@@ -16,7 +16,7 @@ class Revelation(object):
     the requests
     '''
 
-    def __init__(self, slides_file, media_root=None, config=None, debug=False):
+    def __init__(self, slides_file, media_root=None, config=None):
         '''
         Initializes the server and creates the environment for the presentation
         '''

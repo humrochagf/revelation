@@ -1,0 +1,3 @@
+Jinja2==2.10
+Werkzeug==0.14.1
+click==6.7
