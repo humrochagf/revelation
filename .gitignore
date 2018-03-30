@@ -1,0 +1,13 @@
+.idea/
+.cache/
+revelation/static/
+build/
+dist/
+.coverage
+*.egg
+*.egg-info
+*.pyc
+*.pyo
+*.tar.gz
+*.zip
+ngrok
