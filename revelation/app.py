@@ -16,18 +16,18 @@ class Revelation(object):
     the requests
     '''
 
-    def __init__(self, slides_file, media_root=None, config=None):
+    def __init__(self, presentation, media=None, config=None):
         '''
         Initializes the server and creates the environment for the presentation
         '''
         self.config = Config(config)
-        self.slides_file = slides_file
+        self.presentation = presentation
 
         shared_data = {
             '/static': os.path.join(os.path.dirname(__file__), 'static')
         }
 
-        shared_data.update(self.parse_media_root(media_root))
+        shared_data.update(self.parse_media_root(media))
 
         self.wsgi_app = SharedDataMiddleware(self.wsgi_app, shared_data)
 
@@ -53,8 +53,8 @@ class Revelation(object):
 
         :return: a list of strings with the slides content
         '''
-        with open(path, 'r') as slides_file:
-            slides = slides_file.read()
+        with open(path, 'r') as presentation:
+            slides = presentation.read()
 
         return re.split('^{}$'.format(separator), slides, flags=re.MULTILINE)
 
@@ -67,7 +67,7 @@ class Revelation(object):
         context = {
             'meta': self.config.get('REVEAL_META'),
             'slides': self.load_slides(
-                self.slides_file, self.config.get('REVEAL_SLIDE_SEPARATOR')),
+                self.presentation, self.config.get('REVEAL_SLIDE_SEPARATOR')),
             'config': self.config.get('REVEAL_CONFIG'),
             'theme': 'static/css/theme/{}.css'.format(
                 self.config.get('REVEAL_THEME')),

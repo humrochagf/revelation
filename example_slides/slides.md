@@ -59,7 +59,7 @@ __This will also be bold__
 
 ## Images
 
-![Python Logo](img/python.png)
+![Python Logo](media/python.png)
 
 ---
 
