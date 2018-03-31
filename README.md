@@ -14,9 +14,36 @@ $ pip install revelation
 
 ## Usage
 
+### Install/Update reveal.js files
+
+The first thing that you will do after installing revelation is to download and
+install reveal.js to render the presentations.
+
+To do that just run the `installreveal` command:
+
+```shell
+$ revelation installreveal
+```
+
 ### Running the Presentation
 
-### Install/Update reveal.js files
+To start your presentation run:
+
+```shell
+$ revelation start PRESENTATION
+```
+
+The `PRESENTATION` is the path to the markdown presentation file.
+
+### Creating a new Presentation
+
+To create a new presentation run:
+
+```shell
+$ revelation mkpresentation NAME
+```
+
+That will create a new presentation folder with  the `NAME` passed.
 
 ### PDF Export
 
