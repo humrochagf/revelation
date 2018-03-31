@@ -27,10 +27,9 @@ def make_presentation(presentation_path):
     # Media dir
     os.mkdir(os.path.join(presentation_path, 'media'))
     # Config file
-    shutil.copy(
-        default_config.__file__,
-        os.path.join(presentation_path, 'config.py')
-    )
+    config_file = os.path.join(
+        os.path.dirname(default_config.__file__), 'default_config.py')
+    shutil.copy(config_file, os.path.join(presentation_path, 'config.py'))
     # Slide file
     with open(os.path.join(presentation_path, 'slides.md'), 'w') as f:
         f.write('# {0}\n\nStart from here!'.format(
