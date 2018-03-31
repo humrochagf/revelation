@@ -2,14 +2,17 @@
 
 REVEAL_META = {
     # Title of the slide
-    'title': 'flask-reveal',
+    'title': 'revelation',
 
     # Author in the metadata of the slide
     'author': 'Humberto Rocha',
 
     # Description in the metadata of the slide
-    'description': 'A flask-reveal example presentation',
+    'description': 'A revelation example presentation',
 }
+
+# Reveal markdown slide separator
+REVEAL_SLIDE_SEPARATOR = '---'
 
 # Themes
 # beige, black, blood, league, moon, night, serif, simple, sky,
