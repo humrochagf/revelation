@@ -6,6 +6,7 @@ import click
 from werkzeug.serving import run_simple
 
 import revelation
+from revelation.utils import make_presentation
 
 
 @click.group(invoke_without_command=True)
@@ -19,7 +20,19 @@ def cli(ctx, version):
         click.echo(ctx.get_help())
 
 
-@cli.command('start', help='Start revelation server')
+@cli.command('mkpresentation', help='Create a new revelation presentation')
+@click.argument('presentation')
+@click.pass_context
+def mkpresentation(ctx, presentation):
+    if os.path.exists(presentation):
+        click.echo('This presentation already exists')
+        ctx.exit()
+
+    click.echo('Starting a new presentation...')
+    make_presentation(presentation)
+
+
+@cli.command('start', help='Start the revelation server')
 @click.argument('presentation', default=os.getcwd())
 @click.option('--port', '-p', default=4000, help='Presentation server port')
 @click.option('--config', '-c', default=None, help='Custom configuration file')
