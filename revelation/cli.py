@@ -6,7 +6,8 @@ import click
 from werkzeug.serving import run_simple
 
 import revelation
-from revelation.utils import make_presentation
+from revelation.utils import (download_reveal, extract_file, make_presentation,
+                              move_and_replace)
 
 
 @click.group(invoke_without_command=True)
@@ -18,6 +19,24 @@ def cli(ctx, version):
         ctx.exit()
     elif not ctx.invoked_subcommand:
         click.echo(ctx.get_help())
+
+
+@cli.command('installreveal', help='Install or upgrade reveal.js dependency')
+@click.option('--url', '-u', help='Reveal.js download url')
+@click.pass_context
+def installreveal(ctx, url):
+    click.echo('Downloading reveal.js...')
+
+    download = download_reveal(url)
+
+    click.echo('Installing reveal.js...')
+
+    move_and_replace(
+        extract_file(download[0]),
+        os.path.join(os.path.dirname(revelation.__file__), 'static')
+    )
+
+    click.echo('Installation completed!')
 
 
 @cli.command('mkpresentation', help='Create a new revelation presentation')
