@@ -8,7 +8,7 @@ REVEAL_META = {
     'author': 'Some Author',
 
     # Description in the metadata of the slide
-    'description': 'Some description'
+    'description': 'Some description',
 }
 
 # Reveal markdown slide separator
