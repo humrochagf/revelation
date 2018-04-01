@@ -11,6 +11,7 @@ try:
 except ImportError:
     # python 2
     from urllib import urlretrieve
+    FileNotFoundError = IOError
 
 from . import default_config
 
@@ -92,5 +93,10 @@ def extract_file(compressed_file, path='.'):
             with zipfile.ZipFile(compressed_file, 'r') as zfile:
                 basename = zfile.namelist()[0]
                 zfile.extractall(path)
+        else:
+            raise NotImplementedError('File type not supported')
+    else:
+        raise FileNotFoundError(
+            '{0} is not a valid file'.format(compressed_file))
 
     return os.path.abspath(os.path.join(path, basename))
