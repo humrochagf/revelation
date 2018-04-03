@@ -1,6 +1,10 @@
 # Revelation
 
+[![PyPI](https://img.shields.io/pypi/v/revelation.svg)](https://pypi.org/project/revelation/)
+[![PyPI - License](https://img.shields.io/pypi/l/revelation.svg)](https://pypi.org/project/revelation/)
+[![PyPI - Python Version](https://img.shields.io/pypi/pyversions/revelation.svg)](https://pypi.org/project/revelation/)
 [![Build Status](https://travis-ci.org/humrochagf/revelation.svg?branch=master)](https://travis-ci.org/humrochagf/revelation)
+[![Coverage Status](https://coveralls.io/repos/github/humrochagf/revelation/badge.svg?branch=master)](https://coveralls.io/github/humrochagf/revelation?branch=master)
 
 [revelation](https://github.com/humrochagf/revelation) makes your
 [reveal.js](https://github.com/hakimel/reveal.js) presentations without the
