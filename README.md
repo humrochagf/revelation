@@ -102,7 +102,7 @@ Split your slides by setting up a *slide separator* into **REVEAL_CONFIG**. Defa
 
 All images used on your presentation are placed inside the **'img'** folder and referenced on your slides starting from your presentation root.
 
-```markdown
+```md
 ![Python Logo](img/python.png)
 ```
 
