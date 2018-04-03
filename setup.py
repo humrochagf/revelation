@@ -9,7 +9,7 @@ from setuptools import find_packages, setup
 
 try:
     import pypandoc
-    README = pypandoc.convert('README.md', 'rst')
+    README = '\n' + pypandoc.convert('README.md', 'rst')
 except (IOError, ImportError):
     README = ''
 
