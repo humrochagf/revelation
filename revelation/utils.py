@@ -24,7 +24,7 @@ def make_presentation(presentation_path):
     '''
     name = os.path.basename(presentation_path)
     # Presentation dir
-    os.mkdir(name)
+    os.mkdir(presentation_path)
     # Media dir
     os.mkdir(os.path.join(presentation_path, 'media'))
     # Config file

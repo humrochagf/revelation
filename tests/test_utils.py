@@ -7,7 +7,7 @@ import tempfile
 import unittest
 import zipfile
 
-from revelation.utils import extract_file, move_and_replace
+from revelation.utils import extract_file, make_presentation, move_and_replace
 
 try:
     # Python 3
@@ -119,3 +119,16 @@ class HelpersTestCase(unittest.TestCase):
 
     def test_extract_file_on_non_tar_or_zip(self):
         self.assertRaises(NotImplementedError, extract_file, self.somefile)
+
+    def test_make_presentation(self):
+        path = os.path.join(tempfile.mkdtemp(), 'test')
+        media_path = os.path.join(path, 'media')
+        config_path = os.path.join(path, 'config.py')
+        presentation_path = os.path.join(path, 'slides.md')
+
+        make_presentation(path)
+
+        self.assertTrue(os.path.isdir(path))
+        self.assertTrue(os.path.isdir(media_path))
+        self.assertTrue(os.path.isfile(config_path))
+        self.assertTrue(os.path.isfile(presentation_path))
