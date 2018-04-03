@@ -1,5 +1,7 @@
 # Revelation
 
+[![Build Status](https://travis-ci.org/humrochagf/revelation.svg?branch=master)](https://travis-ci.org/humrochagf/revelation)
+
 [revelation](https://github.com/humrochagf/revelation) makes your
 [reveal.js](https://github.com/hakimel/reveal.js) presentations without the
 need to edit a monolithic html file using markdown and serving it localy.
