@@ -72,5 +72,6 @@ setup(
         'Topic :: Text Processing :: Markup :: HTML',
     ],
     test_suite='tests',
-    tests_require=TEST_REQUIREMENTS
+    tests_require=TEST_REQUIREMENTS,
+    extras_require={'test': TEST_REQUIREMENTS}
 )
