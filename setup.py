@@ -22,7 +22,7 @@ REQUIREMENTS = [
 ]
 TEST_REQUIREMENTS = [
     'coverage==4.4.1',
-    'mock==2.0.0',
+    'coveralls==1.1',
     'nose==1.3.7',
     'pylint==1.7.1',
 ]
