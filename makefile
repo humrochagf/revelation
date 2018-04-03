@@ -36,4 +36,5 @@ clean: # remove temporary files and artifacts
 	find . -name '*.pyc' -exec rm -f {} +
 	find . -name '*.pyo' -exec rm -f {} +
 	find . -name '*~' -exec rm -f {} +
+	find . -name '.coverage' -exec rm -f {} +
 	find . -name '__pycache__' -exec rmdir {} +
