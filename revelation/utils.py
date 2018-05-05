@@ -69,7 +69,8 @@ def move_and_replace(src, dst):
         dst_dir = src_dir.replace(src, dst)
 
         if not os.path.exists(dst_dir):
-            os.mkdir(dst_dir)  # to copy not fail, create the not existing dirs
+            # to prevent copy from failing, create the not existing dirs
+            os.makedirs(dst_dir)
 
         for file_ in files:
             src_file = os.path.join(src_dir, file_)

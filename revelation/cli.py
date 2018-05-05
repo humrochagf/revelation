@@ -10,6 +10,10 @@ from revelation.utils import (download_reveal, extract_file, make_presentation,
                               move_and_replace)
 
 
+REVEALJS_FOLDER = os.path.join(os.path.join(
+    os.path.dirname(revelation.__file__), 'static'), 'revealjs')
+
+
 @click.group(invoke_without_command=True)
 @click.option('--version', '-v', is_flag=True, default=False)
 @click.pass_context
@@ -31,10 +35,7 @@ def installreveal(ctx, url):
 
     click.echo('Installing reveal.js...')
 
-    move_and_replace(
-        extract_file(download[0]),
-        os.path.join(os.path.dirname(revelation.__file__), 'static')
-    )
+    move_and_replace(extract_file(download[0]), REVEALJS_FOLDER)
 
     click.echo('Installation completed!')
 
@@ -61,8 +62,7 @@ def mkpresentation(ctx, presentation):
 @click.pass_context
 def start(ctx, presentation, port, config, media, debug):
     # Check if reveal.js is installed
-    if not os.path.exists(os.path.join(
-            os.path.dirname(revelation.__file__), 'static')):
+    if not os.path.exists(REVEALJS_FOLDER):
         click.echo('You must run installreveal command first')
         ctx.exit()
 
@@ -95,7 +95,7 @@ def start(ctx, presentation, port, config, media, debug):
 
     click.echo('Starting revelation server...')
 
-    # instatiating revelatino app
+    # instatiating revelation app
     app = revelation.Revelation(presentation, media, config)
 
     if debug:

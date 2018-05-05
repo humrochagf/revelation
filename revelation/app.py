@@ -69,7 +69,7 @@ class Revelation(object):
             'slides': self.load_slides(
                 self.presentation, self.config.get('REVEAL_SLIDE_SEPARATOR')),
             'config': self.config.get('REVEAL_CONFIG'),
-            'theme': 'static/css/theme/{}.css'.format(
+            'theme': 'static/revealjs/css/theme/{}.css'.format(
                 self.config.get('REVEAL_THEME')),
         }
 
