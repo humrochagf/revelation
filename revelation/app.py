@@ -16,7 +16,7 @@ class Revelation(object):
     the requests
     '''
 
-    def __init__(self, presentation, media=None, config=None):
+    def __init__(self, presentation, config=None, media=None, theme=None):
         '''
         Initializes the server and creates the environment for the presentation
         '''
@@ -24,25 +24,25 @@ class Revelation(object):
         self.presentation = presentation
 
         shared_data = {
-            '/static': os.path.join(os.path.dirname(__file__), 'static')
+            '/static': os.path.join(os.path.dirname(__file__), 'static'),
         }
 
-        shared_data.update(self.parse_media_root(media))
+        shared_data.update(self.parse_shared_data(media))
+        shared_data.update(self.parse_shared_data(theme))
 
         self.wsgi_app = SharedDataMiddleware(self.wsgi_app, shared_data)
 
-    def parse_media_root(self, media_root):
+    def parse_shared_data(self, shared_root):
         '''
-        Create the shared_data configuration for media_root
-        if the folder exists
+        Parse aditional shared_data if it exists
         '''
-        if media_root:
-            media_root = os.path.abspath(media_root)
+        if shared_root:
+            shared_root = os.path.abspath(shared_root)
 
-            if os.path.isdir(media_root):
-                media_url = '/{}'.format(os.path.basename(media_root))
+            if os.path.isdir(shared_root):
+                shared_url = '/{}'.format(os.path.basename(shared_root))
 
-                return {media_url: media_root}
+                return {shared_url: shared_root}
 
         return {}
 
@@ -58,6 +58,15 @@ class Revelation(object):
 
         return re.split('^{}$'.format(separator), slides, flags=re.MULTILINE)
 
+    def get_theme(self, theme):
+        reveal_theme = 'static/revealjs/css/theme/{}.css'.format(theme)
+
+        if os.path.isfile(os.path.join(
+                os.path.dirname(__file__), reveal_theme)):
+            return reveal_theme
+
+        return theme
+
     def dispatch_request(self, request):
         env = Environment(
             loader=PackageLoader('revelation', 'templates'),
@@ -69,8 +78,7 @@ class Revelation(object):
             'slides': self.load_slides(
                 self.presentation, self.config.get('REVEAL_SLIDE_SEPARATOR')),
             'config': self.config.get('REVEAL_CONFIG'),
-            'theme': 'static/revealjs/css/theme/{}.css'.format(
-                self.config.get('REVEAL_THEME')),
+            'theme': self.get_theme(self.config.get('REVEAL_THEME')),
         }
 
         template = env.get_template('presentation.html')
@@ -83,6 +91,7 @@ class Revelation(object):
     def wsgi_app(self, environ, start_response):
         request = Request(environ)
         response = self.dispatch_request(request)
+
         return response(environ, start_response)
 
     def __call__(self, environ, start_response):

@@ -57,10 +57,11 @@ def mkpresentation(ctx, presentation):
 @click.option('--port', '-p', default=4000, help='Presentation server port')
 @click.option('--config', '-c', default=None, help='Custom configuration file')
 @click.option('--media', '-m', default=None, help='Custom media folder')
+@click.option('--theme', '-t', default=None, help='Custom theme folder')
 @click.option('--debug', '-d', is_flag=True, default=False,
               help='Run the revelation server in debugger and reloader on')
 @click.pass_context
-def start(ctx, presentation, port, config, media, debug):
+def start(ctx, presentation, port, config, media, theme, debug):
     # Check if reveal.js is installed
     if not os.path.exists(REVEALJS_FOLDER):
         click.echo('You must run installreveal command first')
@@ -83,6 +84,14 @@ def start(ctx, presentation, port, config, media, debug):
 
         click.echo('Media folder not detected, running without media')
 
+    # Check for theme root
+    if not theme:
+        theme = os.path.join(path, 'theme')
+
+    if not os.path.isdir(theme):
+        # Running without theme folder
+        theme = None
+
     # Check for configuration file
     if not config:
         config = os.path.join(path, 'config.py')
@@ -96,7 +105,7 @@ def start(ctx, presentation, port, config, media, debug):
     click.echo('Starting revelation server...')
 
     # instatiating revelation app
-    app = revelation.Revelation(presentation, media, config)
+    app = revelation.Revelation(presentation, config, media, theme)
 
     if debug:
         run_simple(

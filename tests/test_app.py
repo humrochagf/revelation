@@ -16,18 +16,18 @@ class RevelationTestCase(unittest.TestCase):
         with open(self.slide, 'w') as file:
             file = file.write('# Pag1\n---\n# Pag2')
 
-        self.app = Revelation(self.slide, self.media)
+        self.app = Revelation(self.slide, media=self.media)
 
-    def test_parse_media_root_empty(self):
-        media_config = self.app.parse_media_root(None)
+    def test_parse_shared_data_empty(self):
+        shared_data_config = self.app.parse_shared_data(None)
 
-        self.assertDictEqual(media_config, {})
+        self.assertDictEqual(shared_data_config, {})
 
-    def test_parse_media_root(self):
-        media_config = self.app.parse_media_root(self.media)
+    def test_parse_shared_data(self):
+        shared_data_config = self.app.parse_shared_data(self.media)
 
         self.assertDictEqual(
-            media_config,
+            shared_data_config,
             {'/{}'.format(os.path.basename(self.media)): self.media}
         )
 

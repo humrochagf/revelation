@@ -16,7 +16,10 @@
 
     <!-- Presentation Styles -->
     <link rel="stylesheet" href="static/revealjs/css/reveal.css">
-    <link rel="stylesheet" href="{{ theme }}" id="theme">
+
+    {% if theme %}
+      <link rel="stylesheet" href="{{ theme }}" id="theme">
+    {% endif %}
 
     <!-- For syntax highlighting -->
     <link rel="stylesheet" href="static/revealjs/lib/css/zenburn.css">
