@@ -98,13 +98,17 @@ This is your presentation file written using markdown with some especial tags de
 
 Split your slides by setting up a *slide separator* into **REVEAL_CONFIG**. Default separator is `---`.
 
-### The 'img' folder
+### The 'media' folder
 
-All images used on your presentation are placed inside the **'img'** folder and referenced on your slides starting from your presentation root.
+All images used on your presentation are placed inside the **'media'** folder and referenced on your slides starting from your presentation root.
 
 ```md
 ![Python Logo](img/python.png)
 ```
+
+### The 'theme' folder
+
+You can create your custom theme file and place it inside a **'theme'** folder and reference it at the configuration file.
 
 ### The 'config.py' File
 
