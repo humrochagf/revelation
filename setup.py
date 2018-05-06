@@ -48,7 +48,7 @@ setup(
     url='https://github.com/humrochagf/revelation',
     license='MIT',
     packages=find_packages(),
-    include_package_data=True,
+    package_data={PACKAGE: ['templates/presentation.html']},
     zip_safe=False,
     install_requires=REQUIREMENTS,
     entry_points=dict(
