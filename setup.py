@@ -7,21 +7,15 @@ import re
 
 from setuptools import find_packages, setup
 
-try:
-    import pypandoc
-
-    README = pypandoc.convert("README.md", "rst")
-except (IOError, ImportError):
-    README = ""
-
-# package variables
 PACKAGE = "revelation"
 REQUIREMENTS = ["Jinja2==2.10", "Werkzeug==0.14.1", "click==6.7"]
 TEST_REQUIREMENTS = [
     "coverage==4.4.1", "coveralls==1.1", "nose==1.3.7", "pylint==1.7.1"
 ]
 
-# dynamic package info
+with open("README.md", "rt", encoding="utf8") as f:
+    README = f.read()
+
 with open(os.path.join(PACKAGE, "__init__.py")) as init_file:
     INIT = init_file.read()
 
@@ -46,6 +40,7 @@ setup(
     version=VERSION,
     description="Make awesome reveal.js presentations with revelation",
     long_description=README,
+    long_description_content_type='text/markdown',
     author=AUTHOR,
     author_email=EMAIL,
     url="https://github.com/humrochagf/revelation",
