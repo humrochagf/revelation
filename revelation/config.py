@@ -9,14 +9,14 @@ from . import default_config
 
 
 class Config(dict):
-    '''
+    """
     Class that stores revelation configs thanks to flask Config:
 
     https://github.com/pallets/flask/blob/master/flask/config.py
 
     It loads the default_config variables and if a path is passed it also
     loads the external configs
-    '''
+    """
 
     def __init__(self, filename=None):
         self.load_from_object(default_config)
@@ -33,14 +33,14 @@ class Config(dict):
                 self[key] = getattr(obj, key)
 
     def load_from_pyfile(self, filename):
-        d = types.ModuleType('config')
+        d = types.ModuleType("config")
         d.__file__ = filename
 
         try:
-            with open(filename, mode='rb') as config_file:
-                exec(compile(config_file.read(), filename, 'exec'), d.__dict__)
+            with open(filename, mode="rb") as config_file:
+                exec(compile(config_file.read(), filename, "exec"), d.__dict__)
         except IOError as e:
-            e.strerror = 'Unable to load configuration file (%s)' % e.strerror
+            e.strerror = "Unable to load configuration file (%s)" % e.strerror
             raise
 
         self.load_from_object(d)

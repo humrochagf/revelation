@@ -11,10 +11,10 @@ class RevelationTestCase(unittest.TestCase):
 
     def setUp(self):
         self.media = tempfile.mkdtemp()
-        _, self.slide = tempfile.mkstemp('.md')
+        _, self.slide = tempfile.mkstemp(".md")
 
-        with open(self.slide, 'w') as file:
-            file = file.write('# Pag1\n---\n# Pag2')
+        with open(self.slide, "w") as file:
+            file = file.write("# Pag1\n---\n# Pag2")
 
         self.app = Revelation(self.slide, media=self.media)
 
@@ -28,10 +28,10 @@ class RevelationTestCase(unittest.TestCase):
 
         self.assertDictEqual(
             shared_data_config,
-            {'/{}'.format(os.path.basename(self.media)): self.media}
+            {"/{}".format(os.path.basename(self.media)): self.media},
         )
 
     def test_load_slides(self):
-        slides = self.app.load_slides(self.slide, '---')
+        slides = self.app.load_slides(self.slide, "---")
 
-        self.assertListEqual(slides, ['# Pag1\n', '\n# Pag2'])
+        self.assertListEqual(slides, ["# Pag1\n", "\n# Pag2"])

@@ -39,6 +39,14 @@ test: # run tests
 cover: # coverage tests
 	nosetests -w tests --with-coverage --cover-package=$(PACKAGE)
 
+.PHONY: it
+it:
+	@echo "Any color you want, as long as it's Black"
+
+.PHONY: black
+black:
+	black -l 79 .
+
 .PHONY: clean
 clean: # remove temporary files and artifacts
 	rm -rf site/

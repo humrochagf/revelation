@@ -21,47 +21,49 @@ class HelpersTestCase(unittest.TestCase):
 
     def make_src(self, base):
         source = tempfile.mkdtemp(dir=base)
-        file_to_replace_on_source = os.path.join(source, 'replace.txt')
-        fd, file_to_move = tempfile.mkstemp('.txt', dir=source)
+        file_to_replace_on_source = os.path.join(source, "replace.txt")
+        fd, file_to_move = tempfile.mkstemp(".txt", dir=source)
 
         os.close(fd)
 
         tempfile.mkdtemp(dir=source)
 
-        with open(file_to_replace_on_source, 'w') as f_source:
-            f_source.write('source')
+        with open(file_to_replace_on_source, "w") as f_source:
+            f_source.write("source")
 
         return source
 
     def make_dst(self, base):
         destination = tempfile.mkdtemp(dir=base)
-        file_to_replace_on_dest = os.path.join(destination, 'replace.txt')
+        file_to_replace_on_dest = os.path.join(destination, "replace.txt")
 
-        with open(file_to_replace_on_dest, 'w') as f_dest:
-            f_dest.write('dest')
+        with open(file_to_replace_on_dest, "w") as f_dest:
+            f_dest.write("dest")
 
         return destination
 
     def make_tar(self, content, base):
-        fd, tar_file = tempfile.mkstemp('.tar.gz', dir=base)
+        fd, tar_file = tempfile.mkstemp(".tar.gz", dir=base)
 
         os.close(fd)
 
-        with tarfile.open(tar_file, 'w:gz') as t:
-            t.add(content, arcname='tarfolder')
+        with tarfile.open(tar_file, "w:gz") as t:
+            t.add(content, arcname="tarfolder")
 
         return tar_file
 
     def make_zip(self, content, base):
-        fd, zip_file = tempfile.mkstemp('.zip', dir=base)
+        fd, zip_file = tempfile.mkstemp(".zip", dir=base)
 
         os.close(fd)
 
-        with zipfile.ZipFile(zip_file, 'w') as z:
-            z.write(content, arcname='zipfolder')
+        with zipfile.ZipFile(zip_file, "w") as z:
+            z.write(content, arcname="zipfolder")
             for item in os.listdir(content):
-                z.write(os.path.join(content, item),
-                        arcname=os.path.join('zipfolder', item))
+                z.write(
+                    os.path.join(content, item),
+                    arcname=os.path.join("zipfolder", item),
+                )
 
         return zip_file
 
@@ -85,13 +87,13 @@ class HelpersTestCase(unittest.TestCase):
 
         dst_files = sorted(os.listdir(self.destination))
 
-        with open(os.path.join(self.destination, 'replace.txt'), 'r') as f:
+        with open(os.path.join(self.destination, "replace.txt"), "r") as f:
             file_content = f.read()
 
         # The moved directory should not exist because it was moved
         self.assertFalse(os.path.exists(self.source))
         # The replaced file should contain the data from the source file
-        self.assertEqual(file_content, 'source')
+        self.assertEqual(file_content, "source")
         # The moved files from source should be equal to the
         # files on destination directory
         self.assertEqual(src_files, dst_files)
@@ -121,10 +123,10 @@ class HelpersTestCase(unittest.TestCase):
         self.assertRaises(NotImplementedError, extract_file, self.somefile)
 
     def test_make_presentation(self):
-        path = os.path.join(tempfile.mkdtemp(), 'test')
-        media_path = os.path.join(path, 'media')
-        config_path = os.path.join(path, 'config.py')
-        presentation_path = os.path.join(path, 'slides.md')
+        path = os.path.join(tempfile.mkdtemp(), "test")
+        media_path = os.path.join(path, "media")
+        config_path = os.path.join(path, "config.py")
+        presentation_path = os.path.join(path, "slides.md")
 
         make_presentation(path)
 
