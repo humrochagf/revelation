@@ -54,7 +54,7 @@ setup(
     entry_points=dict(
         console_scripts=['revelation=revelation.cli:cli']),
     platforms='any',
-    keywords=['presentation', 'slides', 'reveal.js', 'markdown'],
+    keywords='presentation slides reveal.js markdown',
     classifiers=[
         'Environment :: Console',
         'Environment :: Web Environment',
