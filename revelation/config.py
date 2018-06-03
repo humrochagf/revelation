@@ -46,7 +46,7 @@ class Config(dict):
             with open(filename, mode="rb") as config_file:
                 exec(
                     compile(config_file.read(), filename, "exec"),
-                    module.__dict__
+                    module.__dict__,
                 )
         except IOError as error:
             error.strerror = "Unable to load configuration file ({})".format(
