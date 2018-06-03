@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+"""Revelation root module with package info"""
 
 from .app import Revelation
 

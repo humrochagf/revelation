@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+"""Example settings file"""
 
 REVEAL_META = {
     # Title of the slide

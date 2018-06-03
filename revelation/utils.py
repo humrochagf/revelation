@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+"""Utility tools used by revelation"""
 
 import os
 import shutil
@@ -90,6 +91,7 @@ def move_and_replace(src, dst):
 
 
 def extract_file(compressed_file, path="."):
+    """Extract function to extract from zip or tar file"""
     if os.path.isfile(compressed_file):
         if tarfile.is_tarfile(compressed_file):
             with tarfile.open(compressed_file, "r:gz") as tfile:

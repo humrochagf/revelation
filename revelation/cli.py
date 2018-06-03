@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+"""Cli tool to handle revelation commands"""
 
 import os
 
@@ -23,6 +24,8 @@ REVEALJS_FOLDER = os.path.join(
 @click.option("--version", "-v", is_flag=True, default=False)
 @click.pass_context
 def cli(ctx, version):
+    """Base command function, it gets the context and passes it to
+    its subcommands"""
     if not ctx.invoked_subcommand and version:
         click.echo(revelation.__version__)
         ctx.exit()
@@ -32,8 +35,12 @@ def cli(ctx, version):
 
 @cli.command("installreveal", help="Install or upgrade reveal.js dependency")
 @click.option("--url", "-u", help="Reveal.js download url")
-@click.pass_context
-def installreveal(ctx, url):
+def installreveal(url):
+    """Reveal.js installation command
+
+    Receives the download url to install from a specific version or
+    downloads the latest version if noting is passed
+    """
     click.echo("Downloading reveal.js...")
 
     download = download_reveal(url)
@@ -49,6 +56,7 @@ def installreveal(ctx, url):
 @click.argument("presentation")
 @click.pass_context
 def mkpresentation(ctx, presentation):
+    """Make presentation project boilerplate"""
     if os.path.exists(presentation):
         click.echo("This presentation already exists")
         ctx.exit()
@@ -72,6 +80,7 @@ def mkpresentation(ctx, presentation):
 )
 @click.pass_context
 def start(ctx, presentation, port, config, media, theme, debug):
+    """Start revelation presentation command"""
     # Check if reveal.js is installed
     if not os.path.exists(REVEALJS_FOLDER):
         click.echo("You must run installreveal command first")

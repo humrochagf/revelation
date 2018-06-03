@@ -1,4 +1,10 @@
 # -*- coding: utf-8 -*-
+"""
+Revelation presentation settings
+
+This is an automatic generated template for revelation presentations
+with the default options.
+"""
 
 REVEAL_META = {
     # Title of the slide
