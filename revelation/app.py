@@ -1,4 +1,9 @@
 # -*- coding: utf-8 -*-
+"""Main revelation module
+
+It has the Revelation main class that creates the webserver do run
+the presentation
+"""
 
 import os
 import re
@@ -60,10 +65,9 @@ class Revelation(object):
 
     def get_theme(self, theme):
         reveal_theme = "static/revealjs/css/theme/{}.css".format(theme)
+        fullpath_theme = os.path.join(os.path.dirname(__file__), reveal_theme)
 
-        if os.path.isfile(
-            os.path.join(os.path.dirname(__file__), reveal_theme)
-        ):
+        if os.path.isfile(fullpath_theme):
             return reveal_theme
 
         return theme
