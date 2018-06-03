@@ -40,7 +40,7 @@ setup(
     version=VERSION,
     description="Make awesome reveal.js presentations with revelation",
     long_description=README,
-    long_description_content_type='text/markdown',
+    long_description_content_type="text/markdown",
     author=AUTHOR,
     author_email=EMAIL,
     url="https://github.com/humrochagf/revelation",
