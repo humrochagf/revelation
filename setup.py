@@ -10,10 +10,10 @@ from setuptools import find_packages, setup
 PACKAGE = "revelation"
 REQUIREMENTS = ["Jinja2==2.10", "Werkzeug==0.14.1", "click==6.7"]
 TEST_REQUIREMENTS = [
-    "coverage==4.4.1", "coveralls==1.1", "nose==1.3.7", "pylint==1.7.1"
+    "coverage==4.5.1", "coveralls==1.3.0", "nose==1.3.7", "pylint==1.9.1"
 ]
 
-with open("README.md", "rt", encoding="utf8") as f:
+with open("README.md", "r") as f:
     README = f.read()
 
 with open(os.path.join(PACKAGE, "__init__.py")) as init_file:
