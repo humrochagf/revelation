@@ -72,20 +72,11 @@ def mkpresentation(ctx, presentation):
 @click.option("--media", "-m", default=None, help="Custom media folder")
 @click.option("--theme", "-t", default=None, help="Custom theme folder")
 @click.option("--outputfolder", "-o", default="outputfolder", help="Folder where the static presentation will be generated")
-@click.option("--outputfilename", "-f", default="index.html", help="Folder where the static presentation will be generated")
+@click.option("--outputfilename", "-f", default="index.html", help="Filename of the static presentation")
 @click.option("--force", "-r", default=False, help="Overwrite the outputfolder if exists")
 @click.pass_context
 def mkstatic(ctx, presentation, config, media, theme, outputfolder, outputfilename, force):
-    """Start revelation presentation command"""
-
-    def do(func, error_message):
-        try:
-            func()
-        except Exception as e:
-            click.echo(error_message)
-            click.echo(f"{e.__class__.__name__}: {e}")
-            ctx.exit()
-
+    """Make static presentation"""
     import shutil
     outputfolder = os.path.realpath(outputfolder)
 
