@@ -2,6 +2,7 @@
 """Cli tool to handle revelation commands"""
 
 import os
+import shutil
 
 import click
 from werkzeug.serving import run_simple
@@ -73,7 +74,7 @@ def mkpresentation(ctx, presentation):
 @click.option(
     "--outputfolder",
     "-o",
-    default="outputfolder",
+    default="output",
     help="Folder where the static presentation will be generated",
 )
 @click.option(
@@ -97,12 +98,11 @@ def mkstatic(
     force,
 ):
     """Make static presentation"""
-    import shutil
 
     outputfolder = os.path.realpath(outputfolder)
 
     if os.path.isfile(outputfolder):
-        click.echo(f"{outputfolder} elready exists and is a file")
+        click.echo("{} already exists and is a file".format(outputfolder))
         ctx.exit()
 
     if os.path.isdir(outputfolder):
@@ -110,7 +110,10 @@ def mkstatic(
             shutil.rmtree(outputfolder)
         else:
             click.echo(
-                f"{outputfolder} elready exists. If you want to override it, use --force or -r"
+                (
+                    "{} already exists. If you want to override it, "
+                    "use --force or -r"
+                ).format(outputfolder)
             )
             ctx.exit()
 
@@ -128,7 +131,6 @@ def mkstatic(
         click.echo("You must run installreveal command first")
         ctx.exit()
     else:
-        # os.makedirs(os.path.join(staticfolder,'revealjs'))
         shutil.copytree(
             REVEALJS_FOLDER, os.path.join(staticfolder, "revealjs")
         )
@@ -167,7 +169,7 @@ def mkstatic(
 
         click.echo("Configuration file not detected, running with defaults")
 
-    # click.echo("Generating static presentation...")
+    click.echo("Generating static presentation...")
 
     # instatiating revelation app
     app = revelation.Revelation(presentation, config, media, theme)
@@ -180,7 +182,9 @@ def mkstatic(
         f.write(app.dispatch_request(None).get_data(as_text=True))
 
     click.echo(
-        f"Static presentation generated in {os.path.realpath(outputfolder)}"
+        "Static presentation generated in {}".format(
+            os.path.realpath(outputfolder)
+        )
     )
 
 
