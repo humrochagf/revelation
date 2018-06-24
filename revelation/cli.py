@@ -65,34 +65,56 @@ def mkpresentation(ctx, presentation):
     make_presentation(presentation)
 
 
-
 @cli.command("mkstatic", help="Make a static presentation")
 @click.argument("presentation", default=os.getcwd())
 @click.option("--config", "-c", default=None, help="Custom configuration file")
 @click.option("--media", "-m", default=None, help="Custom media folder")
 @click.option("--theme", "-t", default=None, help="Custom theme folder")
-@click.option("--outputfolder", "-o", default="outputfolder", help="Folder where the static presentation will be generated")
-@click.option("--outputfilename", "-f", default="index.html", help="Filename of the static presentation")
-@click.option("--force", "-r", default=False, help="Overwrite the outputfolder if exists")
+@click.option(
+    "--outputfolder",
+    "-o",
+    default="outputfolder",
+    help="Folder where the static presentation will be generated",
+)
+@click.option(
+    "--outputfilename",
+    "-f",
+    default="index.html",
+    help="Filename of the static presentation",
+)
+@click.option(
+    "--force", "-r", default=False, help="Overwrite the outputfolder if exists"
+)
 @click.pass_context
-def mkstatic(ctx, presentation, config, media, theme, outputfolder, outputfilename, force):
+def mkstatic(
+    ctx,
+    presentation,
+    config,
+    media,
+    theme,
+    outputfolder,
+    outputfilename,
+    force,
+):
     """Make static presentation"""
     import shutil
+
     outputfolder = os.path.realpath(outputfolder)
 
-
-    if os.path.isfile(outputfolder): 
+    if os.path.isfile(outputfolder):
         click.echo(f"{outputfolder} elready exists and is a file")
         ctx.exit()
-     
+
     if os.path.isdir(outputfolder):
         if force:
             shutil.rmtree(outputfolder)
         else:
-            click.echo(f"{outputfolder} elready exists. If you want to override it, use --force or -r")
+            click.echo(
+                f"{outputfolder} elready exists. If you want to override it, use --force or -r"
+            )
             ctx.exit()
 
-    staticfolder = os.path.join(outputfolder, 'static')
+    staticfolder = os.path.join(outputfolder, "static")
 
     # Check for presentation file
     if os.path.isfile(presentation):
@@ -106,8 +128,10 @@ def mkstatic(ctx, presentation, config, media, theme, outputfolder, outputfilena
         click.echo("You must run installreveal command first")
         ctx.exit()
     else:
-        #os.makedirs(os.path.join(staticfolder,'revealjs'))
-        shutil.copytree(REVEALJS_FOLDER, os.path.join(staticfolder,'revealjs'))
+        # os.makedirs(os.path.join(staticfolder,'revealjs'))
+        shutil.copytree(
+            REVEALJS_FOLDER, os.path.join(staticfolder, "revealjs")
+        )
 
     # Check for media root
     if not media:
@@ -118,9 +142,9 @@ def mkstatic(ctx, presentation, config, media, theme, outputfolder, outputfilena
     if not os.path.isdir(media):
         # Running without media folder
         media = None
-        click.echo("Media folder not detected, running without media")        
-    else:        
-        shutil.copytree(media, os.path.join(outputfolder,'media'))
+        click.echo("Media folder not detected, running without media")
+    else:
+        shutil.copytree(media, os.path.join(outputfolder, "media"))
 
     # Check for theme root
     if not theme:
@@ -129,9 +153,9 @@ def mkstatic(ctx, presentation, config, media, theme, outputfolder, outputfilena
     if not os.path.isdir(theme):
         # Running without theme folder
         theme = None
-        click.echo("Theme not detected, running without custom theme")                
+        click.echo("Theme not detected, running without custom theme")
     else:
-        shutil.copytree(theme, os.path.join(outputfolder,'theme'))
+        shutil.copytree(theme, os.path.join(outputfolder, "theme"))
 
     # Check for configuration file
     if not config:
@@ -143,7 +167,7 @@ def mkstatic(ctx, presentation, config, media, theme, outputfolder, outputfilena
 
         click.echo("Configuration file not detected, running with defaults")
 
-    #click.echo("Generating static presentation...")
+    # click.echo("Generating static presentation...")
 
     # instatiating revelation app
     app = revelation.Revelation(presentation, config, media, theme)
@@ -154,10 +178,10 @@ def mkstatic(ctx, presentation, config, media, theme, outputfolder, outputfilena
     output_filename = os.path.join(outputfolder, outputfilename)
     with open(output_filename, "w") as f:
         f.write(app.dispatch_request(None).get_data(as_text=True))
-    
-    click.echo(f"Static presentation generated in {os.path.realpath(outputfolder)}")
 
-
+    click.echo(
+        f"Static presentation generated in {os.path.realpath(outputfolder)}"
+    )
 
 
 @cli.command("start", help="Start the revelation server")

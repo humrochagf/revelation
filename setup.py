@@ -10,7 +10,10 @@ from setuptools import find_packages, setup
 PACKAGE = "revelation"
 REQUIREMENTS = ["Jinja2==2.10", "Werkzeug==0.14.1", "click==6.7"]
 TEST_REQUIREMENTS = [
-    "coverage==4.5.1", "coveralls==1.3.0", "nose==1.3.7", "pylint==1.9.1"
+    "coverage==4.5.1",
+    "coveralls==1.3.0",
+    "nose==1.3.7",
+    "pylint==1.9.1",
 ]
 
 with open("README.md", "r") as f:
@@ -21,19 +24,13 @@ with open(os.path.join(PACKAGE, "__init__.py")) as init_file:
 
 VERSION = re.search(
     "^__version__ = ['\"]([^'\"]+)['\"]", INIT, re.MULTILINE
-).group(
-    1
-)
+).group(1)
 AUTHOR = re.search(
     "^__author__ = ['\"]([^'\"]+)['\"]", INIT, re.MULTILINE
-).group(
-    1
-)
+).group(1)
 EMAIL = re.search(
     "^__email__ = ['\"]([^'\"]+)['\"]", INIT, re.MULTILINE
-).group(
-    1
-)
+).group(1)
 
 setup(
     name=PACKAGE,

@@ -8,7 +8,6 @@ from revelation import Revelation
 
 
 class RevelationTestCase(unittest.TestCase):
-
     def setUp(self):
         self.media = tempfile.mkdtemp()
         _, self.slide = tempfile.mkstemp(".md")

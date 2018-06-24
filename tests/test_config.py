@@ -7,7 +7,6 @@ from revelation.config import Config
 
 
 class ConfigTestCase(unittest.TestCase):
-
     def setUp(self):
         _, config_file = tempfile.mkstemp(".py")
 

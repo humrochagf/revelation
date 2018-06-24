@@ -18,7 +18,6 @@ except NameError:
 
 
 class HelpersTestCase(unittest.TestCase):
-
     def make_src(self, base):
         source = tempfile.mkdtemp(dir=base)
         file_to_replace_on_source = os.path.join(source, "replace.txt")
