@@ -9,7 +9,7 @@
 
 [revelation](https://github.com/humrochagf/revelation) makes your
 [reveal.js](https://github.com/hakimel/reveal.js) presentations without the
-need to edit a monolithic html file using markdown and serving it localy.
+need to edit a monolithic html file using markdown and serving it locally.
 
 ## Installation
 
@@ -52,12 +52,22 @@ $ revelation mkpresentation NAME
 
 That will create a new presentation folder with  the `NAME` passed.
 
+### Static Export
+
+To export the presentation as static HTML content use the command:
+
+```shell
+$ revelation mkstatic PRESENTATION
+```
+
+The `PRESENTATION` is the path to the markdown presentation file.
+
 ### PDF Export
 
 Presentations can be exported to PDF via a special print stylesheet. This feature will be described using [Google Chrome](https://google.com/chrome) or [Chromium](https://www.chromium.org/Home), but I got the same results using [Firefox](https://www.mozilla.org/en-US/firefox/new/).
 
 1. Run the presentation with revelation.
-2. Open your brownser with the `print-pdf` as query string like : `localhost:5000/?print-pdf`.
+2. Open your browser with the `print-pdf` as query string like : `localhost:5000/?print-pdf`.
 3. Open the in-browser print dialog (CTRL+P or CMD+P).
 4. Change the **Destination** setting to **Save as PDF**.
 5. Change the **Layout** to **Landscape**.
