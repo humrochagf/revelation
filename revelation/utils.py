@@ -10,7 +10,7 @@ try:
     # python 3
     from urllib.request import urlretrieve
 except ImportError:
-    # python 2
+    # legacy python
     from urllib import urlretrieve
 
     FileNotFoundError = IOError

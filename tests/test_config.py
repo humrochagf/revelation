@@ -1,14 +1,16 @@
 # -*- coding: utf-8 -*-
 
+import shutil
 import tempfile
-import unittest
+from unittest import TestCase
 
 from revelation.config import Config
 
 
-class ConfigTestCase(unittest.TestCase):
+class ConfigTestCase(TestCase):
     def setUp(self):
-        _, config_file = tempfile.mkstemp(".py")
+        self.tests_folder = tempfile.mkdtemp()
+        _, config_file = tempfile.mkstemp(".py", dir=self.tests_folder)
 
         with open(config_file, "w") as file:
             file.write(
@@ -20,6 +22,9 @@ class ConfigTestCase(unittest.TestCase):
             )
 
         self.config = Config(config_file)
+
+    def tearDown(self):
+        shutil.rmtree(self.tests_folder)
 
     def test_config_extends_dict(self):
         self.assertIsInstance(self.config, dict)

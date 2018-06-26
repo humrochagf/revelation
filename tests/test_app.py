@@ -1,21 +1,26 @@
 # -*- coding: utf-8 -*-
 
 import os
+import shutil
 import tempfile
-import unittest
+from unittest import TestCase
 
 from revelation import Revelation
 
 
-class RevelationTestCase(unittest.TestCase):
+class RevelationTestCase(TestCase):
     def setUp(self):
-        self.media = tempfile.mkdtemp()
-        _, self.slide = tempfile.mkstemp(".md")
+        self.tests_folder = tempfile.mkdtemp()
+        self.media = tempfile.mkdtemp(dir=self.tests_folder)
+        _, self.slide = tempfile.mkstemp(".md", dir=self.tests_folder)
 
         with open(self.slide, "w") as file:
             file = file.write("# Pag1\n---\n# Pag2")
 
         self.app = Revelation(self.slide, media=self.media)
+
+    def tearDown(self):
+        shutil.rmtree(self.tests_folder)
 
     def test_parse_shared_data_empty(self):
         shared_data_config = self.app.parse_shared_data(None)

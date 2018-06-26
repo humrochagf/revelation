@@ -4,20 +4,20 @@ import os
 import shutil
 import tarfile
 import tempfile
-import unittest
 import zipfile
+from unittest import TestCase
 
 from revelation.utils import extract_file, make_presentation, move_and_replace
 
 try:
-    # Python 3
+    # python 3
     FileNotFoundError
 except NameError:
-    # Python 2
+    # legacy python
     FileNotFoundError = IOError
 
 
-class HelpersTestCase(unittest.TestCase):
+class HelpersTestCase(TestCase):
     def make_src(self, base):
         source = tempfile.mkdtemp(dir=base)
         file_to_replace_on_source = os.path.join(source, "replace.txt")
@@ -67,17 +67,17 @@ class HelpersTestCase(unittest.TestCase):
         return zip_file
 
     def setUp(self):
-        self.base = tempfile.mkdtemp()
-        self.source = self.make_src(self.base)
-        self.destination = self.make_dst(self.base)
-        self.tar = self.make_tar(self.source, self.base)
-        self.zip = self.make_zip(self.source, self.base)
-        fd, self.somefile = tempfile.mkstemp(dir=self.base)
+        self.tests_folder = tempfile.mkdtemp()
+        self.source = self.make_src(self.tests_folder)
+        self.destination = self.make_dst(self.tests_folder)
+        self.tar = self.make_tar(self.source, self.tests_folder)
+        self.zip = self.make_zip(self.source, self.tests_folder)
+        fd, self.somefile = tempfile.mkstemp(dir=self.tests_folder)
 
         os.close(fd)
 
     def tearDown(self):
-        shutil.rmtree(self.base)
+        shutil.rmtree(self.tests_folder)
 
     def test_helper_move_and_replace(self):
         src_files = sorted(os.listdir(self.source))
@@ -100,7 +100,7 @@ class HelpersTestCase(unittest.TestCase):
     def test_extract_file_tarfile(self):
         src_files = sorted(os.listdir(self.source))
 
-        extracted = extract_file(self.tar, self.base)
+        extracted = extract_file(self.tar, self.tests_folder)
 
         extracted_files = sorted(os.listdir(extracted))
 
@@ -109,20 +109,20 @@ class HelpersTestCase(unittest.TestCase):
     def test_extract_file_zipfile(self):
         src_files = sorted(os.listdir(self.source))
 
-        extracted = extract_file(self.zip, self.base)
+        extracted = extract_file(self.zip, self.tests_folder)
 
         extracted_files = sorted(os.listdir(extracted))
 
         self.assertEqual(extracted_files, src_files)
 
     def test_extract_file_on_non_file(self):
-        self.assertRaises(FileNotFoundError, extract_file, self.base)
+        self.assertRaises(FileNotFoundError, extract_file, self.tests_folder)
 
     def test_extract_file_on_non_tar_or_zip(self):
         self.assertRaises(NotImplementedError, extract_file, self.somefile)
 
     def test_make_presentation(self):
-        path = os.path.join(tempfile.mkdtemp(), "test")
+        path = os.path.join(tempfile.mkdtemp(dir=self.tests_folder), "test")
         media_path = os.path.join(path, "media")
         config_path = os.path.join(path, "config.py")
         presentation_path = os.path.join(path, "slides.md")
