@@ -15,7 +15,7 @@ install: # system-wide standard python installation
 .PHONY: install.hack
 install.hack: # install development requirements
 	pip install -r requirements.txt
-	pip install -e .
+	pip install -e .[test]
 
 .PHONY: build
 build: # build package for distribuition
