@@ -29,7 +29,7 @@ publish: # publish package to the pypi
 
 .PHONY: lint
 lint: # lint code
-	pylint $(PACKAGE)
+	flake8 .
 
 .PHONY: test
 test: # run tests

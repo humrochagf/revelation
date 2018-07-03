@@ -19,8 +19,8 @@ REQUIREMENTS = [
 TEST_REQUIREMENTS = [
     "coverage==4.5.1",
     "coveralls==1.3.0",
+    "flake8==3.5.0",
     "nose==1.3.7",
-    "pylint==1.9.1",
 ]
 
 with open("README.md", "r") as f:
