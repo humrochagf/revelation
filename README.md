@@ -7,9 +7,17 @@
 [![Coverage Status](https://coveralls.io/repos/github/humrochagf/revelation/badge.svg?branch=master)](https://coveralls.io/github/humrochagf/revelation?branch=master)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black)
 
-[revelation](https://github.com/humrochagf/revelation) makes your
-[reveal.js](https://github.com/hakimel/reveal.js) presentations without the
-need to edit a monolithic html file using markdown and serving it locally.
+[revelation](https://github.com/humrochagf/revelation) is a cli tool that 
+makes your [reveal.js](https://github.com/hakimel/reveal.js) presentations 
+nice and easy using markdown and serving it locally.
+
+## Features
+
+- Local presentation server to run your presentations even with no connection.
+- Boilerplate presentation creation with one command.
+- Custom css theming support.
+- Export to static html tool.
+- Browser live reload of the presentation at markdown change.
 
 ## Installation
 
