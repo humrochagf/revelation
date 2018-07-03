@@ -5,10 +5,14 @@ It has the Revelation main class that creates the webserver do run
 the presentation
 """
 
+import json
 import os
 import re
 
+from geventwebsocket import WebSocketApplication
 from jinja2 import Environment, PackageLoader, select_autoescape
+from watchdog.events import FileSystemEventHandler
+from watchdog.observers import Observer
 from werkzeug.wrappers import Request, Response
 from werkzeug.wsgi import SharedDataMiddleware
 
@@ -101,3 +105,37 @@ class Revelation(object):
 
     def __call__(self, environ, start_response):
         return self.wsgi_app(environ, start_response)
+
+
+class PresentationReloadWebSocketSendEvent(FileSystemEventHandler):
+    def __init__(self, file, ws):
+        self.file = file
+        self.ws = ws
+
+    def on_modified(self, event):
+        if event.src_path == self.file and not self.ws.closed:
+            self.ws.send(
+                json.dumps({"msg_type": "message", "message": "reload"})
+            )
+
+
+class PresentationReloader(WebSocketApplication):
+
+    presentation = None
+
+    def on_open(self):
+        if self.presentation:
+            event_handler = PresentationReloadWebSocketSendEvent(
+                self.presentation, self.ws
+            )
+            self.observer = Observer()
+            self.observer.schedule(
+                event_handler, os.path.dirname(self.presentation)
+            )
+            self.observer.start()
+
+    def on_message(self, message, *args, **kwargs):
+        pass
+
+    def on_close(self, reason):
+        self.observer.stop()

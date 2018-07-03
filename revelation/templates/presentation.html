@@ -39,6 +39,18 @@
   </head>
 
   <body>
+    <script async>
+      var reloader = new WebSocket("ws://localhost:4000/reloader");
+
+      reloader.onmessage = function (event) {
+        window.location.reload();
+      };
+
+      window.onbeforeunload = function(event) {
+        reloader.close();
+      };
+    </script>
+
     <!-- Presentation body -->
     <div class="reveal">
 

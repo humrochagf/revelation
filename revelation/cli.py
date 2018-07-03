@@ -5,9 +5,11 @@ import os
 import shutil
 
 import click
-from werkzeug.serving import run_simple
+from geventwebsocket import Resource, WebSocketServer
+from werkzeug.debug import DebuggedApplication
 
 import revelation
+from revelation import Revelation, PresentationReloader
 from revelation.utils import (
     download_reveal,
     extract_file,
@@ -172,7 +174,7 @@ def mkstatic(
     click.echo("Generating static presentation...")
 
     # instatiating revelation app
-    app = revelation.Revelation(presentation, config, media, theme)
+    app = Revelation(presentation, config, media, theme)
 
     if not os.path.isdir(outputfolder):
         os.makedirs(outputfolder)
@@ -247,11 +249,21 @@ def start(ctx, presentation, port, config, media, theme, debug):
     click.echo("Starting revelation server...")
 
     # instatiating revelation app
-    app = revelation.Revelation(presentation, config, media, theme)
+    app = Revelation(presentation, config, media, theme)
 
     if debug:
-        run_simple(
-            "localhost", port, app, use_debugger=True, use_reloader=True
-        )
-    else:
-        run_simple("localhost", port, app)
+        app = DebuggedApplication(app)
+
+    PresentationReloader.presentation = os.path.abspath(presentation)
+
+    click.echo("Running at http://localhost:{}".format(port))
+
+    WebSocketServer(
+        ("localhost", port),
+        Resource(
+            [
+                ("^/reloader.*", PresentationReloader),
+                ("^/.*", DebuggedApplication(app)),
+            ]
+        ),
+    ).serve_forever()

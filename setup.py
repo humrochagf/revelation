@@ -8,7 +8,14 @@ import re
 from setuptools import find_packages, setup
 
 PACKAGE = "revelation"
-REQUIREMENTS = ["Jinja2==2.10", "Werkzeug==0.14.1", "click==6.7"]
+REQUIREMENTS = [
+    "Jinja2==2.10",
+    "Werkzeug==0.14.1",
+    "click==6.7",
+    "gevent-websocket==0.10.1",
+    "gevent==1.3.4",
+    "watchdog==0.8.3",
+]
 TEST_REQUIREMENTS = [
     "coverage==4.5.1",
     "coveralls==1.3.0",
