@@ -39,17 +39,20 @@
   </head>
 
   <body>
-    <script async>
-      var reloader = new WebSocket("ws://localhost:4000/reloader");
+    {% if reloader %}
+      <!-- browser auto reload script -->
+      <script async>
+        var reloader = new WebSocket("ws://localhost:4000/reloader");
 
-      reloader.onmessage = function (event) {
-        window.location.reload();
-      };
+        reloader.onmessage = function (event) {
+          window.location.reload();
+        };
 
-      window.onbeforeunload = function(event) {
-        reloader.close();
-      };
-    </script>
+        window.onbeforeunload = function(event) {
+          reloader.close();
+        };
+      </script>
+    {% endif %}
 
     <!-- Presentation body -->
     <div class="reveal">

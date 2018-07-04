@@ -5,6 +5,9 @@ import shutil
 import tempfile
 from unittest import TestCase
 
+from werkzeug.test import Client
+from werkzeug.wrappers import BaseResponse
+
 from revelation import Revelation
 
 
@@ -39,3 +42,21 @@ class RevelationTestCase(TestCase):
         slides = self.app.load_slides(self.slide, "---")
 
         self.assertListEqual(slides, ["# Pag1\n", "\n# Pag2"])
+
+    def test_client_request_ok(self):
+        client = Client(self.app, BaseResponse)
+        response = client.get("/")
+        self.assertEqual(response.status, "200 OK")
+        self.assertEqual(response.headers.get("Content-Type"), "text/html")
+
+    def test_client_with_reload(self):
+        app = Revelation(self.slide, media=self.media, reloader=True)
+        client = Client(app, BaseResponse)
+        response = client.get("/")
+        self.assertIn("reloader", response.data.decode("utf8"))
+
+    def test_client_without_reload(self):
+        app = Revelation(self.slide, media=self.media, reloader=False)
+        client = Client(app, BaseResponse)
+        response = client.get("/")
+        self.assertNotIn("reloader", response.data.decode("utf8"))

@@ -25,12 +25,15 @@ class Revelation(object):
     the requests
     """
 
-    def __init__(self, presentation, config=None, media=None, theme=None):
+    def __init__(
+        self, presentation, config=None, media=None, theme=None, reloader=False
+    ):
         """
         Initializes the server and creates the environment for the presentation
         """
         self.config = Config(config)
         self.presentation = presentation
+        self.reloader = reloader
 
         shared_data = {
             "/static": os.path.join(os.path.dirname(__file__), "static")
@@ -89,6 +92,7 @@ class Revelation(object):
             ),
             "config": self.config.get("REVEAL_CONFIG"),
             "theme": self.get_theme(self.config.get("REVEAL_THEME")),
+            "reloader": self.reloader,
         }
 
         template = env.get_template("presentation.html")

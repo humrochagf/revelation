@@ -249,7 +249,7 @@ def start(ctx, presentation, port, config, media, theme, debug):
     click.echo("Starting revelation server...")
 
     # instatiating revelation app
-    app = Revelation(presentation, config, media, theme)
+    app = Revelation(presentation, config, media, theme, True)
 
     if debug:
         app = DebuggedApplication(app)
