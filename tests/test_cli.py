@@ -70,4 +70,4 @@ class CliTestCase(TestCase):
         runner = CliRunner()
         runner.invoke(cli.start, [presentation_file])
 
-        websocketserver_patch.assert_called_once()
+        self.assertTrue(websocketserver_patch.called)
