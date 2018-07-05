@@ -9,6 +9,13 @@ from click.testing import CliRunner
 
 from revelation import cli
 
+try:
+    # python 3
+    from unittest.mock import patch
+except ImportError:
+    # legacy python
+    from mock import patch
+
 
 class CliTestCase(TestCase):
     def setUp(self):
@@ -52,3 +59,15 @@ class CliTestCase(TestCase):
         self.assertTrue(os.path.isdir(output_folder))
         self.assertTrue(os.path.isfile(index_file))
         self.assertTrue(os.path.isdir(static_folder))
+
+    @patch("revelation.cli.WebSocketServer")
+    def test_start(self, websocketserver_patch):
+        base_folder = tempfile.mkdtemp(dir=self.tests_folder)
+        _, presentation_file = tempfile.mkstemp(
+            ".md", "slides", base_folder, "# Test\n"
+        )
+
+        runner = CliRunner()
+        runner.invoke(cli.start, [presentation_file])
+
+        websocketserver_patch.assert_called_once()
