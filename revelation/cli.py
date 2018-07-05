@@ -61,7 +61,7 @@ def installreveal(url):
 def mkpresentation(ctx, presentation):
     """Make presentation project boilerplate"""
     if os.path.exists(presentation):
-        click.echo("This presentation already exists")
+        click.echo("{} already exists".format(presentation))
         ctx.exit()
 
     click.echo("Starting a new presentation...")
@@ -113,10 +113,9 @@ def mkstatic(
             shutil.rmtree(output_folder)
         else:
             click.echo(
-                (
-                    "{} already exists. If you want to override it, "
-                    "use --force or -r"
-                ).format(output_folder)
+                "{} already exists, use --force or -r to override it".format(
+                    output_folder
+                )
             )
             ctx.exit()
 
