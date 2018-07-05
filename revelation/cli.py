@@ -74,30 +74,26 @@ def mkpresentation(ctx, presentation):
 @click.option("--media", "-m", default=None, help="Custom media folder")
 @click.option("--theme", "-t", default=None, help="Custom theme folder")
 @click.option(
-    "--outputfolder",
+    "--output-folder",
     "-o",
     default="output",
     help="Folder where the static presentation will be generated",
 )
 @click.option(
-    "--outputfilename",
+    "--output-file",
     "-f",
     default="index.html",
-    help="Filename of the static presentation",
+    help="File name of the static presentation",
 )
 @click.option(
-    "--force", "-r", default=False, help="Overwrite the outputfolder if exists"
+    "--force",
+    "-r",
+    default=False,
+    help="Overwrite the output folder if exists",
 )
 @click.pass_context
 def mkstatic(
-    ctx,
-    presentation,
-    config,
-    media,
-    theme,
-    outputfolder,
-    outputfilename,
-    force,
+    ctx, presentation, config, media, theme, output_folder, output_file, force
 ):
     """Make static presentation"""
 
@@ -106,25 +102,25 @@ def mkstatic(
         click.echo("Reveal.js not found, running installation...")
         ctx.invoke(installreveal)
 
-    outputfolder = os.path.realpath(outputfolder)
+    output_folder = os.path.realpath(output_folder)
 
-    if os.path.isfile(outputfolder):
-        click.echo("{} already exists and is a file".format(outputfolder))
+    if os.path.isfile(output_folder):
+        click.echo("{} already exists and is a file".format(output_folder))
         ctx.exit()
 
-    if os.path.isdir(outputfolder):
+    if os.path.isdir(output_folder):
         if force:
-            shutil.rmtree(outputfolder)
+            shutil.rmtree(output_folder)
         else:
             click.echo(
                 (
                     "{} already exists. If you want to override it, "
                     "use --force or -r"
-                ).format(outputfolder)
+                ).format(output_folder)
             )
             ctx.exit()
 
-    staticfolder = os.path.join(outputfolder, "static")
+    staticfolder = os.path.join(output_folder, "static")
 
     # Check for presentation file
     if os.path.isfile(presentation):
@@ -146,7 +142,7 @@ def mkstatic(
         media = None
         click.echo("Media folder not detected, running without media")
     else:
-        shutil.copytree(media, os.path.join(outputfolder, "media"))
+        shutil.copytree(media, os.path.join(output_folder, "media"))
 
     # Check for theme root
     if not theme:
@@ -157,7 +153,7 @@ def mkstatic(
         theme = None
         click.echo("Theme not detected, running without custom theme")
     else:
-        shutil.copytree(theme, os.path.join(outputfolder, "theme"))
+        shutil.copytree(theme, os.path.join(output_folder, "theme"))
 
     # Check for configuration file
     if not config:
@@ -174,16 +170,17 @@ def mkstatic(
     # instantiating revelation app
     app = Revelation(presentation, config, media, theme)
 
-    if not os.path.isdir(outputfolder):
-        os.makedirs(outputfolder)
+    if not os.path.isdir(output_folder):
+        os.makedirs(output_folder)
 
-    output_filename = os.path.join(outputfolder, outputfilename)
-    with open(output_filename, "w") as f:
+    output_file = os.path.join(output_folder, output_file)
+
+    with open(output_file, "w") as f:
         f.write(app.dispatch_request(None).get_data(as_text=True))
 
     click.echo(
         "Static presentation generated in {}".format(
-            os.path.realpath(outputfolder)
+            os.path.realpath(output_folder)
         )
     )
 
