@@ -41,6 +41,20 @@ class CliTestCase(TestCase):
         self.assertTrue(os.path.isdir(media_folder))
         self.assertTrue(os.path.isfile(config_file))
 
+    def test_mkpresentation_already_exists(self):
+        presentation = tempfile.mkdtemp(dir=self.tests_folder)
+
+        runner = CliRunner()
+        result = runner.invoke(cli.mkpresentation, [presentation])
+
+        self.assertEqual(result.exit_code, 1)
+        self.assertEqual(
+            result.output,
+            "Error: '{}' already exists.\n".format(
+                os.path.abspath(presentation)
+            ),
+        )
+
     def test_mkstatic(self):
         base_folder = tempfile.mkdtemp(dir=self.tests_folder)
         _, presentation_file = tempfile.mkstemp(
@@ -59,6 +73,54 @@ class CliTestCase(TestCase):
         self.assertTrue(os.path.isdir(output_folder))
         self.assertTrue(os.path.isfile(index_file))
         self.assertTrue(os.path.isdir(static_folder))
+
+    def test_mkstatic_output_already_exists_file(self):
+        base_folder = tempfile.mkdtemp(dir=self.tests_folder)
+        _, presentation_file = tempfile.mkstemp(
+            ".md", "slides", base_folder, "# Test\n"
+        )
+        _, output = tempfile.mkstemp(dir=base_folder)
+
+        runner = CliRunner()
+        result = runner.invoke(cli.mkstatic, [presentation_file, "-o", output])
+
+        self.assertEqual(result.exit_code, 1)
+        self.assertEqual(
+            result.output,
+            "Error: '{}' already exists and is a file.\n".format(
+                os.path.abspath(output)
+            ),
+        )
+
+    def test_mkstatic_output_already_exists_folder(self):
+        base_folder = tempfile.mkdtemp(dir=self.tests_folder)
+        _, presentation_file = tempfile.mkstemp(
+            ".md", "slides", base_folder, "# Test\n"
+        )
+        output = tempfile.mkdtemp(dir=base_folder)
+
+        runner = CliRunner()
+        result = runner.invoke(cli.mkstatic, [presentation_file, "-o", output])
+
+        self.assertEqual(result.exit_code, 1)
+        self.assertEqual(
+            result.output,
+            "Error: '{}' already exists, use --force to override it.\n".format(
+                os.path.abspath(output)
+            ),
+        )
+
+    def test_mkstatic_presentation_not_found(self):
+        base_folder = tempfile.mkdtemp(dir=self.tests_folder)
+        presentation = os.path.join(base_folder, "notfound")
+
+        runner = CliRunner()
+        result = runner.invoke(cli.mkstatic, [presentation])
+
+        self.assertEqual(result.exit_code, 1)
+        self.assertEqual(
+            result.output, "Error: Presentation file not found.\n"
+        )
 
     @patch("revelation.cli.WebSocketServer")
     def test_start(self, websocketserver_patch):

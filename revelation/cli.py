@@ -3,6 +3,7 @@
 
 import os
 import shutil
+from functools import partial
 
 import click
 from geventwebsocket import Resource, WebSocketServer
@@ -21,6 +22,9 @@ from revelation.utils import (
 REVEALJS_FOLDER = os.path.join(
     os.path.join(os.path.dirname(revelation.__file__), "static"), "revealjs"
 )
+
+# DRY form for echoing errors
+error_echo = partial(click.secho, err=True, fg="red", bold=True)
 
 
 @click.group(invoke_without_command=True)
@@ -61,10 +65,11 @@ def installreveal(url):
 def mkpresentation(ctx, presentation):
     """Make presentation project boilerplate"""
     if os.path.exists(presentation):
-        click.echo("{} already exists".format(presentation))
-        ctx.exit()
+        error_echo("Error: '{}' already exists.".format(presentation))
+        ctx.exit(1)
 
     click.echo("Starting a new presentation...")
+
     make_presentation(presentation)
 
 
@@ -105,19 +110,21 @@ def mkstatic(
     output_folder = os.path.realpath(output_folder)
 
     if os.path.isfile(output_folder):
-        click.echo("{} already exists and is a file".format(output_folder))
-        ctx.exit()
+        error_echo(
+            "Error: '{}' already exists and is a file.".format(output_folder)
+        )
+        ctx.exit(1)
 
     if os.path.isdir(output_folder):
         if force:
             shutil.rmtree(output_folder)
         else:
-            click.echo(
-                "{} already exists, use --force or -r to override it".format(
-                    output_folder
-                )
+            error_echo(
+                (
+                    "Error: '{}' already exists, use --force to override it."
+                ).format(output_folder)
             )
-            ctx.exit()
+            ctx.exit(1)
 
     staticfolder = os.path.join(output_folder, "static")
 
@@ -125,8 +132,8 @@ def mkstatic(
     if os.path.isfile(presentation):
         path = os.path.dirname(presentation)
     else:
-        click.echo("Presentation file not found")
-        ctx.exit()
+        error_echo("Error: Presentation file not found.")
+        ctx.exit(1)
 
     shutil.copytree(REVEALJS_FOLDER, os.path.join(staticfolder, "revealjs"))
 
@@ -139,7 +146,7 @@ def mkstatic(
     if not os.path.isdir(media):
         # Running without media folder
         media = None
-        click.echo("Media folder not detected, running without media")
+        click.echo("Media folder not detected, running without media.")
     else:
         shutil.copytree(media, os.path.join(output_folder, "media"))
 
@@ -150,7 +157,7 @@ def mkstatic(
     if not os.path.isdir(theme):
         # Running without theme folder
         theme = None
-        click.echo("Theme not detected, running without custom theme")
+        click.echo("Theme not detected, running without custom theme.")
     else:
         shutil.copytree(theme, os.path.join(output_folder, "theme"))
 
@@ -162,7 +169,7 @@ def mkstatic(
         # Running without configuration file
         config = None
 
-        click.echo("Configuration file not detected, running with defaults")
+        click.echo("Configuration file not detected, running with defaults.")
 
     click.echo("Generating static presentation...")
 
@@ -209,8 +216,8 @@ def start(ctx, presentation, port, config, media, theme, debug):
     if os.path.isfile(presentation):
         path = os.path.dirname(presentation)
     else:
-        click.echo("Presentation file not found")
-        ctx.exit()
+        click.echo("Error: Presentation file not found.")
+        ctx.exit(1)
 
     # Check for media root
     if not media:
@@ -238,7 +245,7 @@ def start(ctx, presentation, port, config, media, theme, debug):
         # Running without configuration file
         config = None
 
-        click.echo("Configuration file not detected, running with defaults")
+        click.echo("Configuration file not detected, running with defaults.")
 
     click.echo("Starting revelation server...")
 
