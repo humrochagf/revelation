@@ -101,6 +101,11 @@ def mkstatic(
 ):
     """Make static presentation"""
 
+    # Check if reveal.js is installed
+    if not os.path.exists(REVEALJS_FOLDER):
+        click.echo("Reveal.js not found, running installation...")
+        ctx.invoke(installreveal)
+
     outputfolder = os.path.realpath(outputfolder)
 
     if os.path.isfile(outputfolder):
@@ -128,14 +133,7 @@ def mkstatic(
         click.echo("Presentation file not found")
         ctx.exit()
 
-    # Check if reveal.js is installed
-    if not os.path.exists(REVEALJS_FOLDER):
-        click.echo("You must run installreveal command first")
-        ctx.exit()
-    else:
-        shutil.copytree(
-            REVEALJS_FOLDER, os.path.join(staticfolder, "revealjs")
-        )
+    shutil.copytree(REVEALJS_FOLDER, os.path.join(staticfolder, "revealjs"))
 
     # Check for media root
     if not media:
@@ -173,7 +171,7 @@ def mkstatic(
 
     click.echo("Generating static presentation...")
 
-    # instatiating revelation app
+    # instantiating revelation app
     app = Revelation(presentation, config, media, theme)
 
     if not os.path.isdir(outputfolder):
@@ -201,15 +199,15 @@ def mkstatic(
     "-d",
     is_flag=True,
     default=False,
-    help="Run the revelation server in debugger and reloader on",
+    help="Run the revelation server on debug mode",
 )
 @click.pass_context
 def start(ctx, presentation, port, config, media, theme, debug):
     """Start revelation presentation command"""
     # Check if reveal.js is installed
     if not os.path.exists(REVEALJS_FOLDER):
-        click.echo("You must run installreveal command first")
-        ctx.exit()
+        click.echo("Reveal.js not found, running installation...")
+        ctx.invoke(installreveal)
 
     # Check for presentation file
     if os.path.isfile(presentation):
@@ -248,7 +246,7 @@ def start(ctx, presentation, port, config, media, theme, debug):
 
     click.echo("Starting revelation server...")
 
-    # instatiating revelation app
+    # instantiating revelation app
     app = Revelation(presentation, config, media, theme, True)
 
     if debug:

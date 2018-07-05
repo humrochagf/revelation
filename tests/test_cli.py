@@ -13,20 +13,9 @@ from revelation import cli
 class CliTestCase(TestCase):
     def setUp(self):
         self.tests_folder = tempfile.mkdtemp()
-        # save revealjs original folder
-        self.revealjs_folder = cli.REVEALJS_FOLDER
 
     def tearDown(self):
         shutil.rmtree(self.tests_folder)
-        # revert REVEALJS_FOLDER overrides
-        self.original_revealjs_path()
-
-    def fake_revealjs_instalation(self):
-        cli.REVEALJS_FOLDER = os.path.join(self.tests_folder, "revealjs")
-        os.mkdir(cli.REVEALJS_FOLDER)
-
-    def original_revealjs_path(self):
-        cli.REVEALJS_FOLDER = self.revealjs_folder
 
     def test_mkpresentation(self):
         presentation_folder = os.path.join(
@@ -46,8 +35,6 @@ class CliTestCase(TestCase):
         self.assertTrue(os.path.isfile(config_file))
 
     def test_mkstatic(self):
-        self.fake_revealjs_instalation()
-
         base_folder = tempfile.mkdtemp(dir=self.tests_folder)
         _, presentation_file = tempfile.mkstemp(
             ".md", "slides", base_folder, "# Test\n"
