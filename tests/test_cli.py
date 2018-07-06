@@ -133,3 +133,15 @@ class CliTestCase(TestCase):
         runner.invoke(cli.start, [presentation_file])
 
         self.assertTrue(websocketserver_patch.called)
+
+    def test_start_presentation_not_found(self):
+        base_folder = tempfile.mkdtemp(dir=self.tests_folder)
+        presentation = os.path.join(base_folder, "notfound")
+
+        runner = CliRunner()
+        result = runner.invoke(cli.start, [presentation])
+
+        self.assertEqual(result.exit_code, 1)
+        self.assertEqual(
+            result.output, "Error: Presentation file not found.\n"
+        )
