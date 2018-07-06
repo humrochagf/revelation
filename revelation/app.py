@@ -26,7 +26,13 @@ class Revelation(object):
     """
 
     def __init__(
-        self, presentation, config=None, media=None, theme=None, reloader=False
+        self,
+        presentation,
+        config=None,
+        media=None,
+        theme=None,
+        style=None,
+        reloader=False,
     ):
         """
         Initializes the server and creates the environment for the presentation
@@ -42,6 +48,12 @@ class Revelation(object):
         shared_data.update(self.parse_shared_data(media))
         shared_data.update(self.parse_shared_data(theme))
 
+        if style:
+            self.style = os.path.basename(style)
+            shared_data.update(self.parse_shared_data(style))
+        else:
+            self.style = None
+
         self.wsgi_app = SharedDataMiddleware(self.wsgi_app, shared_data)
 
     def parse_shared_data(self, shared_root):
@@ -51,7 +63,7 @@ class Revelation(object):
         if shared_root:
             shared_root = os.path.abspath(shared_root)
 
-            if os.path.isdir(shared_root):
+            if os.path.exists(shared_root):
                 shared_url = "/{}".format(os.path.basename(shared_root))
 
                 return {shared_url: shared_root}
@@ -92,6 +104,7 @@ class Revelation(object):
             ),
             "config": self.config.get("REVEAL_CONFIG"),
             "theme": self.get_theme(self.config.get("REVEAL_THEME")),
+            "style": self.style,
             "reloader": self.reloader,
         }
 

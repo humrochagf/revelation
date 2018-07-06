@@ -79,6 +79,13 @@ def mkpresentation(ctx, presentation):
 @click.option("--media", "-m", default=None, help="Custom media folder")
 @click.option("--theme", "-t", default=None, help="Custom theme folder")
 @click.option(
+    "--style-override-file",
+    "-s",
+    "style",
+    default=None,
+    help="Custom css file to override reveal.js styles",
+)
+@click.option(
     "--output-folder",
     "-o",
     default="output",
@@ -93,12 +100,20 @@ def mkpresentation(ctx, presentation):
 @click.option(
     "--force",
     "-r",
-    default=False,
+    is_flag=True,
     help="Overwrite the output folder if exists",
 )
 @click.pass_context
 def mkstatic(
-    ctx, presentation, config, media, theme, output_folder, output_file, force
+    ctx,
+    presentation,
+    config,
+    media,
+    theme,
+    output_folder,
+    output_file,
+    force,
+    style,
 ):
     """Make static presentation"""
 
@@ -109,10 +124,22 @@ def mkstatic(
 
     output_folder = os.path.realpath(output_folder)
 
+    # Check for style override file
     if os.path.isfile(output_folder):
         error_echo(
             "Error: '{}' already exists and is a file.".format(output_folder)
         )
+        ctx.exit(1)
+
+    # Check for presentation file
+    if os.path.isfile(presentation):
+        path = os.path.dirname(presentation)
+    else:
+        error_echo("Error: Presentation file not found.")
+        ctx.exit(1)
+
+    if style and (not os.path.isfile(style) or not style.endswith(".css")):
+        click.echo("Error: Style is not a css file or does not exists.")
         ctx.exit(1)
 
     if os.path.isdir(output_folder):
@@ -128,12 +155,14 @@ def mkstatic(
 
     staticfolder = os.path.join(output_folder, "static")
 
-    # Check for presentation file
-    if os.path.isfile(presentation):
-        path = os.path.dirname(presentation)
-    else:
-        error_echo("Error: Presentation file not found.")
-        ctx.exit(1)
+    # make the output path
+    os.makedirs(output_folder)
+
+    # if has override style copy
+    if style:
+        shutil.copy(
+            style, os.path.join(output_folder, os.path.basename(style))
+        )
 
     shutil.copytree(REVEALJS_FOLDER, os.path.join(staticfolder, "revealjs"))
 
@@ -174,7 +203,7 @@ def mkstatic(
     click.echo("Generating static presentation...")
 
     # instantiating revelation app
-    app = Revelation(presentation, config, media, theme)
+    app = Revelation(presentation, config, media, theme, style)
 
     if not os.path.isdir(output_folder):
         os.makedirs(output_folder)
@@ -198,6 +227,13 @@ def mkstatic(
 @click.option("--media", "-m", default=None, help="Custom media folder")
 @click.option("--theme", "-t", default=None, help="Custom theme folder")
 @click.option(
+    "--style-override-file",
+    "-s",
+    "style",
+    default=None,
+    help="Custom css file to override reveal.js styles",
+)
+@click.option(
     "--debug",
     "-d",
     is_flag=True,
@@ -205,7 +241,7 @@ def mkstatic(
     help="Run the revelation server on debug mode",
 )
 @click.pass_context
-def start(ctx, presentation, port, config, media, theme, debug):
+def start(ctx, presentation, port, config, media, theme, style, debug):
     """Start revelation presentation command"""
     # Check if reveal.js is installed
     if not os.path.exists(REVEALJS_FOLDER):
@@ -217,6 +253,11 @@ def start(ctx, presentation, port, config, media, theme, debug):
         path = os.path.dirname(presentation)
     else:
         click.echo("Error: Presentation file not found.")
+        ctx.exit(1)
+
+    # Check for style override file
+    if style and (not os.path.isfile(style) or not style.endswith(".css")):
+        click.echo("Error: Style is not a css file or does not exists.")
         ctx.exit(1)
 
     # Check for media root
@@ -250,7 +291,7 @@ def start(ctx, presentation, port, config, media, theme, debug):
     click.echo("Starting revelation server...")
 
     # instantiating revelation app
-    app = Revelation(presentation, config, media, theme, True)
+    app = Revelation(presentation, config, media, theme, style, True)
 
     if debug:
         app = DebuggedApplication(app)

@@ -122,6 +122,38 @@ class CliTestCase(TestCase):
             result.output, "Error: Presentation file not found.\n"
         )
 
+    def test_mkstatic_style_not_file(self):
+        base_folder = tempfile.mkdtemp(dir=self.tests_folder)
+        _, presentation_file = tempfile.mkstemp(
+            ".md", "slides", base_folder, "# Test\n"
+        )
+        style = tempfile.mkdtemp(".css", dir=base_folder)
+
+        runner = CliRunner()
+        result = runner.invoke(cli.mkstatic, [presentation_file, "-s", style])
+
+        self.assertEqual(result.exit_code, 1)
+        self.assertEqual(
+            result.output,
+            "Error: Style is not a css file or does not exists.\n",
+        )
+
+    def test_mkstatic_style_not_css(self):
+        base_folder = tempfile.mkdtemp(dir=self.tests_folder)
+        _, presentation_file = tempfile.mkstemp(
+            ".md", "slides", base_folder, "# Test\n"
+        )
+        _, style = tempfile.mkstemp(".wrong", dir=base_folder)
+
+        runner = CliRunner()
+        result = runner.invoke(cli.mkstatic, [presentation_file, "-s", style])
+
+        self.assertEqual(result.exit_code, 1)
+        self.assertEqual(
+            result.output,
+            "Error: Style is not a css file or does not exists.\n",
+        )
+
     @patch("revelation.cli.WebSocketServer")
     def test_start(self, websocketserver_patch):
         base_folder = tempfile.mkdtemp(dir=self.tests_folder)
@@ -144,4 +176,36 @@ class CliTestCase(TestCase):
         self.assertEqual(result.exit_code, 1)
         self.assertEqual(
             result.output, "Error: Presentation file not found.\n"
+        )
+
+    def test_start_style_not_file(self):
+        base_folder = tempfile.mkdtemp(dir=self.tests_folder)
+        _, presentation_file = tempfile.mkstemp(
+            ".md", "slides", base_folder, "# Test\n"
+        )
+        style = tempfile.mkdtemp(".css", dir=base_folder)
+
+        runner = CliRunner()
+        result = runner.invoke(cli.start, [presentation_file, "-s", style])
+
+        self.assertEqual(result.exit_code, 1)
+        self.assertEqual(
+            result.output,
+            "Error: Style is not a css file or does not exists.\n",
+        )
+
+    def test_start_style_not_css(self):
+        base_folder = tempfile.mkdtemp(dir=self.tests_folder)
+        _, presentation_file = tempfile.mkstemp(
+            ".md", "slides", base_folder, "# Test\n"
+        )
+        _, style = tempfile.mkstemp(".wrong", dir=base_folder)
+
+        runner = CliRunner()
+        result = runner.invoke(cli.start, [presentation_file, "-s", style])
+
+        self.assertEqual(result.exit_code, 1)
+        self.assertEqual(
+            result.output,
+            "Error: Style is not a css file or does not exists.\n",
         )
