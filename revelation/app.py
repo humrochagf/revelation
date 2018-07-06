@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-"""Main revelation module
+"""
+Main revelation module
 
 It has the Revelation main class that creates the webserver do run
 the presentation
@@ -125,30 +126,31 @@ class Revelation(object):
 
 
 class PresentationReloadWebSocketSendEvent(FileSystemEventHandler):
-    def __init__(self, file, ws):
-        self.file = file
+    """
+    Handler class to notify throughout the websocket
+    when a tracked file changes
+    """
+
+    def __init__(self, ws):
         self.ws = ws
 
     def on_modified(self, event):
-        if event.src_path == self.file and not self.ws.closed:
+        if event.src_path.endswith(('.md', '.css')) and not self.ws.closed:
             self.ws.send(
                 json.dumps({"msg_type": "message", "message": "reload"})
             )
 
 
 class PresentationReloader(WebSocketApplication):
+    """WebSocket to notify the frontend on file changes"""
 
-    presentation = None
+    tracking_path = None
 
     def on_open(self):
-        if self.presentation:
-            event_handler = PresentationReloadWebSocketSendEvent(
-                self.presentation, self.ws
-            )
+        if self.tracking_path:
+            event_handler = PresentationReloadWebSocketSendEvent(self.ws)
             self.observer = Observer()
-            self.observer.schedule(
-                event_handler, os.path.dirname(self.presentation)
-            )
+            self.observer.schedule(event_handler, self.tracking_path)
             self.observer.start()
 
     def on_message(self, message, *args, **kwargs):

@@ -296,7 +296,7 @@ def start(ctx, presentation, port, config, media, theme, style, debug):
     if debug:
         app = DebuggedApplication(app)
 
-    PresentationReloader.presentation = os.path.abspath(presentation)
+    PresentationReloader.tracking_path = os.path.abspath(path)
 
     click.echo("Running at http://localhost:{}".format(port))
 
