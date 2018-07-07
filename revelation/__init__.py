@@ -5,5 +5,5 @@ from .app import PresentationReloader, Revelation
 
 __author__ = "Humberto Rocha"
 __email__ = "humrochagf@gmail.com"
-__version__ = "0.4.1"
+__version__ = "0.5.0"
 __all__ = ["PresentationReloader", "Revelation"]
