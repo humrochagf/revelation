@@ -135,7 +135,7 @@ class PresentationReloadWebSocketSendEvent(FileSystemEventHandler):
         self.ws = ws
 
     def on_modified(self, event):
-        if event.src_path.endswith(('.md', '.css')) and not self.ws.closed:
+        if event.src_path.endswith((".md", ".css")) and not self.ws.closed:
             self.ws.send(
                 json.dumps({"msg_type": "message", "message": "reload"})
             )

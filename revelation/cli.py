@@ -98,10 +98,7 @@ def mkpresentation(ctx, presentation):
     help="File name of the static presentation",
 )
 @click.option(
-    "--force",
-    "-r",
-    is_flag=True,
-    help="Overwrite the output folder if exists",
+    "--force", "-r", is_flag=True, help="Overwrite the output folder if exists"
 )
 @click.pass_context
 def mkstatic(
