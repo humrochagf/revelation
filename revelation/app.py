@@ -78,8 +78,8 @@ class Revelation(object):
 
         :return: a list of strings with the slides content
         """
-        with open(path, "r", encoding="utf-8") as presentation:
-            slides = presentation.read()
+        with open(path, "rb") as presentation:
+            slides = presentation.read().decode("utf-8")
 
         return re.split("^{}$".format(separator), slides, flags=re.MULTILINE)
 
@@ -112,7 +112,7 @@ class Revelation(object):
         template = env.get_template("presentation.html")
 
         return Response(
-            template.render(**context), headers={"content-type": "text/html; charset=utf8"}
+            template.render(**context), headers={"content-type": "text/html"}
         )
 
     def wsgi_app(self, environ, start_response):
