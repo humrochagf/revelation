@@ -207,7 +207,7 @@ def mkstatic(
 
     output_file = os.path.join(output_folder, output_file)
 
-    with open(output_file, "w") as f:
+    with open(output_file, "w", encoding="utf-8") as f:
         f.write(app.dispatch_request(None).get_data(as_text=True))
 
     click.echo(
