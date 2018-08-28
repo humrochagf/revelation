@@ -13,14 +13,14 @@ REQUIREMENTS = [
     "Werkzeug==0.14.1",
     "click==6.7",
     "gevent-websocket==0.10.1",
-    "gevent==1.3.4",
+    "gevent==1.3.6",
     "watchdog==0.8.3",
 ]
 TEST_REQUIREMENTS = [
     "coverage==4.5.1",
-    "coveralls==1.3.0",
+    "coveralls==1.4.0",
     "flake8==3.5.0",
-    "mock",
+    "mock==2.0.0",
     "nose==1.3.7",
 ]
 
