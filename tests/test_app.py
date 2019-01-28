@@ -16,9 +16,21 @@ class RevelationTestCase(TestCase):
         self.tests_folder = tempfile.mkdtemp()
         self.media = tempfile.mkdtemp(dir=self.tests_folder)
         _, self.slide = tempfile.mkstemp(".md", dir=self.tests_folder)
+        _, self.non_normalized_slide = tempfile.mkstemp(
+            ".md", dir=self.tests_folder
+        )
+        _, self.non_ascii_slide = tempfile.mkstemp(
+            ".md", dir=self.tests_folder
+        )
 
         with open(self.slide, "w") as file:
             file = file.write("# Pag1\n---\n# Pag2")
+
+        with open(self.non_normalized_slide, "w") as file:
+            file = file.write("# Pag1\r---\r\n# Pag2")
+
+        with open(self.non_ascii_slide, "w") as file:
+            file = file.write("# こんにちは\n---\n# 乾杯")
 
         self.app = Revelation(self.slide, media=self.media)
 
@@ -42,6 +54,16 @@ class RevelationTestCase(TestCase):
         slides = self.app.load_slides(self.slide, "---")
 
         self.assertListEqual(slides, ["# Pag1\n", "\n# Pag2"])
+
+    def test_load_slides_non_normalized(self):
+        slides = self.app.load_slides(self.non_normalized_slide, "---")
+
+        self.assertListEqual(slides, ["# Pag1\n", "\n# Pag2"])
+
+    def test_load_slides_non_ascii(self):
+        slides = self.app.load_slides(self.non_ascii_slide, "---")
+
+        self.assertListEqual(slides, ["# こんにちは\n", "\n# 乾杯"])
 
     def test_client_request_ok(self):
         client = Client(self.app, BaseResponse)

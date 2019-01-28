@@ -18,6 +18,7 @@ from werkzeug.wrappers import Request, Response
 from werkzeug.wsgi import SharedDataMiddleware
 
 from .config import Config
+from .utils import normalize_newlines
 
 
 class Revelation(object):
@@ -79,7 +80,7 @@ class Revelation(object):
         :return: a list of strings with the slides content
         """
         with open(path, "rb") as presentation:
-            slides = presentation.read().decode("utf-8")
+            slides = normalize_newlines(presentation.read().decode("utf-8"))
 
         return re.split("^{}$".format(separator), slides, flags=re.MULTILINE)
 
