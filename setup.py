@@ -17,9 +17,9 @@ REQUIREMENTS = [
     "watchdog==0.8.3",
 ]
 TEST_REQUIREMENTS = [
-    "coverage==4.5.1",
-    "coveralls==1.4.0",
-    "flake8==3.5.0",
+    "coverage==4.5.2",
+    "coveralls==1.5.1",
+    "flake8==3.6.0",
     "mock==2.0.0",
     "nose==1.3.7",
 ]
