@@ -115,6 +115,16 @@ def foo():
 
 ---
 
+## Vertical Slides
+
+Press down arrow to see the next vertical slide
+
+---~
+
+This is a verticale slide
+
+---
+
 ## Useful Links
 
 * [reveal.js docs](https://github.com/hakimel/reveal.js)

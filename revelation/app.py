@@ -72,7 +72,7 @@ class Revelation(object):
 
         return {}
 
-    def load_slides(self, path, separator):
+    def load_slides(self, path, section_separator, vertical_separator):
         """
         Get slides file from the given path, loads it and split into list
         of slides.
@@ -82,7 +82,16 @@ class Revelation(object):
         with open(path, "rb") as presentation:
             slides = normalize_newlines(presentation.read().decode("utf-8"))
 
-        return re.split("^{}$".format(separator), slides, flags=re.MULTILINE)
+        return [
+            re.split(
+                "^{}$".format(vertical_separator),
+                section,
+                flags=re.MULTILINE,
+            )
+            for section in re.split(
+                "^{}$".format(section_separator), slides, flags=re.MULTILINE
+            )
+        ]
 
     def get_theme(self, theme):
         reveal_theme = "static/revealjs/css/theme/{}.css".format(theme)
@@ -102,7 +111,9 @@ class Revelation(object):
         context = {
             "meta": self.config.get("REVEAL_META"),
             "slides": self.load_slides(
-                self.presentation, self.config.get("REVEAL_SLIDE_SEPARATOR")
+                self.presentation,
+                self.config.get("REVEAL_SLIDE_SEPARATOR"),
+                self.config.get("REVEAL_VERTICAL_SLIDE_SEPARATOR"),
             ),
             "config": self.config.get("REVEAL_CONFIG"),
             "theme": self.get_theme(self.config.get("REVEAL_THEME")),
