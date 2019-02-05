@@ -89,9 +89,8 @@ class CliTestCase(TestCase):
 
         runner = CliRunner()
         result = runner.invoke(
-            cli.mkstatic, [
-                presentation_file, "-o", output_folder, "-s", style_file
-            ]
+            cli.mkstatic,
+            [presentation_file, "-o", output_folder, "-s", style_file],
         )
 
         self.assertEqual(result.exit_code, 0)
