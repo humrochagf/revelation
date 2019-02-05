@@ -115,7 +115,7 @@ The revelation checks for three things on your presentation folder.
 
 This is your presentation file written using markdown with some especial tags described on [markdown section](#markdown) and is placed on your presentation root folder.
 
-Split your slides by setting up a *slide separator* into **REVEAL_CONFIG**. Default separator is `---`.
+Split your slides by setting up a *slide separator* and *vertical slide separator* into **REVEAL_CONFIG**. Default separator are `---` and `---~`.
 
 ### The 'media' folder
 

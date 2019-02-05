@@ -12,6 +12,7 @@ REVEAL_META = {
 
 # Reveal markdown slide separator
 REVEAL_SLIDE_SEPARATOR = "---"
+REVEAL_VERTICAL_SLIDE_SEPARATOR = "---~"
 
 # Themes
 # beige, black, blood, league, moon, night, serif, simple, sky,

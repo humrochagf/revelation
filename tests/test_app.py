@@ -24,7 +24,7 @@ class RevelationTestCase(TestCase):
         )
 
         with open(self.slide, "w") as file:
-            file = file.write("# Pag1\n---\n# Pag2")
+            file = file.write("# Pag1\n---\n# Pag2.1\n---~\n# Page2.2")
 
         with open(self.non_normalized_slide, "w") as file:
             file = file.write("# Pag1\r---\r\n# Pag2")
@@ -51,19 +51,22 @@ class RevelationTestCase(TestCase):
         )
 
     def test_load_slides(self):
-        slides = self.app.load_slides(self.slide, "---")
+        slides = self.app.load_slides(self.slide, "---", "---~")
 
-        self.assertListEqual(slides, ["# Pag1\n", "\n# Pag2"])
+        self.assertListEqual(
+            slides,
+            [["# Pag1\n"], ["\n# Pag2.1\n", "\n# Page2.2"]],
+        )
 
     def test_load_slides_non_normalized(self):
-        slides = self.app.load_slides(self.non_normalized_slide, "---")
+        slides = self.app.load_slides(self.non_normalized_slide, "---", "---~")
 
-        self.assertListEqual(slides, ["# Pag1\n", "\n# Pag2"])
+        self.assertListEqual(slides, [["# Pag1\n"], ["\n# Pag2"]])
 
     def test_load_slides_non_ascii(self):
-        slides = self.app.load_slides(self.non_ascii_slide, "---")
+        slides = self.app.load_slides(self.non_ascii_slide, "---", "---~")
 
-        self.assertListEqual(slides, [u"# こんにちは\n", u"\n# 乾杯"])
+        self.assertListEqual(slides, [[u"# こんにちは\n"], [u"\n# 乾杯"]])
 
     def test_client_request_ok(self):
         client = Client(self.app, BaseResponse)
