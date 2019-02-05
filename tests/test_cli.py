@@ -74,6 +74,32 @@ class CliTestCase(TestCase):
         self.assertTrue(os.path.isfile(index_file))
         self.assertTrue(os.path.isdir(static_folder))
 
+    def test_mkstatic_override_styles(self):
+        base_folder = tempfile.mkdtemp(dir=self.tests_folder)
+        _, presentation_file = tempfile.mkstemp(
+            ".md", "slides", base_folder, "# Test\n"
+        )
+        _, style_file = tempfile.mkstemp(
+            ".css", base_folder, "h1 { color: #000 }"
+        )
+        output_folder = os.path.join(base_folder, "output")
+        index_file = os.path.join(output_folder, "index.html")
+        output_style_file = os.path.join(output_folder, style_file)
+        static_folder = os.path.join(output_folder, "static")
+
+        runner = CliRunner()
+        result = runner.invoke(
+            cli.mkstatic, [
+                presentation_file, "-o", output_folder, "-s", style_file
+            ]
+        )
+
+        self.assertEqual(result.exit_code, 0)
+        self.assertTrue(os.path.isdir(output_folder))
+        self.assertTrue(os.path.isfile(index_file))
+        self.assertTrue(os.path.isfile(output_style_file))
+        self.assertTrue(os.path.isdir(static_folder))
+
     def test_mkstatic_output_already_exists_file(self):
         base_folder = tempfile.mkdtemp(dir=self.tests_folder)
         _, presentation_file = tempfile.mkstemp(
