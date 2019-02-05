@@ -64,13 +64,7 @@
       <!-- Any section element inside of this container is displayed as a slide -->
       <div class="slides">
         {% for section in slides %}
-          {% if section.__len__() == 1 %}
-            <section data-markdown>
-              <script type="text/template">
-                {{ section[0]|safe }}
-              </script>
-            </section>
-          {% else %}
+          {% if section|length > 1 %}
             <section>
               {% for slide in section %}
                 <section data-markdown>
@@ -80,6 +74,14 @@
                 </section>
               {% endfor %}
             </section>
+          {% else %}
+            {% for slide in section %}
+              <section data-markdown>
+                <script type="text/template">
+                  {{ slide|safe }}
+                </script>
+              </section>
+            {% endfor %}
           {% endif %}
         {% endfor %}
       </div>
