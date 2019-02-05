@@ -84,9 +84,7 @@ class Revelation(object):
 
         return [
             re.split(
-                "^{}$".format(vertical_separator),
-                section,
-                flags=re.MULTILINE,
+                "^{}$".format(vertical_separator), section, flags=re.MULTILINE
             )
             for section in re.split(
                 "^{}$".format(section_separator), slides, flags=re.MULTILINE

@@ -54,8 +54,7 @@ class RevelationTestCase(TestCase):
         slides = self.app.load_slides(self.slide, "---", "---~")
 
         self.assertListEqual(
-            slides,
-            [["# Pag1\n"], ["\n# Pag2.1\n", "\n# Page2.2"]],
+            slides, [["# Pag1\n"], ["\n# Pag2.1\n", "\n# Page2.2"]]
         )
 
     def test_load_slides_non_normalized(self):
