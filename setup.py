@@ -9,7 +9,7 @@ from setuptools import find_packages, setup
 
 PACKAGE = "revelation"
 REQUIREMENTS = [
-    "Jinja2==2.10",
+    "Jinja2==2.10.1",
     "Werkzeug==0.14.1",
     "click==6.7",
     "gevent-websocket==0.10.1",
