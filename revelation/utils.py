@@ -17,7 +17,7 @@ except ImportError:
 
 from . import default_config
 
-REVEAL_URL = "https://github.com/hakimel/reveal.js/archive/3.6.0.tar.gz"
+REVEAL_URL = "https://github.com/hakimel/reveal.js/archive/3.8.0.tar.gz"
 
 
 def make_presentation(presentation_path):
