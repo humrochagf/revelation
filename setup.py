@@ -10,17 +10,17 @@ from setuptools import find_packages, setup
 PACKAGE = "revelation"
 REQUIREMENTS = [
     "Jinja2==2.10.1",
-    "Werkzeug==0.14.1",
-    "click==6.7",
+    "Werkzeug==0.15.4",
+    "click==7.0",
     "gevent-websocket==0.10.1",
-    "gevent==1.3.6",
-    "watchdog==0.8.3",
+    "gevent==1.4.0",
+    "watchdog==0.9.0",
 ]
 TEST_REQUIREMENTS = [
-    "coverage==4.5.2",
-    "coveralls==1.5.1",
-    "flake8==3.6.0",
-    "mock==2.0.0",
+    "coverage==4.5.3",
+    "coveralls==1.8.1",
+    "flake8==3.7.8",
+    "mock==3.0.5",
     "nose==1.3.7",
 ]
 
