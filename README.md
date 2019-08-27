@@ -3,7 +3,7 @@
 [![PyPI](https://img.shields.io/pypi/v/revelation.svg)](https://pypi.org/project/revelation/)
 [![PyPI - License](https://img.shields.io/pypi/l/revelation.svg)](https://pypi.org/project/revelation/)
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/revelation.svg)](https://pypi.org/project/revelation/)
-[![Build Status](https://travis-ci.org/humrochagf/revelation.svg?branch=master)](https://travis-ci.org/humrochagf/revelation)
+[![Actions Status](https://github.com/humrochagf/revelation/workflows/Python_Package/badge.svg)](https://github.com/humrochagf/revelation/actions)
 [![Coverage Status](https://coveralls.io/repos/github/humrochagf/revelation/badge.svg?branch=master)](https://coveralls.io/github/humrochagf/revelation?branch=master)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black)
 
