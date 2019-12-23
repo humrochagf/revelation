@@ -9,7 +9,7 @@ jobs:
     strategy:
       max-parallel: 4
       matrix:
-        python-version: [2.7, 3.5, 3.6, 3.7]
+        python-version: [3.6, 3.7, 3.8]
 
     steps:
     - uses: actions/checkout@v1
@@ -27,7 +27,7 @@ jobs:
         make lint
     - name: Test with nosetests
       run: |
-        pip install nose mock coverage
+        pip install nose mock coverage<5
         make cover
     - name: Refresh coveralls
       if: github.event_name == 'push'
