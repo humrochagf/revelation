@@ -109,27 +109,37 @@ Connections                   ttl     opn     rt1     rt5     p50     p90
 
 ## Presentation Setup
 
-The revelation checks for three things on your presentation folder.
+The base presentation file structure looks like this:
 
-### The 'slides.md' File
+```
+presentation/
+|- media/
+|- theme/
+|- config.py
+|- slides.md
+```
+
+### The slides.md File
 
 This is your presentation file written using markdown with some especial tags described on [markdown section](#markdown) and is placed on your presentation root folder.
 
 Split your slides by setting up a *slide separator* and *vertical slide separator* into **REVEAL_CONFIG**. Default separator are `---` and `---~`.
 
-### The 'media' folder
+### The media folder
 
-All images used on your presentation are placed inside the **'media'** folder and referenced on your slides starting from your presentation root.
+By default, revelation looks for a folder called **media** inside your presentation root folder. All media placed inside it can be referenced on your presentation by the path `/media`:
 
 ```md
-![Python Logo](img/python.png)
+![Python Logo](media/python.png)
 ```
 
-### The 'theme' folder
+You can define a custom media path using the `--media` option on revelation `start` command.
 
-You can create your custom theme file and place it inside a **'theme'** folder and reference it at the configuration file.
+### The theme folder
 
-### The 'config.py' File
+You can create your custom theme file and place it inside a **theme** folder and reference it at the configuration file by the option `--theme`.
+
+### The config.py File
 
 The configuration file are placed on the presentation root folder and is responsible to customize your presentation.
 
