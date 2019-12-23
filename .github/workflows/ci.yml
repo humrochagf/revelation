@@ -27,7 +27,7 @@ jobs:
         make lint
     - name: Test with nosetests
       run: |
-        pip install nose mock coverage<5
+        pip install nose mock 'coverage<5'
         make cover
     - name: Refresh coveralls
       if: github.event_name == 'push'
