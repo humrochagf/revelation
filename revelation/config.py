@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Revelation configuration handler"""
 
 import os

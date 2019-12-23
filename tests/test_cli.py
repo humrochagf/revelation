@@ -1,20 +1,12 @@
-# -*- coding: utf-8 -*-
-
 import os
 import shutil
 import tempfile
 from unittest import TestCase
+from unittest.mock import patch
 
 from click.testing import CliRunner
 
 from revelation import cli
-
-try:
-    # python 3
-    from unittest.mock import patch
-except ImportError:
-    # legacy python
-    from mock import patch
 
 
 class CliTestCase(TestCase):

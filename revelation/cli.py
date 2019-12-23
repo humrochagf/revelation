@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Cli tool to handle revelation commands"""
 
 import os

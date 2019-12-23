@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 import shutil
 import tempfile
 from unittest import TestCase

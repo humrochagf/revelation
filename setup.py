@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 """revelation setup file"""
 
 import os
@@ -9,17 +8,17 @@ from setuptools import find_packages, setup
 
 PACKAGE = "revelation"
 REQUIREMENTS = [
-    "Jinja2==2.10.1",
-    "Werkzeug==0.15.4",
+    "Jinja2==2.10.3",
+    "Werkzeug==0.16.0",
     "click==7.0",
     "gevent-websocket==0.10.1",
     "gevent==1.4.0",
     "watchdog==0.9.0",
 ]
 TEST_REQUIREMENTS = [
-    "coverage==4.5.3",
-    "coveralls==1.8.1",
-    "flake8==3.7.8",
+    "coverage==4.5.4",
+    "coveralls==1.9.2",
+    "flake8==3.7.9",
     "mock==3.0.5",
     "nose==1.3.7",
 ]
@@ -63,13 +62,10 @@ setup(
         "Intended Audience :: Developers",
         "License :: OSI Approved :: MIT License",
         "Natural Language :: English",
-        "Programming Language :: Python :: 2",
-        "Programming Language :: Python :: 2.7",
         "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.4",
-        "Programming Language :: Python :: 3.5",
         "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3.8",
         "Topic :: Multimedia :: Graphics :: Presentation",
         "Topic :: Text Processing :: Markup :: HTML",
     ],

@@ -1,19 +1,10 @@
-# -*- coding: utf-8 -*-
 """Utility tools used by revelation"""
 
 import os
 import shutil
 import tarfile
 import zipfile
-
-try:
-    # python 3
-    from urllib.request import urlretrieve
-except ImportError:
-    # legacy python
-    from urllib import urlretrieve
-
-    FileNotFoundError = IOError
+from urllib.request import urlretrieve
 
 from . import default_config
 

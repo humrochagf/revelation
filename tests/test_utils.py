@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 import os
 import shutil
 import tarfile
@@ -8,13 +6,6 @@ import zipfile
 from unittest import TestCase
 
 from revelation.utils import extract_file, make_presentation, move_and_replace
-
-try:
-    # python 3
-    FileNotFoundError
-except NameError:
-    # legacy python
-    FileNotFoundError = IOError
 
 
 class HelpersTestCase(TestCase):
