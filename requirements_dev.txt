@@ -1,5 +1,5 @@
 black
-coverage==4.5.4
+coverage==5.0.1
 coveralls==1.9.2
 flake8==3.7.9
 isort
