@@ -9,14 +9,13 @@ from geventwebsocket import Resource, WebSocketServer
 from werkzeug.debug import DebuggedApplication
 
 import revelation
-from revelation import Revelation, PresentationReloader
+from revelation import PresentationReloader, Revelation
 from revelation.utils import (
     download_reveal,
     extract_file,
     make_presentation,
     move_and_replace,
 )
-
 
 REVEALJS_FOLDER = os.path.join(
     os.path.join(os.path.dirname(revelation.__file__), "static"), "revealjs"

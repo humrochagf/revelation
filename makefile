@@ -2,9 +2,8 @@
 
 ######################################
 
-PROJECT    := $(shell basename $(PWD))
+ROOTDIR    := $(PWD)
 PACKAGE    := "revelation"
-BUILD_TIME := $(shell date +%FT%T%z)
 
 ######################################
 
@@ -39,12 +38,9 @@ test: # run tests
 cover: # coverage tests
 	nosetests -w tests --with-coverage --cover-package=$(PACKAGE)
 
-.PHONY: it
-it:
-	@echo "Any color you want, as long as it's Black"
-
-.PHONY: black
-black:
+.PHONY: format
+format:
+	isort $(ROOTDIR) --recursive --apply
 	black -l 79 .
 
 .PHONY: clean
