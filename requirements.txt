@@ -3,4 +3,4 @@ Werkzeug==0.16.0
 click==7.0
 gevent-websocket==0.10.1
 gevent==1.4.0
-watchdog==0.9.0
+watchdog==0.10.1
