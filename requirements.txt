@@ -1,6 +1,6 @@
 Jinja2==2.10.3
 Werkzeug==0.16.0
-click==7.0
+click==7.1.1
 gevent-websocket==0.10.1
 gevent==1.4.0
 watchdog==0.9.0
