@@ -1,4 +1,4 @@
-Jinja2==2.10.3
+Jinja2==2.11.2
 Werkzeug==0.16.0
 click==7.0
 gevent-websocket==0.10.1
