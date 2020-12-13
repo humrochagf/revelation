@@ -9,21 +9,21 @@ PACKAGE    := "revelation"
 
 .PHONY: lint
 lint: # lint code
-	flake8 .
+	poetry run flake8 .
 
 .PHONY: test
 test: # run tests
-	nosetests tests
+	poetry run nosetests tests
 
 .PHONY: cover
 cover: # coverage tests
-	coverage run --source=$(PACKAGE) -m nose tests/
-	coverage report -m
+	poetry run coverage run --source=$(PACKAGE) -m nose tests/
+	poetry run coverage report -m
 
 .PHONY: format
 format:
-	isort $(ROOTDIR)
-	black -l 79 .
+	poetry run isort $(ROOTDIR)
+	poetry run black -l 79 .
 
 .PHONY: clean
 clean: # remove temporary files and artifacts
