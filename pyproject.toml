@@ -5,6 +5,7 @@ description = "Make awesome reveal.js presentations with revelation"
 authors = ["Humberto Rocha <humrochagf@gmail.com>"]
 license = "MIT"
 readme = "README.md"
+exclude = ["revelation/static/*"]
 
 [tool.poetry.scripts]
 revelation = "revelation.cli:cli"

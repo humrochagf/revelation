@@ -7,25 +7,6 @@ PACKAGE    := "revelation"
 
 ######################################
 
-.PHONY: install
-install: # system-wide standard python installation
-	pip install .
-
-.PHONY: install.hack
-install.hack: # install development requirements
-	pip install -r requirements.txt
-	pip install -e .[test]
-
-.PHONY: build
-build: # build package for distribuition
-	rm -rf dist
-	python setup.py sdist
-	python setup.py bdist_wheel --universal
-
-.PHONY: publish
-publish: # publish package to the pypi
-	twine upload dist/*
-
 .PHONY: lint
 lint: # lint code
 	flake8 .
