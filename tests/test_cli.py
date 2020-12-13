@@ -171,8 +171,8 @@ class CliTestCase(TestCase):
             "Error: Style is not a css file or does not exists.\n",
         )
 
-    @patch("revelation.cli.WebSocketServer")
-    def test_start(self, websocketserver_patch):
+    @patch("revelation.cli.run_simple")
+    def test_start(self, run_simple_patch):
         base_folder = tempfile.mkdtemp(dir=self.tests_folder)
         _, presentation_file = tempfile.mkstemp(
             ".md", "slides", base_folder, "# Test\n"
@@ -181,7 +181,7 @@ class CliTestCase(TestCase):
         runner = CliRunner()
         runner.invoke(cli.start, [presentation_file])
 
-        self.assertTrue(websocketserver_patch.called)
+        self.assertTrue(run_simple_patch.called)
 
     def test_start_presentation_not_found(self):
         base_folder = tempfile.mkdtemp(dir=self.tests_folder)

@@ -5,16 +5,12 @@ It has the Revelation main class that creates the webserver do run
 the presentation
 """
 
-import json
 import os
 import re
 
-from geventwebsocket import WebSocketApplication
 from jinja2 import Environment, PackageLoader, select_autoescape
-from watchdog.events import FileSystemEventHandler
-from watchdog.observers import Observer
+from werkzeug.middleware.shared_data import SharedDataMiddleware
 from werkzeug.wrappers import Request, Response
-from werkzeug.wsgi import SharedDataMiddleware
 
 from .config import Config
 from .utils import normalize_newlines
@@ -33,14 +29,12 @@ class Revelation(object):
         media=None,
         theme=None,
         style=None,
-        reloader=False,
     ):
         """
         Initializes the server and creates the environment for the presentation
         """
         self.config = Config(config)
         self.presentation = presentation
-        self.reloader = reloader
 
         shared_data = {
             "/static": os.path.join(os.path.dirname(__file__), "static")
@@ -115,7 +109,6 @@ class Revelation(object):
             "config": self.config.get("REVEAL_CONFIG"),
             "theme": self.get_theme(self.config.get("REVEAL_THEME")),
             "style": self.style,
-            "reloader": self.reloader,
         }
 
         template = env.get_template("presentation.html")
@@ -132,38 +125,3 @@ class Revelation(object):
 
     def __call__(self, environ, start_response):
         return self.wsgi_app(environ, start_response)
-
-
-class PresentationReloadWebSocketSendEvent(FileSystemEventHandler):
-    """
-    Handler class to notify throughout the websocket
-    when a tracked file changes
-    """
-
-    def __init__(self, ws):
-        self.ws = ws
-
-    def on_modified(self, event):
-        if event.src_path.endswith((".md", ".css")) and not self.ws.closed:
-            self.ws.send(
-                json.dumps({"msg_type": "message", "message": "reload"})
-            )
-
-
-class PresentationReloader(WebSocketApplication):
-    """WebSocket to notify the frontend on file changes"""
-
-    tracking_path = None
-
-    def on_open(self):
-        if self.tracking_path:
-            event_handler = PresentationReloadWebSocketSendEvent(self.ws)
-            self.observer = Observer()
-            self.observer.schedule(event_handler, self.tracking_path)
-            self.observer.start()
-
-    def on_message(self, message, *args, **kwargs):
-        pass
-
-    def on_close(self, reason):
-        self.observer.stop()

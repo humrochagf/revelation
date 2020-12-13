@@ -1,15 +1,15 @@
 """Cli tool to handle revelation commands"""
 
+import glob
 import os
 import shutil
 from functools import partial
 
 import click
-from geventwebsocket import Resource, WebSocketServer
-from werkzeug.debug import DebuggedApplication
+from werkzeug.serving import run_simple
 
 import revelation
-from revelation import PresentationReloader, Revelation
+from revelation import Revelation
 from revelation.utils import (
     download_reveal,
     extract_file,
@@ -288,21 +288,20 @@ def start(ctx, presentation, port, config, media, theme, style, debug):
     click.echo("Starting revelation server...")
 
     # instantiating revelation app
-    app = Revelation(presentation, config, media, theme, style, True)
+    app = Revelation(presentation, config, media, theme, style)
+
+    server_args = {
+        "hostname": "localhost",
+        "port": port,
+        "application": app,
+        "use_reloader": False,
+    }
 
     if debug:
-        app = DebuggedApplication(app)
+        server_args["use_debugger"] = True
+        server_args["use_reloader"] = True
+        server_args["reloader_type"] = "watchdog"
+        server_args["extra_files"] = glob.glob(os.path.join(path, "*.md"))
+        server_args["extra_files"] += glob.glob(os.path.join(path, "*.css"))
 
-    PresentationReloader.tracking_path = os.path.abspath(path)
-
-    click.echo("Running at http://localhost:{}".format(port))
-
-    WebSocketServer(
-        ("localhost", port),
-        Resource(
-            [
-                ("^/reloader.*", PresentationReloader),
-                ("^/.*", DebuggedApplication(app)),
-            ]
-        ),
-    ).serve_forever()
+    run_simple(**server_args)

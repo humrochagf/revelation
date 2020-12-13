@@ -36,11 +36,12 @@ test: # run tests
 
 .PHONY: cover
 cover: # coverage tests
-	nosetests -w tests --with-coverage --cover-package=$(PACKAGE)
+	coverage run --source=$(PACKAGE) -m nose tests/
+	coverage report -m
 
 .PHONY: format
 format:
-	isort $(ROOTDIR) --recursive --apply
+	isort $(ROOTDIR)
 	black -l 79 .
 
 .PHONY: clean

@@ -70,15 +70,3 @@ class RevelationTestCase(TestCase):
         response = client.get("/")
         self.assertEqual(response.status, "200 OK")
         self.assertEqual(response.headers.get("Content-Type"), "text/html")
-
-    def test_client_with_reload(self):
-        app = Revelation(self.slide, media=self.media, reloader=True)
-        client = Client(app, BaseResponse)
-        response = client.get("/")
-        self.assertIn("reloader", response.data.decode("utf8"))
-
-    def test_client_without_reload(self):
-        app = Revelation(self.slide, media=self.media, reloader=False)
-        client = Client(app, BaseResponse)
-        response = client.get("/")
-        self.assertNotIn("reloader", response.data.decode("utf8"))
