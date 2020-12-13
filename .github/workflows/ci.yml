@@ -22,13 +22,16 @@ jobs:
         poetry install
     - name: Lint with flake8
       run: |
+        poetry shell
         make lint
     - name: Test with nosetests
       run: |
+        poetry shell
         make cover
     - name: Refresh coveralls
       if: github.event_name == 'push'
       env:
         COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
       run: |
+        poetry shell
         coveralls
