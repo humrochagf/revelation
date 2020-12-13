@@ -11,7 +11,9 @@ from werkzeug.serving import run_simple
 import revelation
 from revelation import Revelation
 from revelation.utils import (
-    download_reveal,
+    MATHJAX_URL,
+    REVEAL_URL,
+    download_file,
     extract_file,
     make_presentation,
     move_and_replace,
@@ -19,6 +21,10 @@ from revelation.utils import (
 
 REVEALJS_FOLDER = os.path.join(
     os.path.join(os.path.dirname(revelation.__file__), "static"), "revealjs"
+)
+
+MATHJAX_FOLDER = os.path.join(
+    os.path.join(os.path.dirname(revelation.__file__), "static"), "mathjax"
 )
 
 # DRY form for echoing errors
@@ -39,7 +45,7 @@ def cli(ctx, version):
 
 
 @cli.command("installreveal", help="Install or upgrade reveal.js dependency")
-@click.option("--url", "-u", help="Reveal.js download url")
+@click.option("--url", "-u", default=REVEAL_URL, help="Reveal.js download url")
 def installreveal(url):
     """Reveal.js installation command
 
@@ -48,11 +54,19 @@ def installreveal(url):
     """
     click.echo("Downloading reveal.js...")
 
-    download = download_reveal(url)
+    download = download_file(url)
 
     click.echo("Installing reveal.js...")
 
     move_and_replace(extract_file(download[0]), REVEALJS_FOLDER)
+
+    click.echo("Downloading MathJax...")
+
+    download = download_file(MATHJAX_URL)
+
+    click.echo("Installing MathJax...")
+
+    move_and_replace(extract_file(download[0]), MATHJAX_FOLDER)
 
     click.echo("Installation completed!")
 

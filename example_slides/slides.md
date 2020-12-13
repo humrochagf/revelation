@@ -103,6 +103,12 @@ def foo():
 
 ---
 
+## Equations
+
+`$$ J(\theta_0,\theta_1) = \sum_{i=0} $$`
+
+---
+
 ## Fragment
 
 - Item 1 <!-- .element: class="fragment" data-fragment-index="1" -->

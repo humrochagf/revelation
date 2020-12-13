@@ -8,7 +8,8 @@ from urllib.request import urlretrieve
 
 from . import default_config
 
-REVEAL_URL = "https://github.com/hakimel/reveal.js/archive/3.8.0.tar.gz"
+REVEAL_URL = "https://github.com/hakimel/reveal.js/archive/master.zip"
+MATHJAX_URL = "https://github.com/mathjax/MathJax/archive/2.7.9.zip"
 
 
 def make_presentation(presentation_path):
@@ -34,13 +35,10 @@ def make_presentation(presentation_path):
         )
 
 
-def download_reveal(url=None):
+def download_file(url=None):
     """
-    Download reveal.js installation files
+    Download a file from a given url
     """
-    if not url:
-        url = REVEAL_URL
-
     try:
         return urlretrieve(url)
     except Exception:

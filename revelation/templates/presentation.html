@@ -1,21 +1,18 @@
 <!doctype html>
-<html lang="en">
+<html>
   <head>
     <!-- Metadata about the presentation -->
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
     <title>{{ meta.title }}</title>
 
     <meta name="description" content="{{ meta.description }}">
     <meta name="author" content="{{ meta.author }}">
 
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
-
     <!-- Presentation Styles -->
-    <link rel="stylesheet" href="static/revealjs/css/reveal.css">
+    <link rel="stylesheet" href="static/revealjs/dist/reset.css">
+    <link rel="stylesheet" href="static/revealjs/dist/reveal.css">
 
     {% if theme %}
       <link rel="stylesheet" href="{{ theme }}" id="theme">
@@ -25,21 +22,8 @@
       <link rel="stylesheet" href="{{ style }}" id="style">
     {% endif %}
 
-    <!-- For syntax highlighting -->
-    <link rel="stylesheet" href="static/revealjs/lib/css/zenburn.css">
-
-    <!-- Printing and PDF exports -->
-    <script>
-      var link = document.createElement( 'link' );
-      link.rel = 'stylesheet';
-      link.type = 'text/css';
-      link.href = window.location.search.match( /print-pdf/gi ) ? "static/revealjs/css/print/pdf.css" : "static/revealjs/css/print/paper.css";
-      document.getElementsByTagName( 'head' )[0].appendChild( link );
-    </script>
-
-    <!--[if lt IE 9]>
-    <script src="static/revealjs/lib/js/html5shiv.js"></script>
-    <![endif]-->
+    <!-- Theme used for syntax highlighted code -->
+    <link rel="stylesheet" href="static/revealjs/plugin/highlight/monokai.css" id="highlight-theme">
   </head>
 
   <body>
@@ -53,18 +37,18 @@
             <section>
               {% for slide in section %}
                 <section data-markdown>
-                  <script type="text/template">
+                  <textarea data-template>
                     {{ slide|safe }}
-                  </script>
+                  </textarea>
                 </section>
               {% endfor %}
             </section>
           {% else %}
             {% for slide in section %}
               <section data-markdown>
-                <script type="text/template">
+                <textarea data-template>
                   {{ slide|safe }}
-                </script>
+                </textarea>
               </section>
             {% endfor %}
           {% endif %}
@@ -73,34 +57,33 @@
 
     </div>
 
-    <!-- Scripts loaded after the content -->
-    <script src="static/revealjs/lib/js/head.min.js"></script>
-    <script src="static/revealjs/js/reveal.js"></script>
+    <!-- Reveal.js script -->
+    <script src="static/revealjs/dist/reveal.js"></script>
+
+    <!-- Reveal.js plugins -->
+    <script src="static/revealjs/plugin/markdown/markdown.js"></script>
+    <script src="static/revealjs/plugin/highlight/highlight.js"></script>
+    <script src="static/revealjs/plugin/search/search.js"></script>
+    <script src="static/revealjs/plugin/notes/notes.js"></script>
+    <script src="static/revealjs/plugin/math/math.js"></script>
+    <script src="static/revealjs/plugin/zoom/zoom.js"></script>
 
     <script>
-      // Full list of configuration options available here:
-      // https://github.com/hakimel/reveal.js#configuration
       Reveal.initialize({
-        // Optional libraries used to extend on reveal.js
-        dependencies: [
-          // Cross-browser shim that fully implements classList - https://github.com/eligrey/classList.js/
-          { src: 'static/revealjs/lib/js/classList.js', condition: function() { return !document.body.classList; } },
-
-          // Interpret Markdown in <section> elements
-          { src: 'static/revealjs/plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
-          { src: 'static/revealjs/plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
-
-          // Syntax highlight for <code> elements
-          { src: 'static/revealjs/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
-
-          // Zoom in and out with Alt+click
-          { src: 'static/revealjs/plugin/zoom-js/zoom.js', async: true },
-
-          // Speaker notes
-          { src: 'static/revealjs/plugin/notes/notes.js', async: true },
-
-          // MathJax
-          { src: 'static/revealjs/plugin/math/math.js', async: true }
+        hash: true,
+        math: {
+          mathjax: 'static/mathjax/MathJax.js',
+          config: 'TeX-AMS_HTML-full',
+          // pass other options into `MathJax.Hub.Config()`
+          TeX: { Macros: { RR: "{\\bf R}" } }
+        },
+        plugins: [
+          RevealMarkdown,
+          RevealHighlight,
+          RevealSearch,
+          RevealNotes,
+          RevealMath,
+          RevealZoom
         ]
       });
 
