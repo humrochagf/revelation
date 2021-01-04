@@ -87,6 +87,7 @@ def mkpresentation(presentation: str):
 
 @cli.command()
 def mkstatic(
+    ctx: typer.Context,
     presentation: str,
     config: str = Option(None, "--config", "-c", help="Custom config file"),
     media: str = Option(None, "--media", "-m", help="Custom media folder"),
@@ -122,7 +123,10 @@ def mkstatic(
     if not os.path.exists(REVEALJS_FOLDER):
         echo("Reveal.js not found, running installation...")
 
-        installreveal()
+        # Change after fix on https://github.com/tiangolo/typer/issues/102
+        ctx.invoke(
+            typer.main.get_command(cli).get_command(ctx, "installreveal")
+        )
 
     output_folder = os.path.realpath(output_folder)
 
@@ -223,6 +227,7 @@ def mkstatic(
 
 @cli.command()
 def start(
+    ctx: typer.Context,
     presentation: str,
     port: str = Option(4000, "--port", "-p", help="Presentation server port"),
     config: str = Option(None, "--config", "-c", help="Custom config file"),
@@ -247,7 +252,10 @@ def start(
     if not os.path.exists(REVEALJS_FOLDER):
         echo("Reveal.js not found, running installation...")
 
-        installreveal()
+        # Change after fix on https://github.com/tiangolo/typer/issues/102
+        ctx.invoke(
+            typer.main.get_command(cli).get_command(ctx, "installreveal")
+        )
 
     # Check for presentation file
     if os.path.isfile(presentation):
