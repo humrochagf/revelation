@@ -59,7 +59,7 @@ class Revelation(object):
             shared_root = os.path.abspath(shared_root)
 
             if os.path.exists(shared_root):
-                shared_url = "/{}".format(os.path.basename(shared_root))
+                shared_url = f"/{os.path.basename(shared_root)}"
 
                 return {shared_url: shared_root}
 
@@ -76,16 +76,14 @@ class Revelation(object):
             slides = normalize_newlines(presentation.read().decode("utf-8"))
 
         return [
-            re.split(
-                "^{}$".format(vertical_separator), section, flags=re.MULTILINE
-            )
+            re.split(f"^{vertical_separator}$", section, flags=re.MULTILINE)
             for section in re.split(
-                "^{}$".format(section_separator), slides, flags=re.MULTILINE
+                f"^{section_separator}$", slides, flags=re.MULTILINE
             )
         ]
 
     def get_theme(self, theme):
-        reveal_theme = "static/revealjs/dist/theme/{}.css".format(theme)
+        reveal_theme = f"static/revealjs/dist/theme/{theme}.css"
         fullpath_theme = os.path.join(os.path.dirname(__file__), reveal_theme)
 
         if os.path.isfile(fullpath_theme):

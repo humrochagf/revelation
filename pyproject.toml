@@ -15,7 +15,7 @@ rv = "revelation.cli:cli"
 python = "^3.8"
 Werkzeug = {extras = ["watchdog"], version = "^1.0.1"}
 Jinja2 = "^2.11.2"
-click = "^7.1.2"
+typer = "^0.3.2"
 
 [tool.poetry.dev-dependencies]
 black = "^20.8b1"

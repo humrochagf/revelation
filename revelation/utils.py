@@ -27,12 +27,10 @@ def make_presentation(presentation_path):
     )
     shutil.copy(config_file, os.path.join(presentation_path, "config.py"))
     # Slide file
-    with open(os.path.join(presentation_path, "slides.md"), "w") as f:
-        f.write(
-            "# {0}\n\nStart from here!".format(
-                name.replace("_", " ").replace("-", " ").title()
-            )
-        )
+    with open(os.path.join(presentation_path, "slides.md"), "w") as fp:
+        title = name.replace("_", " ").replace("-", " ").title()
+
+        fp.write(f"# {title}\n\nStart from here!")
 
 
 def download_file(url=None):
@@ -93,9 +91,7 @@ def extract_file(compressed_file, path="."):
         else:
             raise NotImplementedError("File type not supported")
     else:
-        raise FileNotFoundError(
-            "{0} is not a valid file".format(compressed_file)
-        )
+        raise FileNotFoundError(f"{compressed_file} is not a valid file")
 
     return os.path.abspath(os.path.join(path, basename))
 

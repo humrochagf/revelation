@@ -45,7 +45,7 @@ class RevelationTestCase(TestCase):
 
         self.assertDictEqual(
             shared_data_config,
-            {"/{}".format(os.path.basename(self.media)): self.media},
+            {f"/{os.path.basename(self.media)}": self.media},
         )
 
     def test_load_slides(self):
@@ -63,7 +63,7 @@ class RevelationTestCase(TestCase):
     def test_load_slides_non_ascii(self):
         slides = self.app.load_slides(self.non_ascii_slide, "---", "---~")
 
-        self.assertListEqual(slides, [[u"# こんにちは\n"], [u"\n# 乾杯"]])
+        self.assertListEqual(slides, [["# こんにちは\n"], ["\n# 乾杯"]])
 
     def test_client_request_ok(self):
         client = Client(self.app, BaseResponse)

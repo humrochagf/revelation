@@ -3,9 +3,9 @@
 import glob
 import os
 import shutil
-from functools import partial
 
-import click
+import typer
+from typer import Option
 from werkzeug.serving import run_simple
 
 import revelation
@@ -27,140 +27,134 @@ MATHJAX_FOLDER = os.path.join(
     os.path.join(os.path.dirname(revelation.__file__), "static"), "mathjax"
 )
 
-# DRY form for echoing errors
-error_echo = partial(click.secho, err=True, fg="red", bold=True)
+cli = typer.Typer()
+echo = typer.echo
 
 
-@click.group(invoke_without_command=True)
-@click.option("--version", "-v", is_flag=True, default=False)
-@click.pass_context
-def cli(ctx, version):
-    """Base command function, it gets the context and passes it to
-    its subcommands"""
-    if not ctx.invoked_subcommand and version:
-        click.echo(revelation.__version__)
-        ctx.exit()
-    elif not ctx.invoked_subcommand:
-        click.echo(ctx.get_help())
+def error(message: str):
+    typer.secho(f"Error: {message}", err=True, fg="red", bold=True)
 
 
-@cli.command("installreveal", help="Install or upgrade reveal.js dependency")
-@click.option("--url", "-u", default=REVEAL_URL, help="Reveal.js download url")
-def installreveal(url):
-    """Reveal.js installation command
+@cli.command()
+def version():
+    """
+    Show version
+    """
+    echo(revelation.__version__)
+
+
+@cli.command()
+def installreveal(
+    url: str = Option(REVEAL_URL, "--url", "-u", help="Reveal.js download url")
+):
+    """
+    Install or upgrade reveal.js dependency
 
     Receives the download url to install from a specific version or
     downloads the latest version if noting is passed
     """
-    click.echo("Downloading reveal.js...")
+    echo("Downloading reveal.js...")
 
     download = download_file(url)
 
-    click.echo("Installing reveal.js...")
+    echo("Installing reveal.js...")
 
     move_and_replace(extract_file(download[0]), REVEALJS_FOLDER)
 
-    click.echo("Downloading MathJax...")
+    echo("Downloading MathJax...")
 
     download = download_file(MATHJAX_URL)
 
-    click.echo("Installing MathJax...")
+    echo("Installing MathJax...")
 
     move_and_replace(extract_file(download[0]), MATHJAX_FOLDER)
 
-    click.echo("Installation completed!")
+    echo("Installation completed!")
 
 
-@cli.command("mkpresentation", help="Create a new revelation presentation")
-@click.argument("presentation")
-@click.pass_context
-def mkpresentation(ctx, presentation):
-    """Make presentation project boilerplate"""
+@cli.command()
+def mkpresentation(presentation: str):
+    """Create a new revelation presentation"""
     if os.path.exists(presentation):
-        error_echo("Error: '{}' already exists.".format(presentation))
-        ctx.exit(1)
+        error(f"'{presentation}' already exists.")
 
-    click.echo("Starting a new presentation...")
+        raise typer.Abort()
+
+    echo("Starting a new presentation...")
 
     make_presentation(presentation)
 
 
-@cli.command("mkstatic", help="Make a static presentation")
-@click.argument("presentation", default=os.getcwd())
-@click.option("--config", "-c", default=None, help="Custom configuration file")
-@click.option("--media", "-m", default=None, help="Custom media folder")
-@click.option("--theme", "-t", default=None, help="Custom theme folder")
-@click.option(
-    "--style-override-file",
-    "-s",
-    "style",
-    default=None,
-    help="Custom css file to override reveal.js styles",
-)
-@click.option(
-    "--output-folder",
-    "-o",
-    default="output",
-    help="Folder where the static presentation will be generated",
-)
-@click.option(
-    "--output-file",
-    "-f",
-    default="index.html",
-    help="File name of the static presentation",
-)
-@click.option(
-    "--force", "-r", is_flag=True, help="Overwrite the output folder if exists"
-)
-@click.pass_context
+@cli.command()
 def mkstatic(
-    ctx,
-    presentation,
-    config,
-    media,
-    theme,
-    output_folder,
-    output_file,
-    force,
-    style,
+    presentation: str,
+    config: str = Option(None, "--config", "-c", help="Custom config file"),
+    media: str = Option(None, "--media", "-m", help="Custom media folder"),
+    theme: str = Option(None, "--theme", "-t", help="Custom theme folder"),
+    output_folder: str = Option(
+        "output",
+        "--output-folder",
+        "-o",
+        help="Folder where the static presentation will be generated",
+    ),
+    output_file: str = Option(
+        "index.html",
+        "--output-file",
+        "-f",
+        help="File name of the static presentation",
+    ),
+    force: bool = Option(
+        False,
+        "--force",
+        "-r",
+        help="Overwrite the output folder if exists",
+    ),
+    style: str = Option(
+        None,
+        "--style-override-file",
+        "-s",
+        help="Custom css file to override reveal.js styles",
+    ),
 ):
     """Make static presentation"""
 
     # Check if reveal.js is installed
     if not os.path.exists(REVEALJS_FOLDER):
-        click.echo("Reveal.js not found, running installation...")
-        ctx.invoke(installreveal)
+        echo("Reveal.js not found, running installation...")
+
+        installreveal()
 
     output_folder = os.path.realpath(output_folder)
 
     # Check for style override file
     if os.path.isfile(output_folder):
-        error_echo(
-            "Error: '{}' already exists and is a file.".format(output_folder)
-        )
-        ctx.exit(1)
+        error(f"'{output_folder}' already exists and is a file.")
+
+        raise typer.Abort()
 
     # Check for presentation file
     if os.path.isfile(presentation):
         path = os.path.dirname(presentation)
     else:
-        error_echo("Error: Presentation file not found.")
-        ctx.exit(1)
+        error("Presentation file not found.")
+
+        raise typer.Abort()
 
     if style and (not os.path.isfile(style) or not style.endswith(".css")):
-        click.echo("Error: Style is not a css file or does not exists.")
-        ctx.exit(1)
+        error("Style is not a css file or does not exists.")
+
+        raise typer.Abort()
 
     if os.path.isdir(output_folder):
         if force:
             shutil.rmtree(output_folder)
         else:
-            error_echo(
-                (
-                    "Error: '{}' already exists, use --force to override it."
-                ).format(output_folder)
+            error(
+                f"'{output_folder}' already exists, "
+                "use --force to override it."
             )
-            ctx.exit(1)
+
+            raise typer.Abort()
 
     staticfolder = os.path.join(output_folder, "static")
 
@@ -184,7 +178,7 @@ def mkstatic(
     if not os.path.isdir(media):
         # Running without media folder
         media = None
-        click.echo("Media folder not detected, running without media.")
+        echo("Media folder not detected, running without media.")
     else:
         shutil.copytree(media, os.path.join(output_folder, "media"))
 
@@ -195,7 +189,7 @@ def mkstatic(
     if not os.path.isdir(theme):
         # Running without theme folder
         theme = None
-        click.echo("Theme not detected, running without custom theme.")
+        echo("Theme not detected, running without custom theme.")
     else:
         shutil.copytree(theme, os.path.join(output_folder, "theme"))
 
@@ -207,9 +201,9 @@ def mkstatic(
         # Running without configuration file
         config = None
 
-        click.echo("Configuration file not detected, running with defaults.")
+        echo("Configuration file not detected, running with defaults.")
 
-    click.echo("Generating static presentation...")
+    echo("Generating static presentation...")
 
     # instantiating revelation app
     app = Revelation(presentation, config, media, theme, style)
@@ -224,52 +218,50 @@ def mkstatic(
             app.dispatch_request(None).get_data(as_text=True).encode("utf-8")
         )
 
-    click.echo(
-        "Static presentation generated in {}".format(
-            os.path.realpath(output_folder)
-        )
-    )
+    echo(f"Static presentation generated in {os.path.realpath(output_folder)}")
 
 
-@cli.command("start", help="Start the revelation server")
-@click.argument("presentation", default=os.getcwd())
-@click.option("--port", "-p", default=4000, help="Presentation server port")
-@click.option("--config", "-c", default=None, help="Custom configuration file")
-@click.option("--media", "-m", default=None, help="Custom media folder")
-@click.option("--theme", "-t", default=None, help="Custom theme folder")
-@click.option(
-    "--style-override-file",
-    "-s",
-    "style",
-    default=None,
-    help="Custom css file to override reveal.js styles",
-)
-@click.option(
-    "--debug",
-    "-d",
-    is_flag=True,
-    default=False,
-    help="Run the revelation server on debug mode",
-)
-@click.pass_context
-def start(ctx, presentation, port, config, media, theme, style, debug):
-    """Start revelation presentation command"""
+@cli.command()
+def start(
+    presentation: str,
+    port: str = Option(4000, "--port", "-p", help="Presentation server port"),
+    config: str = Option(None, "--config", "-c", help="Custom config file"),
+    media: str = Option(None, "--media", "-m", help="Custom media folder"),
+    theme: str = Option(None, "--theme", "-t", help="Custom theme folder"),
+    style: str = Option(
+        None,
+        "--style-override-file",
+        "-s",
+        help="Custom css file to override reveal.js styles",
+    ),
+    debug: bool = Option(
+        False,
+        "--debug",
+        "-d",
+        is_flag=True,
+        help="Run the revelation server on debug mode",
+    ),
+):
+    """Start the revelation server"""
     # Check if reveal.js is installed
     if not os.path.exists(REVEALJS_FOLDER):
-        click.echo("Reveal.js not found, running installation...")
-        ctx.invoke(installreveal)
+        echo("Reveal.js not found, running installation...")
+
+        installreveal()
 
     # Check for presentation file
     if os.path.isfile(presentation):
         path = os.path.dirname(presentation)
     else:
-        click.echo("Error: Presentation file not found.")
-        ctx.exit(1)
+        error("Presentation file not found.")
+
+        raise typer.Abort()
 
     # Check for style override file
     if style and (not os.path.isfile(style) or not style.endswith(".css")):
-        click.echo("Error: Style is not a css file or does not exists.")
-        ctx.exit(1)
+        error("Style is not a css file or does not exists.")
+
+        raise typer.Abort()
 
     # Check for media root
     if not media:
@@ -279,7 +271,7 @@ def start(ctx, presentation, port, config, media, theme, style, debug):
         # Running without media folder
         media = None
 
-        click.echo("Media folder not detected, running without media")
+        echo("Media folder not detected, running without media")
 
     # Check for theme root
     if not theme:
@@ -297,9 +289,9 @@ def start(ctx, presentation, port, config, media, theme, style, debug):
         # Running without configuration file
         config = None
 
-        click.echo("Configuration file not detected, running with defaults.")
+        echo("Configuration file not detected, running with defaults.")
 
-    click.echo("Starting revelation server...")
+    echo("Starting revelation server...")
 
     # instantiating revelation app
     app = Revelation(presentation, config, media, theme, style)

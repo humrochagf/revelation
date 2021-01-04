@@ -48,10 +48,9 @@ class Config(dict):
                     module.__dict__,
                 )
         except IOError as error:
-            error.strerror = "Unable to load configuration file ({})".format(
-                error.strerror
-            )
+            strerror = error.strerror
+            error.strerror = f"Unable to load configuration file ({strerror})"
 
-            raise
+            raise error
 
         self.load_from_object(module)

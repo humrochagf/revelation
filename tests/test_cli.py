@@ -4,9 +4,9 @@ import tempfile
 from unittest import TestCase
 from unittest.mock import patch
 
-from click.testing import CliRunner
+from typer.testing import CliRunner
 
-from revelation import cli
+from revelation.cli import cli
 
 
 class CliTestCase(TestCase):
@@ -25,7 +25,7 @@ class CliTestCase(TestCase):
         config_file = os.path.join(presentation_folder, "config.py")
 
         runner = CliRunner()
-        result = runner.invoke(cli.mkpresentation, [presentation_folder])
+        result = runner.invoke(cli, ["mkpresentation", presentation_folder])
 
         self.assertEqual(result.exit_code, 0)
         self.assertTrue(os.path.isdir(presentation_folder))
@@ -37,14 +37,13 @@ class CliTestCase(TestCase):
         presentation = tempfile.mkdtemp(dir=self.tests_folder)
 
         runner = CliRunner()
-        result = runner.invoke(cli.mkpresentation, [presentation])
+        result = runner.invoke(cli, ["mkpresentation", presentation])
 
         self.assertEqual(result.exit_code, 1)
         self.assertEqual(
             result.output,
-            "Error: '{}' already exists.\n".format(
-                os.path.abspath(presentation)
-            ),
+            f"Error: '{os.path.abspath(presentation)}' already exists.\n"
+            "Aborted!\n",
         )
 
     def test_mkstatic(self):
@@ -58,7 +57,7 @@ class CliTestCase(TestCase):
 
         runner = CliRunner()
         result = runner.invoke(
-            cli.mkstatic, [presentation_file, "-o", output_folder]
+            cli, ["mkstatic", presentation_file, "-o", output_folder]
         )
 
         self.assertEqual(result.exit_code, 0)
@@ -81,8 +80,15 @@ class CliTestCase(TestCase):
 
         runner = CliRunner()
         result = runner.invoke(
-            cli.mkstatic,
-            [presentation_file, "-o", output_folder, "-s", style_file],
+            cli,
+            [
+                "mkstatic",
+                presentation_file,
+                "-o",
+                output_folder,
+                "-s",
+                style_file,
+            ],
         )
 
         self.assertEqual(result.exit_code, 0)
@@ -99,14 +105,15 @@ class CliTestCase(TestCase):
         _, output = tempfile.mkstemp(dir=base_folder)
 
         runner = CliRunner()
-        result = runner.invoke(cli.mkstatic, [presentation_file, "-o", output])
+        result = runner.invoke(
+            cli, ["mkstatic", presentation_file, "-o", output]
+        )
 
         self.assertEqual(result.exit_code, 1)
         self.assertEqual(
             result.output,
-            "Error: '{}' already exists and is a file.\n".format(
-                os.path.abspath(output)
-            ),
+            f"Error: '{os.path.abspath(output)}' already exists and is a file."
+            "\nAborted!\n",
         )
 
     def test_mkstatic_output_already_exists_folder(self):
@@ -117,14 +124,15 @@ class CliTestCase(TestCase):
         output = tempfile.mkdtemp(dir=base_folder)
 
         runner = CliRunner()
-        result = runner.invoke(cli.mkstatic, [presentation_file, "-o", output])
+        result = runner.invoke(
+            cli, ["mkstatic", presentation_file, "-o", output]
+        )
 
         self.assertEqual(result.exit_code, 1)
         self.assertEqual(
             result.output,
-            "Error: '{}' already exists, use --force to override it.\n".format(
-                os.path.abspath(output)
-            ),
+            f"Error: '{os.path.abspath(output)}' already exists, "
+            "use --force to override it.\nAborted!\n",
         )
 
     def test_mkstatic_presentation_not_found(self):
@@ -132,11 +140,11 @@ class CliTestCase(TestCase):
         presentation = os.path.join(base_folder, "notfound")
 
         runner = CliRunner()
-        result = runner.invoke(cli.mkstatic, [presentation])
+        result = runner.invoke(cli, ["mkstatic", presentation])
 
         self.assertEqual(result.exit_code, 1)
         self.assertEqual(
-            result.output, "Error: Presentation file not found.\n"
+            result.output, "Error: Presentation file not found.\nAborted!\n"
         )
 
     def test_mkstatic_style_not_file(self):
@@ -147,12 +155,14 @@ class CliTestCase(TestCase):
         style = tempfile.mkdtemp(".css", dir=base_folder)
 
         runner = CliRunner()
-        result = runner.invoke(cli.mkstatic, [presentation_file, "-s", style])
+        result = runner.invoke(
+            cli, ["mkstatic", presentation_file, "-s", style]
+        )
 
         self.assertEqual(result.exit_code, 1)
         self.assertEqual(
             result.output,
-            "Error: Style is not a css file or does not exists.\n",
+            "Error: Style is not a css file or does not exists.\nAborted!\n",
         )
 
     def test_mkstatic_style_not_css(self):
@@ -163,12 +173,14 @@ class CliTestCase(TestCase):
         _, style = tempfile.mkstemp(".wrong", dir=base_folder)
 
         runner = CliRunner()
-        result = runner.invoke(cli.mkstatic, [presentation_file, "-s", style])
+        result = runner.invoke(
+            cli, ["mkstatic", presentation_file, "-s", style]
+        )
 
         self.assertEqual(result.exit_code, 1)
         self.assertEqual(
             result.output,
-            "Error: Style is not a css file or does not exists.\n",
+            "Error: Style is not a css file or does not exists.\nAborted!\n",
         )
 
     @patch("revelation.cli.run_simple")
@@ -179,7 +191,7 @@ class CliTestCase(TestCase):
         )
 
         runner = CliRunner()
-        runner.invoke(cli.start, [presentation_file])
+        runner.invoke(cli, ["start", presentation_file])
 
         self.assertTrue(run_simple_patch.called)
 
@@ -188,11 +200,11 @@ class CliTestCase(TestCase):
         presentation = os.path.join(base_folder, "notfound")
 
         runner = CliRunner()
-        result = runner.invoke(cli.start, [presentation])
+        result = runner.invoke(cli, ["start", presentation])
 
         self.assertEqual(result.exit_code, 1)
         self.assertEqual(
-            result.output, "Error: Presentation file not found.\n"
+            result.output, "Error: Presentation file not found.\nAborted!\n"
         )
 
     def test_start_style_not_file(self):
@@ -203,12 +215,12 @@ class CliTestCase(TestCase):
         style = tempfile.mkdtemp(".css", dir=base_folder)
 
         runner = CliRunner()
-        result = runner.invoke(cli.start, [presentation_file, "-s", style])
+        result = runner.invoke(cli, ["start", presentation_file, "-s", style])
 
         self.assertEqual(result.exit_code, 1)
         self.assertEqual(
             result.output,
-            "Error: Style is not a css file or does not exists.\n",
+            "Error: Style is not a css file or does not exists.\nAborted!\n",
         )
 
     def test_start_style_not_css(self):
@@ -219,10 +231,10 @@ class CliTestCase(TestCase):
         _, style = tempfile.mkstemp(".wrong", dir=base_folder)
 
         runner = CliRunner()
-        result = runner.invoke(cli.start, [presentation_file, "-s", style])
+        result = runner.invoke(cli, ["start", presentation_file, "-s", style])
 
         self.assertEqual(result.exit_code, 1)
         self.assertEqual(
             result.output,
-            "Error: Style is not a css file or does not exists.\n",
+            "Error: Style is not a css file or does not exists.\nAborted!\n",
         )
