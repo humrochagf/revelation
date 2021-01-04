@@ -19,7 +19,7 @@ typer = "^0.3.2"
 
 [tool.poetry.dev-dependencies]
 black = "^20.8b1"
-isort = "^5.6.4"
+isort = "^5.7.0"
 flake8 = "^3.8.4"
 ipdb = "^0.13.4"
 ipython = "^7.19.0"

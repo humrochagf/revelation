@@ -192,7 +192,7 @@ python-versions = "*"
 
 [[package]]
 name = "isort"
-version = "5.6.4"
+version = "5.7.0"
 description = "A Python utility / library to sort Python imports."
 category = "dev"
 optional = false
@@ -489,7 +489,7 @@ watchdog = ["watchdog"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "bb0fa025b2ba01aba7e27dafe8e04800d95ff83c8068a6b8546ff564d2185f7b"
+content-hash = "1d408a43561e31d4291510b0784cd08b3d595118d5598742711fa311bf352891"
 
 [metadata.files]
 appdirs = [
@@ -605,8 +605,8 @@ ipython-genutils = [
     {file = "ipython_genutils-0.2.0.tar.gz", hash = "sha256:eb2e116e75ecef9d4d228fdc66af54269afa26ab4463042e33785b887c628ba8"},
 ]
 isort = [
-    {file = "isort-5.6.4-py3-none-any.whl", hash = "sha256:dcab1d98b469a12a1a624ead220584391648790275560e1a43e54c5dceae65e7"},
-    {file = "isort-5.6.4.tar.gz", hash = "sha256:dcaeec1b5f0eca77faea2a35ab790b4f3680ff75590bfcb7145986905aab2f58"},
+    {file = "isort-5.7.0-py3-none-any.whl", hash = "sha256:fff4f0c04e1825522ce6949973e83110a6e907750cd92d128b0d14aaaadbffdc"},
+    {file = "isort-5.7.0.tar.gz", hash = "sha256:c729845434366216d320e936b8ad6f9d681aab72dc7cbc2d51bedc3582f3ad1e"},
 ]
 jedi = [
     {file = "jedi-0.17.2-py2.py3-none-any.whl", hash = "sha256:98cc583fa0f2f8304968199b01b6b4b94f469a1f4a74c1560506ca2a211378b5"},
@@ -805,6 +805,22 @@ urllib3 = [
     {file = "urllib3-1.26.2.tar.gz", hash = "sha256:19188f96923873c92ccb987120ec4acaa12f0461fa9ce5d3d0772bc965a39e08"},
 ]
 watchdog = [
+    {file = "watchdog-1.0.1-cp36-cp36m-macosx_10_9_x86_64.whl", hash = "sha256:e81063af77eca2c2a3d051e7455f8d4e5b64899e4839393986a6562a600be3b3"},
+    {file = "watchdog-1.0.1-cp37-cp37m-macosx_10_9_x86_64.whl", hash = "sha256:7dde5fd09240927e162fb2c2225168769f4377e2015414a489fb41a569dee920"},
+    {file = "watchdog-1.0.1-cp38-cp38-macosx_10_9_x86_64.whl", hash = "sha256:1122c5092534e557ea4242cfd6afaa568d9658631f752592dffb4d815eb9044a"},
+    {file = "watchdog-1.0.1-cp39-cp39-macosx_10_9_x86_64.whl", hash = "sha256:ef8c0cf76b7adc2d1ecf0733baa3a7d05a4442dcc3dda76fb9ea850cb7973323"},
+    {file = "watchdog-1.0.1-pp36-pypy36_pp73-macosx_10_9_x86_64.whl", hash = "sha256:7a2708a0a48d3357dddba4b6e0563862b95b72c1652405682d189635796ebd22"},
+    {file = "watchdog-1.0.1-pp37-pypy37_pp73-macosx_10_9_x86_64.whl", hash = "sha256:048449a598410459c8ec58caec40663b3d05d7123ee831620b1ba9c581e38d92"},
+    {file = "watchdog-1.0.1-py3-none-manylinux2014_aarch64.whl", hash = "sha256:1875a47a2f2f29a26abd6781e8e7357a2c31b7b8b997baeb0d630ac1442239e3"},
+    {file = "watchdog-1.0.1-py3-none-manylinux2014_armv7l.whl", hash = "sha256:2e5edfbdcea9d37c581f92fa1463b35f3fb4399fb2c0106c22a228b8c8b24c05"},
+    {file = "watchdog-1.0.1-py3-none-manylinux2014_i686.whl", hash = "sha256:a98c31b13f357c641ef3ab7628817a8d599584e5bd56eca9b90906ecfdbf72cf"},
+    {file = "watchdog-1.0.1-py3-none-manylinux2014_ppc64.whl", hash = "sha256:1bb0715633fcf4b3148a4c5a3dd4dacde2102e9eb6d0e3beb120e45c31f292a0"},
+    {file = "watchdog-1.0.1-py3-none-manylinux2014_ppc64le.whl", hash = "sha256:68018bde139a34615eaa55f6142bb4aaca1f45dc110dc876dfe5ab7507929cf1"},
+    {file = "watchdog-1.0.1-py3-none-manylinux2014_s390x.whl", hash = "sha256:78e4fd442e5ab7dd8e76aa135f64b08c9032fa857caa73c4afc6804238603c9b"},
+    {file = "watchdog-1.0.1-py3-none-manylinux2014_x86_64.whl", hash = "sha256:416fef58a6354dc671d309708b117857970c63fbf8c0507ae473bdc4ef91aa20"},
+    {file = "watchdog-1.0.1-py3-none-win32.whl", hash = "sha256:29dab966cab2f5cd517d99524f53e9676c8ed579af9ea1f2378218ca997819c0"},
+    {file = "watchdog-1.0.1-py3-none-win_amd64.whl", hash = "sha256:e12c12df51b368cfaa02f0b93462078b517b8fc498d875a0d063503d6a4b047c"},
+    {file = "watchdog-1.0.1-py3-none-win_ia64.whl", hash = "sha256:73735161ca5c5853af25240bf9aa1edd18c51721bfc6b2c0d30d8fac7ea16a6b"},
     {file = "watchdog-1.0.1.tar.gz", hash = "sha256:78ea5d78f2cf8e4d6343ab2cbed93bb47b7a85b1c2f90a1dea365226bbab68ac"},
 ]
 wcwidth = [
