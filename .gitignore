@@ -1,13 +1,22 @@
-.idea/
-.cache/
-revelation/static/
-build/
-dist/
-.coverage
+# file extensions
 *.egg
 *.egg-info
-*.pyc
-*.pyo
+*.py[cod]
 *.tar.gz
 *.zip
+
+# hidden folders
+.cache/
+.coverage
+.idea/
+.mypy_cache/
+.pytest_cache/
+.venv/
+
+# folders
+build/
+dist/
+revelation/static/
+
+# files
 ngrok

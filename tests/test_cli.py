@@ -1,240 +1,191 @@
-import os
-import shutil
-import tempfile
-from unittest import TestCase
-from unittest.mock import patch
+from pathlib import Path
 
+from pytest_mock import MockerFixture
 from typer.testing import CliRunner
 
 from revelation.cli import cli
 
+from .conftest import Presentation
 
-class CliTestCase(TestCase):
-    def setUp(self):
-        self.tests_folder = tempfile.mkdtemp()
 
-    def tearDown(self):
-        shutil.rmtree(self.tests_folder)
+def test_mkpresentation(tmp_path: Path):
+    presentation = Presentation(tmp_path)
 
-    def test_mkpresentation(self):
-        presentation_folder = os.path.join(
-            self.tests_folder, "test_mkpresentation"
-        )
-        presentation_file = os.path.join(presentation_folder, "slides.md")
-        media_folder = os.path.join(presentation_folder, "media")
-        config_file = os.path.join(presentation_folder, "config.py")
+    runner = CliRunner()
+    result = runner.invoke(cli, ["mkpresentation", str(presentation.root)])
 
-        runner = CliRunner()
-        result = runner.invoke(cli, ["mkpresentation", presentation_folder])
+    assert result.exit_code == 0
+    assert presentation.root.is_dir()
+    assert presentation.file.is_file()
+    assert presentation.media.is_dir()
+    assert presentation.config.is_file()
 
-        self.assertEqual(result.exit_code, 0)
-        self.assertTrue(os.path.isdir(presentation_folder))
-        self.assertTrue(os.path.isfile(presentation_file))
-        self.assertTrue(os.path.isdir(media_folder))
-        self.assertTrue(os.path.isfile(config_file))
 
-    def test_mkpresentation_already_exists(self):
-        presentation = tempfile.mkdtemp(dir=self.tests_folder)
+def test_mkpresentation_already_exists(presentation: Presentation):
+    runner = CliRunner()
+    result = runner.invoke(cli, ["mkpresentation", str(presentation.root)])
 
-        runner = CliRunner()
-        result = runner.invoke(cli, ["mkpresentation", presentation])
+    assert result.exit_code == 1
+    assert result.output == (
+        f"Error: '{presentation.root}' already exists.\nAborted!\n"
+    )
 
-        self.assertEqual(result.exit_code, 1)
-        self.assertEqual(
-            result.output,
-            f"Error: '{os.path.abspath(presentation)}' already exists.\n"
-            "Aborted!\n",
-        )
 
-    def test_mkstatic(self):
-        base_folder = tempfile.mkdtemp(dir=self.tests_folder)
-        _, presentation_file = tempfile.mkstemp(
-            ".md", "slides", base_folder, "# Test\n"
-        )
-        output_folder = os.path.join(base_folder, "output")
-        index_file = os.path.join(output_folder, "index.html")
-        static_folder = os.path.join(output_folder, "static")
+def test_mkstatic(presentation: Presentation):
+    output_dir = presentation.parent / "output"
+    index_file = output_dir / "index.html"
+    static_dir = output_dir / "static"
 
-        runner = CliRunner()
-        result = runner.invoke(
-            cli, ["mkstatic", presentation_file, "-o", output_folder]
-        )
+    runner = CliRunner()
+    result = runner.invoke(
+        cli, ["mkstatic", str(presentation.file), "-o", str(output_dir)]
+    )
 
-        self.assertEqual(result.exit_code, 0)
-        self.assertTrue(os.path.isdir(output_folder))
-        self.assertTrue(os.path.isfile(index_file))
-        self.assertTrue(os.path.isdir(static_folder))
+    assert result.exit_code == 0
+    assert output_dir.is_dir()
+    assert index_file.is_file()
+    assert static_dir.is_dir()
 
-    def test_mkstatic_override_styles(self):
-        base_folder = tempfile.mkdtemp(dir=self.tests_folder)
-        _, presentation_file = tempfile.mkstemp(
-            ".md", "slides", base_folder, "# Test\n"
-        )
-        _, style_file = tempfile.mkstemp(
-            ".css", base_folder, "h1 { color: #000 }"
-        )
-        output_folder = os.path.join(base_folder, "output")
-        index_file = os.path.join(output_folder, "index.html")
-        output_style_file = os.path.join(output_folder, style_file)
-        static_folder = os.path.join(output_folder, "static")
 
-        runner = CliRunner()
-        result = runner.invoke(
-            cli,
-            [
-                "mkstatic",
-                presentation_file,
-                "-o",
-                output_folder,
-                "-s",
-                style_file,
-            ],
-        )
+def test_mkstatic_override_styles(presentation: Presentation):
+    style_file = presentation.root / "style.css"
+    style_file.write_text("h1 { color: #000 }", "utf8")
 
-        self.assertEqual(result.exit_code, 0)
-        self.assertTrue(os.path.isdir(output_folder))
-        self.assertTrue(os.path.isfile(index_file))
-        self.assertTrue(os.path.isfile(output_style_file))
-        self.assertTrue(os.path.isdir(static_folder))
+    output_dir = presentation.parent / "output"
+    output_style_file = output_dir / "style.css"
 
-    def test_mkstatic_output_already_exists_file(self):
-        base_folder = tempfile.mkdtemp(dir=self.tests_folder)
-        _, presentation_file = tempfile.mkstemp(
-            ".md", "slides", base_folder, "# Test\n"
-        )
-        _, output = tempfile.mkstemp(dir=base_folder)
+    runner = CliRunner()
+    result = runner.invoke(
+        cli,
+        [
+            "mkstatic",
+            str(presentation.file),
+            "-o",
+            str(output_dir),
+            "-s",
+            str(style_file),
+        ],
+    )
 
-        runner = CliRunner()
-        result = runner.invoke(
-            cli, ["mkstatic", presentation_file, "-o", output]
-        )
+    assert result.exit_code == 0
+    assert output_style_file.is_file()
 
-        self.assertEqual(result.exit_code, 1)
-        self.assertEqual(
-            result.output,
-            f"Error: '{os.path.abspath(output)}' already exists and is a file."
-            "\nAborted!\n",
-        )
 
-    def test_mkstatic_output_already_exists_folder(self):
-        base_folder = tempfile.mkdtemp(dir=self.tests_folder)
-        _, presentation_file = tempfile.mkstemp(
-            ".md", "slides", base_folder, "# Test\n"
-        )
-        output = tempfile.mkdtemp(dir=base_folder)
+def test_mkstatic_output_already_exists_file(presentation: Presentation):
+    output_file = presentation.parent / "output"
+    output_file.write_text("", "utf8")
 
-        runner = CliRunner()
-        result = runner.invoke(
-            cli, ["mkstatic", presentation_file, "-o", output]
-        )
+    runner = CliRunner()
+    result = runner.invoke(
+        cli, ["mkstatic", str(presentation.file), "-o", str(output_file)]
+    )
 
-        self.assertEqual(result.exit_code, 1)
-        self.assertEqual(
-            result.output,
-            f"Error: '{os.path.abspath(output)}' already exists, "
-            "use --force to override it.\nAborted!\n",
-        )
+    assert result.exit_code == 1
+    assert result.output == (
+        f"Error: '{output_file}' already exists and is a file.\nAborted!\n"
+    )
 
-    def test_mkstatic_presentation_not_found(self):
-        base_folder = tempfile.mkdtemp(dir=self.tests_folder)
-        presentation = os.path.join(base_folder, "notfound")
 
-        runner = CliRunner()
-        result = runner.invoke(cli, ["mkstatic", presentation])
+def test_mkstatic_output_already_exists_folder(presentation: Presentation):
+    output_dir = presentation.parent / "output"
+    output_dir.mkdir()
 
-        self.assertEqual(result.exit_code, 1)
-        self.assertEqual(
-            result.output, "Error: Presentation file not found.\nAborted!\n"
-        )
+    runner = CliRunner()
+    result = runner.invoke(
+        cli, ["mkstatic", str(presentation.file), "-o", str(output_dir)]
+    )
 
-    def test_mkstatic_style_not_file(self):
-        base_folder = tempfile.mkdtemp(dir=self.tests_folder)
-        _, presentation_file = tempfile.mkstemp(
-            ".md", "slides", base_folder, "# Test\n"
-        )
-        style = tempfile.mkdtemp(".css", dir=base_folder)
+    assert result.exit_code == 1
+    assert result.output == (
+        f"Error: '{output_dir}' already exists, use --force to override it.\n"
+        "Aborted!\n"
+    )
 
-        runner = CliRunner()
-        result = runner.invoke(
-            cli, ["mkstatic", presentation_file, "-s", style]
-        )
 
-        self.assertEqual(result.exit_code, 1)
-        self.assertEqual(
-            result.output,
-            "Error: Style is not a css file or does not exists.\nAborted!\n",
-        )
+def test_mkstatic_presentation_not_found(tmp_path: Path):
+    presentation = tmp_path / "notfound"
 
-    def test_mkstatic_style_not_css(self):
-        base_folder = tempfile.mkdtemp(dir=self.tests_folder)
-        _, presentation_file = tempfile.mkstemp(
-            ".md", "slides", base_folder, "# Test\n"
-        )
-        _, style = tempfile.mkstemp(".wrong", dir=base_folder)
+    runner = CliRunner()
+    result = runner.invoke(cli, ["mkstatic", str(presentation)])
 
-        runner = CliRunner()
-        result = runner.invoke(
-            cli, ["mkstatic", presentation_file, "-s", style]
-        )
+    assert result.exit_code == 1
+    assert result.output == "Error: Presentation file not found.\nAborted!\n"
 
-        self.assertEqual(result.exit_code, 1)
-        self.assertEqual(
-            result.output,
-            "Error: Style is not a css file or does not exists.\nAborted!\n",
-        )
 
-    @patch("revelation.cli.run_simple")
-    def test_start(self, run_simple_patch):
-        base_folder = tempfile.mkdtemp(dir=self.tests_folder)
-        _, presentation_file = tempfile.mkstemp(
-            ".md", "slides", base_folder, "# Test\n"
-        )
+def test_mkstatic_style_not_file(presentation: Presentation):
+    style_dir = presentation.root / "style.css"
+    style_dir.mkdir()
 
-        runner = CliRunner()
-        runner.invoke(cli, ["start", presentation_file])
+    runner = CliRunner()
+    result = runner.invoke(
+        cli, ["mkstatic", str(presentation.file), "-s", str(style_dir)]
+    )
 
-        self.assertTrue(run_simple_patch.called)
+    assert result.exit_code == 1
+    assert result.output == (
+        "Error: Style is not a css file or does not exists.\nAborted!\n"
+    )
 
-    def test_start_presentation_not_found(self):
-        base_folder = tempfile.mkdtemp(dir=self.tests_folder)
-        presentation = os.path.join(base_folder, "notfound")
 
-        runner = CliRunner()
-        result = runner.invoke(cli, ["start", presentation])
+def test_mkstatic_style_not_css(presentation: Presentation):
+    style_file = presentation.root / "style.notcss"
+    style_file.write_text("", "utf8")
 
-        self.assertEqual(result.exit_code, 1)
-        self.assertEqual(
-            result.output, "Error: Presentation file not found.\nAborted!\n"
-        )
+    runner = CliRunner()
+    result = runner.invoke(
+        cli, ["mkstatic", str(presentation.file), "-s", str(style_file)]
+    )
 
-    def test_start_style_not_file(self):
-        base_folder = tempfile.mkdtemp(dir=self.tests_folder)
-        _, presentation_file = tempfile.mkstemp(
-            ".md", "slides", base_folder, "# Test\n"
-        )
-        style = tempfile.mkdtemp(".css", dir=base_folder)
+    assert result.exit_code == 1
+    assert result.output == (
+        "Error: Style is not a css file or does not exists.\nAborted!\n"
+    )
 
-        runner = CliRunner()
-        result = runner.invoke(cli, ["start", presentation_file, "-s", style])
 
-        self.assertEqual(result.exit_code, 1)
-        self.assertEqual(
-            result.output,
-            "Error: Style is not a css file or does not exists.\nAborted!\n",
-        )
+def test_start(mocker: MockerFixture, presentation: Presentation):
+    mocked_run_simple = mocker.patch("revelation.cli.run_simple")
 
-    def test_start_style_not_css(self):
-        base_folder = tempfile.mkdtemp(dir=self.tests_folder)
-        _, presentation_file = tempfile.mkstemp(
-            ".md", "slides", base_folder, "# Test\n"
-        )
-        _, style = tempfile.mkstemp(".wrong", dir=base_folder)
+    runner = CliRunner()
+    runner.invoke(cli, ["start", str(presentation.file)])
 
-        runner = CliRunner()
-        result = runner.invoke(cli, ["start", presentation_file, "-s", style])
+    assert mocked_run_simple.called
 
-        self.assertEqual(result.exit_code, 1)
-        self.assertEqual(
-            result.output,
-            "Error: Style is not a css file or does not exists.\nAborted!\n",
-        )
+
+def test_start_presentation_not_found(tmp_path: Path):
+    presentation = tmp_path / "notfound"
+
+    runner = CliRunner()
+    result = runner.invoke(cli, ["start", str(presentation)])
+
+    assert result.exit_code == 1
+    assert result.output == "Error: Presentation file not found.\nAborted!\n"
+
+
+def test_start_style_not_file(presentation: Presentation):
+    style_dir = presentation.root / "style.css"
+    style_dir.mkdir()
+
+    runner = CliRunner()
+    result = runner.invoke(
+        cli, ["start", str(presentation.file), "-s", str(style_dir)]
+    )
+
+    assert result.exit_code == 1
+    assert result.output == (
+        "Error: Style is not a css file or does not exists.\nAborted!\n"
+    )
+
+
+def test_start_style_not_css(presentation: Presentation):
+    style_file = presentation.root / "style.notcss"
+    style_file.write_text("", "utf8")
+
+    runner = CliRunner()
+    result = runner.invoke(
+        cli, ["start", str(presentation.file), "-s", str(style_file)]
+    )
+
+    assert result.exit_code == 1
+    assert result.output == (
+        "Error: Style is not a css file or does not exists.\nAborted!\n"
+    )

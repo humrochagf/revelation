@@ -1,126 +1,83 @@
-import os
-import shutil
-import tarfile
-import tempfile
-import zipfile
-from unittest import TestCase
+from pathlib import Path
+
+import pytest
 
 from revelation.utils import extract_file, make_presentation, move_and_replace
 
+from .conftest import Presentation
 
-class HelpersTestCase(TestCase):
-    def make_src(self, base):
-        source = tempfile.mkdtemp(dir=base)
-        file_to_replace_on_source = os.path.join(source, "replace.txt")
-        fd, file_to_move = tempfile.mkstemp(".txt", dir=source)
 
-        os.close(fd)
+def test_helper_move_and_replace(presentation: Presentation):
+    dst_dir = presentation.parent / "destination"
+    dst_dir.mkdir()
 
-        tempfile.mkdtemp(dir=source)
+    dst_file = dst_dir / "slides.md"
+    dst_file.write_text("replace", "utf8")
 
-        with open(file_to_replace_on_source, "w") as f_source:
-            f_source.write("source")
+    src_files = sorted((f.name for f in presentation.root.iterdir()))
 
-        return source
+    move_and_replace(str(presentation.root), str(dst_dir))
 
-    def make_dst(self, base):
-        destination = tempfile.mkdtemp(dir=base)
-        file_to_replace_on_dest = os.path.join(destination, "replace.txt")
+    dst_files = sorted((f.name for f in dst_dir.iterdir()))
 
-        with open(file_to_replace_on_dest, "w") as f_dest:
-            f_dest.write("dest")
+    # The moved directory should not exist because it was moved
+    assert not presentation.root.exists()
+    # The replaced file should contain the data from the source file
+    assert dst_file.read_text("utf8") == "# Test"
+    # The moved files from source should be equal to the
+    # files on destination directory
+    assert src_files == dst_files
 
-        return destination
 
-    def make_tar(self, content, base):
-        fd, tar_file = tempfile.mkstemp(".tar.gz", dir=base)
+def test_extract_file_zipfile(
+    presentation: Presentation,
+    presentation_zip: Path,
+):
+    src_files = sorted((f.name for f in presentation.root.iterdir()))
 
-        os.close(fd)
+    extracted_dir = Path(
+        extract_file(presentation_zip, str(presentation.parent))
+    )
 
-        with tarfile.open(tar_file, "w:gz") as t:
-            t.add(content, arcname="tarfolder")
+    extracted_files = sorted((f.name for f in extracted_dir.iterdir()))
 
-        return tar_file
+    assert extracted_files == src_files
 
-    def make_zip(self, content, base):
-        fd, zip_file = tempfile.mkstemp(".zip", dir=base)
 
-        os.close(fd)
+def test_extract_file_tarfile(
+    presentation: Presentation,
+    presentation_tar: Path,
+):
+    src_files = sorted((f.name for f in presentation.root.iterdir()))
 
-        with zipfile.ZipFile(zip_file, "w") as z:
-            z.write(content, arcname="zipfolder")
-            for item in os.listdir(content):
-                z.write(
-                    os.path.join(content, item),
-                    arcname=os.path.join("zipfolder", item),
-                )
+    extracted_dir = Path(
+        extract_file(presentation_tar, str(presentation.parent))
+    )
 
-        return zip_file
+    extracted_files = sorted((f.name for f in extracted_dir.iterdir()))
 
-    def setUp(self):
-        self.tests_folder = tempfile.mkdtemp()
-        self.source = self.make_src(self.tests_folder)
-        self.destination = self.make_dst(self.tests_folder)
-        self.tar = self.make_tar(self.source, self.tests_folder)
-        self.zip = self.make_zip(self.source, self.tests_folder)
-        fd, self.somefile = tempfile.mkstemp(dir=self.tests_folder)
+    assert extracted_files == src_files
 
-        os.close(fd)
 
-    def tearDown(self):
-        shutil.rmtree(self.tests_folder)
+def test_extract_file_on_non_file(tmp_path: Path):
+    with pytest.raises(FileNotFoundError):
+        extract_file(tmp_path / "notfound", str(tmp_path))
 
-    def test_helper_move_and_replace(self):
-        src_files = sorted(os.listdir(self.source))
 
-        move_and_replace(self.source, self.destination)
+def test_extract_file_on_non_tar_or_zip(tmp_path: Path):
+    wrong_format = tmp_path / "file.wrong"
+    wrong_format.write_text("", "utf8")
 
-        dst_files = sorted(os.listdir(self.destination))
+    with pytest.raises(NotImplementedError):
+        extract_file(wrong_format, str(tmp_path))
 
-        with open(os.path.join(self.destination, "replace.txt"), "r") as f:
-            file_content = f.read()
 
-        # The moved directory should not exist because it was moved
-        self.assertFalse(os.path.exists(self.source))
-        # The replaced file should contain the data from the source file
-        self.assertEqual(file_content, "source")
-        # The moved files from source should be equal to the
-        # files on destination directory
-        self.assertEqual(src_files, dst_files)
+def test_make_presentation(tmp_path: Path):
+    presentation = Presentation(tmp_path)
 
-    def test_extract_file_tarfile(self):
-        src_files = sorted(os.listdir(self.source))
+    make_presentation(str(presentation.root))
 
-        extracted = extract_file(self.tar, self.tests_folder)
-
-        extracted_files = sorted(os.listdir(extracted))
-
-        self.assertEqual(extracted_files, src_files)
-
-    def test_extract_file_zipfile(self):
-        src_files = sorted(os.listdir(self.source))
-
-        extracted = extract_file(self.zip, self.tests_folder)
-
-        extracted_files = sorted(os.listdir(extracted))
-
-        self.assertEqual(extracted_files, src_files)
-
-    def test_extract_file_on_non_file(self):
-        self.assertRaises(FileNotFoundError, extract_file, self.tests_folder)
-
-    def test_extract_file_on_non_tar_or_zip(self):
-        self.assertRaises(NotImplementedError, extract_file, self.somefile)
-
-    def test_make_presentation(self):
-        path = os.path.join(tempfile.mkdtemp(dir=self.tests_folder), "test")
-        media_path = os.path.join(path, "media")
-        config_path = os.path.join(path, "config.py")
-        presentation_path = os.path.join(path, "slides.md")
-
-        make_presentation(path)
-
-        self.assertTrue(os.path.isdir(path))
-        self.assertTrue(os.path.isdir(media_path))
-        self.assertTrue(os.path.isfile(config_path))
-        self.assertTrue(os.path.isfile(presentation_path))
+    assert presentation.root.is_dir()
+    assert presentation.file.is_file()
+    assert presentation.media.is_dir()
+    assert presentation.config.is_file()

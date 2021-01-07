@@ -13,12 +13,11 @@ lint: # lint code
 
 .PHONY: test
 test: # run tests
-	poetry run nosetests tests
+	poetry run pytest tests
 
 .PHONY: cover
 cover: # coverage tests
-	poetry run coverage run --source=$(PACKAGE) -m nose tests/
-	poetry run coverage report -m
+	poetry run pytest --cov=$(PACKAGE) tests/
 
 .PHONY: format
 format:

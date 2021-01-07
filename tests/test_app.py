@@ -1,72 +1,59 @@
-import os
-import shutil
-import tempfile
-from unittest import TestCase
-
 from werkzeug.test import Client
 from werkzeug.wrappers import BaseResponse
 
 from revelation import Revelation
 
+from .conftest import Presentation
 
-class RevelationTestCase(TestCase):
-    def setUp(self):
-        self.tests_folder = tempfile.mkdtemp()
-        self.media = tempfile.mkdtemp(dir=self.tests_folder)
-        _, self.slide = tempfile.mkstemp(".md", dir=self.tests_folder)
-        _, self.non_normalized_slide = tempfile.mkstemp(
-            ".md", dir=self.tests_folder
-        )
-        _, self.non_ascii_slide = tempfile.mkstemp(
-            ".md", dir=self.tests_folder
-        )
 
-        with open(self.slide, "w") as file:
-            file = file.write("# Pag1\n---\n# Pag2.1\n---~\n# Page2.2")
+def test_parse_shared_data_empty(revelation: Revelation):
+    shared_data_config = revelation.parse_shared_data(None)
 
-        with open(self.non_normalized_slide, "w") as file:
-            file = file.write("# Pag1\r---\r\n# Pag2")
+    assert shared_data_config == {}
 
-        with open(self.non_ascii_slide, "w") as file:
-            file = file.write("# こんにちは\n---\n# 乾杯")
 
-        self.app = Revelation(self.slide, media=self.media)
+def test_parse_shared_data(presentation: Presentation, revelation: Revelation):
+    shared_data_config = revelation.parse_shared_data(presentation.media)
 
-    def tearDown(self):
-        shutil.rmtree(self.tests_folder)
+    assert shared_data_config == {
+        f"/{presentation.media.name}": str(presentation.media)
+    }
 
-    def test_parse_shared_data_empty(self):
-        shared_data_config = self.app.parse_shared_data(None)
 
-        self.assertDictEqual(shared_data_config, {})
+def test_load_slides(presentation: Presentation, revelation: Revelation):
+    presentation.file.write_text(
+        "# Pag1\n---\n# Pag2.1\n---~\n# Page2.2", "utf8"
+    )
 
-    def test_parse_shared_data(self):
-        shared_data_config = self.app.parse_shared_data(self.media)
+    slides = revelation.load_slides(str(presentation.file), "---", "---~")
 
-        self.assertDictEqual(
-            shared_data_config,
-            {f"/{os.path.basename(self.media)}": self.media},
-        )
+    assert slides == [["# Pag1\n"], ["\n# Pag2.1\n", "\n# Page2.2"]]
 
-    def test_load_slides(self):
-        slides = self.app.load_slides(self.slide, "---", "---~")
 
-        self.assertListEqual(
-            slides, [["# Pag1\n"], ["\n# Pag2.1\n", "\n# Page2.2"]]
-        )
+def test_load_slides_non_normalized(
+    presentation: Presentation, revelation: Revelation
+):
+    presentation.file.write_text("# Pag1\r---\r\n# Pag2", "utf8")
 
-    def test_load_slides_non_normalized(self):
-        slides = self.app.load_slides(self.non_normalized_slide, "---", "---~")
+    slides = revelation.load_slides(str(presentation.file), "---", "---~")
 
-        self.assertListEqual(slides, [["# Pag1\n"], ["\n# Pag2"]])
+    assert slides == [["# Pag1\n"], ["\n# Pag2"]]
 
-    def test_load_slides_non_ascii(self):
-        slides = self.app.load_slides(self.non_ascii_slide, "---", "---~")
 
-        self.assertListEqual(slides, [["# こんにちは\n"], ["\n# 乾杯"]])
+def test_load_slides_non_ascii(
+    presentation: Presentation, revelation: Revelation
+):
+    presentation.file.write_text("# こんにちは\n---\n# 乾杯", "utf8")
 
-    def test_client_request_ok(self):
-        client = Client(self.app, BaseResponse)
-        response = client.get("/")
-        self.assertEqual(response.status, "200 OK")
-        self.assertEqual(response.headers.get("Content-Type"), "text/html")
+    slides = revelation.load_slides(str(presentation.file), "---", "---~")
+
+    assert slides == [["# こんにちは\n"], ["\n# 乾杯"]]
+
+
+def test_client_request_ok(revelation: Revelation):
+    client = Client(revelation, BaseResponse)
+
+    response = client.get("/")
+
+    assert response.status == "200 OK"
+    assert response.headers.get("Content-Type") == "text/html"
