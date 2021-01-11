@@ -443,7 +443,7 @@ testing = ["fields", "hunter", "process-tests (==2.0.2)", "six", "pytest-xdist",
 
 [[package]]
 name = "pytest-mock"
-version = "3.5.0"
+version = "3.5.1"
 description = "Thin-wrapper around the mock package for easier use with pytest"
 category = "dev"
 optional = false
@@ -586,7 +586,7 @@ watchdog = ["watchdog"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "a91da8a625d902bdc06721fd84bbc8940d71476ec869c2099b2a673f17ec271f"
+content-hash = "c1b7c4641b964634c8db0ecc57c270ef78937b8f64f0fe228ba8adf6f9ab5b85"
 
 [metadata.files]
 appdirs = [
@@ -829,8 +829,8 @@ pytest-cov = [
     {file = "pytest_cov-2.10.1-py2.py3-none-any.whl", hash = "sha256:45ec2d5182f89a81fc3eb29e3d1ed3113b9e9a873bcddb2a71faaab066110191"},
 ]
 pytest-mock = [
-    {file = "pytest-mock-3.5.0.tar.gz", hash = "sha256:4992db789175540d40a193bc60e987b1e69f1a989adad525a44e581c82149b14"},
-    {file = "pytest_mock-3.5.0-py3-none-any.whl", hash = "sha256:f9d77233b3af6c71cec6a8b8b5e9e9a2effd1bb6ff56e9ace72541ff6843ac81"},
+    {file = "pytest-mock-3.5.1.tar.gz", hash = "sha256:a1e2aba6af9560d313c642dae7e00a2a12b022b80301d9d7fc8ec6858e1dd9fc"},
+    {file = "pytest_mock-3.5.1-py3-none-any.whl", hash = "sha256:379b391cfad22422ea2e252bdfc008edd08509029bcde3c25b2c0bd741e0424e"},
 ]
 regex = [
     {file = "regex-2020.11.13-cp36-cp36m-macosx_10_9_x86_64.whl", hash = "sha256:8b882a78c320478b12ff024e81dc7d43c1462aa4a3341c754ee65d857a521f85"},
@@ -933,6 +933,22 @@ urllib3 = [
     {file = "urllib3-1.26.2.tar.gz", hash = "sha256:19188f96923873c92ccb987120ec4acaa12f0461fa9ce5d3d0772bc965a39e08"},
 ]
 watchdog = [
+    {file = "watchdog-1.0.1-cp36-cp36m-macosx_10_9_x86_64.whl", hash = "sha256:e81063af77eca2c2a3d051e7455f8d4e5b64899e4839393986a6562a600be3b3"},
+    {file = "watchdog-1.0.1-cp37-cp37m-macosx_10_9_x86_64.whl", hash = "sha256:7dde5fd09240927e162fb2c2225168769f4377e2015414a489fb41a569dee920"},
+    {file = "watchdog-1.0.1-cp38-cp38-macosx_10_9_x86_64.whl", hash = "sha256:1122c5092534e557ea4242cfd6afaa568d9658631f752592dffb4d815eb9044a"},
+    {file = "watchdog-1.0.1-cp39-cp39-macosx_10_9_x86_64.whl", hash = "sha256:ef8c0cf76b7adc2d1ecf0733baa3a7d05a4442dcc3dda76fb9ea850cb7973323"},
+    {file = "watchdog-1.0.1-pp36-pypy36_pp73-macosx_10_9_x86_64.whl", hash = "sha256:7a2708a0a48d3357dddba4b6e0563862b95b72c1652405682d189635796ebd22"},
+    {file = "watchdog-1.0.1-pp37-pypy37_pp73-macosx_10_9_x86_64.whl", hash = "sha256:048449a598410459c8ec58caec40663b3d05d7123ee831620b1ba9c581e38d92"},
+    {file = "watchdog-1.0.1-py3-none-manylinux2014_aarch64.whl", hash = "sha256:1875a47a2f2f29a26abd6781e8e7357a2c31b7b8b997baeb0d630ac1442239e3"},
+    {file = "watchdog-1.0.1-py3-none-manylinux2014_armv7l.whl", hash = "sha256:2e5edfbdcea9d37c581f92fa1463b35f3fb4399fb2c0106c22a228b8c8b24c05"},
+    {file = "watchdog-1.0.1-py3-none-manylinux2014_i686.whl", hash = "sha256:a98c31b13f357c641ef3ab7628817a8d599584e5bd56eca9b90906ecfdbf72cf"},
+    {file = "watchdog-1.0.1-py3-none-manylinux2014_ppc64.whl", hash = "sha256:1bb0715633fcf4b3148a4c5a3dd4dacde2102e9eb6d0e3beb120e45c31f292a0"},
+    {file = "watchdog-1.0.1-py3-none-manylinux2014_ppc64le.whl", hash = "sha256:68018bde139a34615eaa55f6142bb4aaca1f45dc110dc876dfe5ab7507929cf1"},
+    {file = "watchdog-1.0.1-py3-none-manylinux2014_s390x.whl", hash = "sha256:78e4fd442e5ab7dd8e76aa135f64b08c9032fa857caa73c4afc6804238603c9b"},
+    {file = "watchdog-1.0.1-py3-none-manylinux2014_x86_64.whl", hash = "sha256:416fef58a6354dc671d309708b117857970c63fbf8c0507ae473bdc4ef91aa20"},
+    {file = "watchdog-1.0.1-py3-none-win32.whl", hash = "sha256:29dab966cab2f5cd517d99524f53e9676c8ed579af9ea1f2378218ca997819c0"},
+    {file = "watchdog-1.0.1-py3-none-win_amd64.whl", hash = "sha256:e12c12df51b368cfaa02f0b93462078b517b8fc498d875a0d063503d6a4b047c"},
+    {file = "watchdog-1.0.1-py3-none-win_ia64.whl", hash = "sha256:73735161ca5c5853af25240bf9aa1edd18c51721bfc6b2c0d30d8fac7ea16a6b"},
     {file = "watchdog-1.0.1.tar.gz", hash = "sha256:78ea5d78f2cf8e4d6343ab2cbed93bb47b7a85b1c2f90a1dea365226bbab68ac"},
 ]
 wcwidth = [
