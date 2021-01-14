@@ -59,14 +59,17 @@ def test_mkstatic_custom_media(presentation: Presentation):
     custom_media_file = output_dir / "media" / presentation_media_file.name
 
     runner = CliRunner()
-    result = runner.invoke(cli, [
-        "mkstatic",
-        str(presentation.file),
-        "-o",
-        str(output_dir),
-        "-m",
-        str(presentation_media),
-    ])
+    result = runner.invoke(
+        cli,
+        [
+            "mkstatic",
+            str(presentation.file),
+            "-o",
+            str(output_dir),
+            "-m",
+            str(presentation_media),
+        ],
+    )
 
     assert result.exit_code == 0
     assert output_dir.is_dir()
@@ -98,10 +101,7 @@ def test_mkstatic_without_config(presentation: Presentation):
     )
 
     assert result.exit_code == 0
-    assert (
-        "Configuration file not detected, running with defaults."
-        in result.output
-    )
+    assert "Configuration file not detected, running with defaults." in result.output
 
 
 def test_mkstatic_with_theme(presentation: Presentation):
@@ -254,9 +254,7 @@ def test_start_style_not_file(presentation: Presentation):
     style_dir.mkdir()
 
     runner = CliRunner()
-    result = runner.invoke(
-        cli, ["start", str(presentation.file), "-s", str(style_dir)]
-    )
+    result = runner.invoke(cli, ["start", str(presentation.file), "-s", str(style_dir)])
 
     assert result.exit_code == 1
     assert result.output == (

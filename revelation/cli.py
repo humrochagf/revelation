@@ -3,9 +3,11 @@
 import glob
 import os
 import shutil
+from typing import Any, Dict, Optional
 
 import typer
 from typer import Option
+from typer.main import get_command
 from werkzeug.serving import run_simple
 
 import revelation
@@ -89,9 +91,9 @@ def mkpresentation(presentation: str):
 def mkstatic(
     ctx: typer.Context,
     presentation: str,
-    config: str = Option(None, "--config", "-c", help="Custom config file"),
-    media: str = Option(None, "--media", "-m", help="Custom media folder"),
-    theme: str = Option(None, "--theme", "-t", help="Custom theme folder"),
+    config: Optional[str] = Option(None, "--config", "-c", help="Custom config file"),
+    media: Optional[str] = Option(None, "--media", "-m", help="Custom media folder"),
+    theme: Optional[str] = Option(None, "--theme", "-t", help="Custom theme folder"),
     output_folder: str = Option(
         "output",
         "--output-folder",
@@ -110,7 +112,7 @@ def mkstatic(
         "-r",
         help="Overwrite the output folder if exists",
     ),
-    style: str = Option(
+    style: Optional[str] = Option(
         None,
         "--style-override-file",
         "-s",
@@ -124,9 +126,7 @@ def mkstatic(
         echo("Reveal.js not found, running installation...")
 
         # Change after fix on https://github.com/tiangolo/typer/issues/102
-        ctx.invoke(
-            typer.main.get_command(cli).get_command(ctx, "installreveal")
-        )
+        ctx.invoke(get_command(cli).get_command(ctx, "installreveal"))  # type: ignore
 
     output_folder = os.path.realpath(output_folder)
 
@@ -153,10 +153,7 @@ def mkstatic(
         if force:
             shutil.rmtree(output_folder)
         else:
-            error(
-                f"'{output_folder}' already exists, "
-                "use --force to override it."
-            )
+            error(f"'{output_folder}' already exists, " "use --force to override it.")
 
             raise typer.Abort()
 
@@ -167,9 +164,7 @@ def mkstatic(
 
     # if has override style copy
     if style:
-        shutil.copy(
-            style, os.path.join(output_folder, os.path.basename(style))
-        )
+        shutil.copy(style, os.path.join(output_folder, os.path.basename(style)))
 
     shutil.copytree(REVEALJS_FOLDER, os.path.join(staticfolder, "revealjs"))
 
@@ -218,9 +213,7 @@ def mkstatic(
     output_file = os.path.join(output_folder, output_file)
 
     with open(output_file, "wb") as f:
-        f.write(
-            app.dispatch_request(None).get_data(as_text=True).encode("utf-8")
-        )
+        f.write(app.dispatch_request(None).get_data(as_text=True).encode("utf-8"))
 
     echo(f"Static presentation generated in {os.path.realpath(output_folder)}")
 
@@ -229,11 +222,11 @@ def mkstatic(
 def start(
     ctx: typer.Context,
     presentation: str,
-    port: str = Option(4000, "--port", "-p", help="Presentation server port"),
-    config: str = Option(None, "--config", "-c", help="Custom config file"),
-    media: str = Option(None, "--media", "-m", help="Custom media folder"),
-    theme: str = Option(None, "--theme", "-t", help="Custom theme folder"),
-    style: str = Option(
+    port: int = Option(4000, "--port", "-p", help="Presentation server port"),
+    config: Optional[str] = Option(None, "--config", "-c", help="Custom config file"),
+    media: Optional[str] = Option(None, "--media", "-m", help="Custom media folder"),
+    theme: Optional[str] = Option(None, "--theme", "-t", help="Custom theme folder"),
+    style: Optional[str] = Option(
         None,
         "--style-override-file",
         "-s",
@@ -253,9 +246,7 @@ def start(
         echo("Reveal.js not found, running installation...")
 
         # Change after fix on https://github.com/tiangolo/typer/issues/102
-        ctx.invoke(
-            typer.main.get_command(cli).get_command(ctx, "installreveal")
-        )
+        ctx.invoke(get_command(cli).get_command(ctx, "installreveal"))  # type: ignore
 
     # Check for presentation file
     if os.path.isfile(presentation):
@@ -304,7 +295,7 @@ def start(
     # instantiating revelation app
     app = Revelation(presentation, config, media, theme, style)
 
-    server_args = {
+    server_args: Dict[str, Any] = {
         "hostname": "localhost",
         "port": port,
         "application": app,
@@ -315,7 +306,8 @@ def start(
         server_args["use_debugger"] = True
         server_args["use_reloader"] = True
         server_args["reloader_type"] = "watchdog"
-        server_args["extra_files"] = glob.glob(os.path.join(path, "*.md"))
-        server_args["extra_files"] += glob.glob(os.path.join(path, "*.css"))
+        server_args["extra_files"] = glob.glob(os.path.join(path, "*.md")) + glob.glob(
+            os.path.join(path, "*.css")
+        )
 
     run_simple(**server_args)

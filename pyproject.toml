@@ -27,6 +27,11 @@ coveralls = "^2.2.0"
 pytest = "^6.2.1"
 pytest-mock = "^3.5.0"
 pytest-cov = "^2.10.1"
+mypy = "^0.790"
+
+[tool.isort]
+known_first_party = "revelation"
+profile = "black"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

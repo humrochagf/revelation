@@ -35,9 +35,7 @@ def test_extract_file_zipfile(
 ):
     src_files = sorted((f.name for f in presentation.root.iterdir()))
 
-    extracted_dir = Path(
-        extract_file(presentation_zip, str(presentation.parent))
-    )
+    extracted_dir = Path(extract_file(presentation_zip, str(presentation.parent)))
 
     extracted_files = sorted((f.name for f in extracted_dir.iterdir()))
 
@@ -50,9 +48,7 @@ def test_extract_file_tarfile(
 ):
     src_files = sorted((f.name for f in presentation.root.iterdir()))
 
-    extracted_dir = Path(
-        extract_file(presentation_tar, str(presentation.parent))
-    )
+    extracted_dir = Path(extract_file(presentation_tar, str(presentation.parent)))
 
     extracted_files = sorted((f.name for f in extracted_dir.iterdir()))
 

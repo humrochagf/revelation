@@ -2,10 +2,13 @@
 
 ######################################
 
-ROOTDIR    := $(PWD)
-PACKAGE    := "revelation"
+PACKAGE := "revelation"
 
 ######################################
+
+.PHONY: typecheck
+typecheck: # type check code
+	poetry run mypy .
 
 .PHONY: lint
 lint: # lint code
@@ -21,8 +24,8 @@ cover: # coverage tests
 
 .PHONY: format
 format:
-	poetry run isort $(ROOTDIR)
-	poetry run black -l 79 .
+	poetry run isort .
+	poetry run black .
 
 .PHONY: clean
 clean: # remove temporary files and artifacts
