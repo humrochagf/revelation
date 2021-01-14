@@ -20,9 +20,12 @@ jobs:
       run: |
         pip install poetry
         poetry install
-    - name: Lint with flake8
+    - name: Lint check with flake8
       run: |
         make lint
+    - name: Type check with mypy
+      run: |
+        make typecheck
     - name: Test with nosetests
       run: |
         make cover
