@@ -4,7 +4,9 @@ import os
 import shutil
 import tarfile
 import zipfile
+from http.client import HTTPMessage
 from pathlib import Path
+from typing import Tuple
 from urllib.request import urlretrieve
 
 from . import default_config
@@ -26,7 +28,7 @@ def make_presentation(presentation_path: Path):
         fp.write(f"# {title}\n\nStart from here!")
 
 
-def download_file(url=None):
+def download_file(url: str) -> Tuple[str, HTTPMessage]:
     """
     Download a file from a given url
     """
