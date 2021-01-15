@@ -101,7 +101,10 @@ def test_mkstatic_without_config(presentation: Presentation):
     )
 
     assert result.exit_code == 0
-    assert "Configuration file not detected, running with defaults." in result.output
+    assert (
+        "Configuration file not detected, running with defaults."
+        in result.output
+    )
 
 
 def test_mkstatic_with_theme(presentation: Presentation):
@@ -254,7 +257,9 @@ def test_start_style_not_file(presentation: Presentation):
     style_dir.mkdir()
 
     runner = CliRunner()
-    result = runner.invoke(cli, ["start", str(presentation.file), "-s", str(style_dir)])
+    result = runner.invoke(
+        cli, ["start", str(presentation.file), "-s", str(style_dir)]
+    )
 
     assert result.exit_code == 1
     assert result.output == (

@@ -25,7 +25,7 @@ cover: # coverage tests
 .PHONY: format
 format:
 	poetry run isort .
-	poetry run black .
+	poetry run black -l 79 .
 
 .PHONY: clean
 clean: # remove temporary files and artifacts

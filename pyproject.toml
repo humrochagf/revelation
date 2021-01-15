@@ -30,8 +30,12 @@ pytest-cov = "^2.10.1"
 mypy = "^0.790"
 
 [tool.isort]
+ensure_newline_before_comments = true
+force_grid_wrap = 0
+include_trailing_comma = true
 known_first_party = "revelation"
-profile = "black"
+multi_line_output = 3
+use_parentheses = true
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

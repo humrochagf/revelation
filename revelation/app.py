@@ -36,7 +36,9 @@ class Revelation(object):
         self.config = Config(config)
         self.presentation = presentation
 
-        shared_data = {"/static": os.path.join(os.path.dirname(__file__), "static")}
+        shared_data = {
+            "/static": os.path.join(os.path.dirname(__file__), "static")
+        }
 
         shared_data.update(self.parse_shared_data(media))
         shared_data.update(self.parse_shared_data(theme))
