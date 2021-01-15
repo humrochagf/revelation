@@ -8,9 +8,6 @@ from urllib.request import urlretrieve
 
 from . import default_config
 
-REVEAL_URL = "https://github.com/hakimel/reveal.js/archive/master.zip"
-MATHJAX_URL = "https://github.com/mathjax/MathJax/archive/2.7.9.zip"
-
 
 def make_presentation(presentation_path):
     """

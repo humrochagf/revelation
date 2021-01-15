@@ -3,6 +3,7 @@
 import glob
 import os
 import shutil
+from pathlib import Path
 from typing import Any, Dict, Optional
 
 import typer
@@ -12,21 +13,17 @@ from werkzeug.serving import run_simple
 
 import revelation
 from revelation import Revelation
-from revelation.utils import (
+from revelation.constants import (
+    MATHJAX_DIR,
     MATHJAX_URL,
     REVEAL_URL,
+    REVEALJS_DIR,
+)
+from revelation.utils import (
     download_file,
     extract_file,
     make_presentation,
     move_and_replace,
-)
-
-REVEALJS_FOLDER = os.path.join(
-    os.path.join(os.path.dirname(revelation.__file__), "static"), "revealjs"
-)
-
-MATHJAX_FOLDER = os.path.join(
-    os.path.join(os.path.dirname(revelation.__file__), "static"), "mathjax"
 )
 
 cli = typer.Typer()
@@ -61,7 +58,7 @@ def installreveal(
 
     echo("Installing reveal.js...")
 
-    move_and_replace(extract_file(download[0]), REVEALJS_FOLDER)
+    move_and_replace(extract_file(download[0]), str(REVEALJS_DIR))
 
     echo("Downloading MathJax...")
 
@@ -69,22 +66,22 @@ def installreveal(
 
     echo("Installing MathJax...")
 
-    move_and_replace(extract_file(download[0]), MATHJAX_FOLDER)
+    move_and_replace(extract_file(download[0]), str(MATHJAX_DIR))
 
     echo("Installation completed!")
 
 
 @cli.command()
-def mkpresentation(presentation: str):
+def mkpresentation(presentation: Path):
     """Create a new revelation presentation"""
-    if os.path.exists(presentation):
+    if presentation.exists():
         error(f"'{presentation}' already exists.")
 
         raise typer.Abort()
 
     echo("Starting a new presentation...")
 
-    make_presentation(presentation)
+    make_presentation(str(presentation))
 
 
 @cli.command()
@@ -122,7 +119,7 @@ def mkstatic(
     """Make static presentation"""
 
     # Check if reveal.js is installed
-    if not os.path.exists(REVEALJS_FOLDER):
+    if not os.path.exists(str(REVEALJS_DIR)):
         echo("Reveal.js not found, running installation...")
 
         # Change after fix on https://github.com/tiangolo/typer/issues/102
@@ -166,7 +163,7 @@ def mkstatic(
     if style:
         shutil.copy(style, os.path.join(output_folder, os.path.basename(style)))
 
-    shutil.copytree(REVEALJS_FOLDER, os.path.join(staticfolder, "revealjs"))
+    shutil.copytree(str(REVEALJS_DIR), os.path.join(staticfolder, "revealjs"))
 
     # Check for media root
     if not media:
@@ -242,7 +239,7 @@ def start(
 ):
     """Start the revelation server"""
     # Check if reveal.js is installed
-    if not os.path.exists(REVEALJS_FOLDER):
+    if not os.path.exists(str(REVEALJS_DIR)):
         echo("Reveal.js not found, running installation...")
 
         # Change after fix on https://github.com/tiangolo/typer/issues/102
