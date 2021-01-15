@@ -4,27 +4,23 @@ import os
 import shutil
 import tarfile
 import zipfile
+from pathlib import Path
 from urllib.request import urlretrieve
 
 from . import default_config
 
 
-def make_presentation(presentation_path):
+def make_presentation(presentation_path: Path):
     """
     Make a new presentation boilerplate code given a presentation_path
     """
-    name = os.path.basename(presentation_path)
-    # Presentation dir
-    os.mkdir(presentation_path)
-    # Media dir
-    os.mkdir(os.path.join(presentation_path, "media"))
-    # Config file
-    config_file = os.path.join(
-        os.path.dirname(default_config.__file__), "default_config.py"
-    )
-    shutil.copy(config_file, os.path.join(presentation_path, "config.py"))
-    # Slide file
-    with open(os.path.join(presentation_path, "slides.md"), "w") as fp:
+    name = presentation_path.name
+
+    (presentation_path / "media").mkdir(parents=True)
+
+    shutil.copy(default_config.__file__, presentation_path / "config.py")
+
+    with (presentation_path / "slides.md").open("w") as fp:
         title = name.replace("_", " ").replace("-", " ").title()
 
         fp.write(f"# {title}\n\nStart from here!")

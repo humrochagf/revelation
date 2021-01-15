@@ -75,7 +75,7 @@ def test_extract_file_on_non_tar_or_zip(tmp_path: Path):
 def test_make_presentation(tmp_path: Path):
     presentation = Presentation(tmp_path)
 
-    make_presentation(str(presentation.root))
+    make_presentation(presentation.root)
 
     assert presentation.root.is_dir()
     assert presentation.file.is_file()

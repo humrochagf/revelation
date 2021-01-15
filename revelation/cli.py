@@ -81,7 +81,7 @@ def mkpresentation(presentation: Path):
 
     echo("Starting a new presentation...")
 
-    make_presentation(str(presentation))
+    make_presentation(presentation)
 
 
 @cli.command()
