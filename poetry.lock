@@ -444,14 +444,14 @@ testing = ["argcomplete", "hypothesis (>=3.56)", "mock", "nose", "requests", "xm
 
 [[package]]
 name = "pytest-cov"
-version = "2.10.1"
+version = "2.11.0"
 description = "Pytest plugin for measuring coverage."
 category = "dev"
 optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
 
 [package.dependencies]
-coverage = ">=4.4"
+coverage = ">=5.2.1"
 pytest = ">=4.6"
 
 [package.extras]
@@ -602,7 +602,7 @@ watchdog = ["watchdog"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "09f815805043ea0ca97c0b724aaf79608f57f3450748a9f6be53784f6c64d19c"
+content-hash = "bf88458827d9a5bbcd2676cd7888cdc64694f78982e7e49b4f0248f2f697cf94"
 
 [metadata.files]
 appdirs = [
@@ -857,8 +857,8 @@ pytest = [
     {file = "pytest-6.2.1.tar.gz", hash = "sha256:66e419b1899bc27346cb2c993e12c5e5e8daba9073c1fbce33b9807abc95c306"},
 ]
 pytest-cov = [
-    {file = "pytest-cov-2.10.1.tar.gz", hash = "sha256:47bd0ce14056fdd79f93e1713f88fad7bdcc583dcd7783da86ef2f085a0bb88e"},
-    {file = "pytest_cov-2.10.1-py2.py3-none-any.whl", hash = "sha256:45ec2d5182f89a81fc3eb29e3d1ed3113b9e9a873bcddb2a71faaab066110191"},
+    {file = "pytest-cov-2.11.0.tar.gz", hash = "sha256:e90e034cde61dacb1394639a33f449725c591025b182d69752c1dd0bfec639a7"},
+    {file = "pytest_cov-2.11.0-py2.py3-none-any.whl", hash = "sha256:626a8a6ab188656c4f84b67d22436d6c494699d917e567e0048dda6e7f59e028"},
 ]
 pytest-mock = [
     {file = "pytest-mock-3.5.1.tar.gz", hash = "sha256:a1e2aba6af9560d313c642dae7e00a2a12b022b80301d9d7fc8ec6858e1dd9fc"},
@@ -965,6 +965,22 @@ urllib3 = [
     {file = "urllib3-1.26.2.tar.gz", hash = "sha256:19188f96923873c92ccb987120ec4acaa12f0461fa9ce5d3d0772bc965a39e08"},
 ]
 watchdog = [
+    {file = "watchdog-1.0.1-cp36-cp36m-macosx_10_9_x86_64.whl", hash = "sha256:e81063af77eca2c2a3d051e7455f8d4e5b64899e4839393986a6562a600be3b3"},
+    {file = "watchdog-1.0.1-cp37-cp37m-macosx_10_9_x86_64.whl", hash = "sha256:7dde5fd09240927e162fb2c2225168769f4377e2015414a489fb41a569dee920"},
+    {file = "watchdog-1.0.1-cp38-cp38-macosx_10_9_x86_64.whl", hash = "sha256:1122c5092534e557ea4242cfd6afaa568d9658631f752592dffb4d815eb9044a"},
+    {file = "watchdog-1.0.1-cp39-cp39-macosx_10_9_x86_64.whl", hash = "sha256:ef8c0cf76b7adc2d1ecf0733baa3a7d05a4442dcc3dda76fb9ea850cb7973323"},
+    {file = "watchdog-1.0.1-pp36-pypy36_pp73-macosx_10_9_x86_64.whl", hash = "sha256:7a2708a0a48d3357dddba4b6e0563862b95b72c1652405682d189635796ebd22"},
+    {file = "watchdog-1.0.1-pp37-pypy37_pp73-macosx_10_9_x86_64.whl", hash = "sha256:048449a598410459c8ec58caec40663b3d05d7123ee831620b1ba9c581e38d92"},
+    {file = "watchdog-1.0.1-py3-none-manylinux2014_aarch64.whl", hash = "sha256:1875a47a2f2f29a26abd6781e8e7357a2c31b7b8b997baeb0d630ac1442239e3"},
+    {file = "watchdog-1.0.1-py3-none-manylinux2014_armv7l.whl", hash = "sha256:2e5edfbdcea9d37c581f92fa1463b35f3fb4399fb2c0106c22a228b8c8b24c05"},
+    {file = "watchdog-1.0.1-py3-none-manylinux2014_i686.whl", hash = "sha256:a98c31b13f357c641ef3ab7628817a8d599584e5bd56eca9b90906ecfdbf72cf"},
+    {file = "watchdog-1.0.1-py3-none-manylinux2014_ppc64.whl", hash = "sha256:1bb0715633fcf4b3148a4c5a3dd4dacde2102e9eb6d0e3beb120e45c31f292a0"},
+    {file = "watchdog-1.0.1-py3-none-manylinux2014_ppc64le.whl", hash = "sha256:68018bde139a34615eaa55f6142bb4aaca1f45dc110dc876dfe5ab7507929cf1"},
+    {file = "watchdog-1.0.1-py3-none-manylinux2014_s390x.whl", hash = "sha256:78e4fd442e5ab7dd8e76aa135f64b08c9032fa857caa73c4afc6804238603c9b"},
+    {file = "watchdog-1.0.1-py3-none-manylinux2014_x86_64.whl", hash = "sha256:416fef58a6354dc671d309708b117857970c63fbf8c0507ae473bdc4ef91aa20"},
+    {file = "watchdog-1.0.1-py3-none-win32.whl", hash = "sha256:29dab966cab2f5cd517d99524f53e9676c8ed579af9ea1f2378218ca997819c0"},
+    {file = "watchdog-1.0.1-py3-none-win_amd64.whl", hash = "sha256:e12c12df51b368cfaa02f0b93462078b517b8fc498d875a0d063503d6a4b047c"},
+    {file = "watchdog-1.0.1-py3-none-win_ia64.whl", hash = "sha256:73735161ca5c5853af25240bf9aa1edd18c51721bfc6b2c0d30d8fac7ea16a6b"},
     {file = "watchdog-1.0.1.tar.gz", hash = "sha256:78ea5d78f2cf8e4d6343ab2cbed93bb47b7a85b1c2f90a1dea365226bbab68ac"},
 ]
 wcwidth = [

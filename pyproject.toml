@@ -26,7 +26,7 @@ ipython = "^7.19.0"
 coveralls = "^3.0.0"
 pytest = "^6.2.1"
 pytest-mock = "^3.5.1"
-pytest-cov = "^2.10.1"
+pytest-cov = "^2.11.0"
 mypy = "^0.790"
 
 [tool.isort]
