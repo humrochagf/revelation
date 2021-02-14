@@ -28,17 +28,16 @@ def make_presentation(presentation_path: Path):
         fp.write(f"# {title}\n\nStart from here!")
 
 
-def download_file(url: str) -> Tuple[str, HTTPMessage]:
+def download_file(url: str) -> Tuple[Path, HTTPMessage]:
     """
     Download a file from a given url
     """
-    try:
-        return urlretrieve(url)
-    except Exception:
-        raise
+    downloaded_file, result = urlretrieve(url)
+
+    return Path(downloaded_file), result
 
 
-def move_and_replace(src, dst):
+def move_and_replace(src: Path, dst: Path):
     """
     Helper function used to move files from one place to another,
     creating os replacing them if needed
@@ -47,14 +46,14 @@ def move_and_replace(src, dst):
     :param dst: destination directory
     """
 
-    src = os.path.abspath(src)
-    dst = os.path.abspath(dst)
+    src = src.resolve()
+    dst = dst.resolve()
 
     for src_dir, _, files in os.walk(src):
         # using os walk to navigate through the directory tree
         # keep te dir structure by replacing the source root to
         # the destination on walked path
-        dst_dir = src_dir.replace(src, dst)
+        dst_dir = src_dir.replace(str(src), str(dst))
 
         if not os.path.exists(dst_dir):
             # to prevent copy from failing, create the not existing dirs

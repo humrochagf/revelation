@@ -58,7 +58,7 @@ def installreveal(
 
     echo("Installing reveal.js...")
 
-    move_and_replace(extract_file(download[0]), str(REVEALJS_DIR))
+    move_and_replace(extract_file(download[0]), REVEALJS_DIR)
 
     echo("Downloading MathJax...")
 
@@ -66,7 +66,7 @@ def installreveal(
 
     echo("Installing MathJax...")
 
-    move_and_replace(extract_file(download[0]), str(MATHJAX_DIR))
+    move_and_replace(extract_file(download[0]), MATHJAX_DIR)
 
     echo("Installation completed!")
 

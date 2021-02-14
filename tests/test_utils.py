@@ -16,7 +16,7 @@ def test_helper_move_and_replace(presentation: Presentation):
 
     src_files = sorted((f.name for f in presentation.root.iterdir()))
 
-    move_and_replace(str(presentation.root), str(dst_dir))
+    move_and_replace(presentation.root, dst_dir)
 
     dst_files = sorted((f.name for f in dst_dir.iterdir()))
 
