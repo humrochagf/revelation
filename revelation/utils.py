@@ -71,13 +71,15 @@ def move_and_replace(src: Path, dst: Path):
     shutil.rmtree(src)  # remove the dir structure from the source
 
 
-def extract_file(compressed_file, path="."):
+def extract_file(compressed_file: Path, path: Path = Path(".")) -> Path:
     """Extract function to extract from zip or tar file"""
-    if os.path.isfile(compressed_file):
-        if tarfile.is_tarfile(compressed_file):
+    path = path.resolve()
+
+    if compressed_file.is_file():
+        if tarfile.is_tarfile(str(compressed_file)):
             with tarfile.open(compressed_file, "r:gz") as tfile:
-                basename = tfile.members[0].name
-                tfile.extractall(path + "/")
+                basename = tfile.getnames()[0]
+                tfile.extractall(str(path.resolve()))
         elif zipfile.is_zipfile(compressed_file):
             with zipfile.ZipFile(compressed_file, "r") as zfile:
                 basename = zfile.namelist()[0]
@@ -87,7 +89,7 @@ def extract_file(compressed_file, path="."):
     else:
         raise FileNotFoundError(f"{compressed_file} is not a valid file")
 
-    return os.path.abspath(os.path.join(path, basename))
+    return path / basename
 
 
 def normalize_newlines(text):

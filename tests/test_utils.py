@@ -35,9 +35,7 @@ def test_extract_file_zipfile(
 ):
     src_files = sorted((f.name for f in presentation.root.iterdir()))
 
-    extracted_dir = Path(
-        extract_file(presentation_zip, str(presentation.parent))
-    )
+    extracted_dir = Path(extract_file(presentation_zip, presentation.parent))
 
     extracted_files = sorted((f.name for f in extracted_dir.iterdir()))
 
@@ -50,9 +48,7 @@ def test_extract_file_tarfile(
 ):
     src_files = sorted((f.name for f in presentation.root.iterdir()))
 
-    extracted_dir = Path(
-        extract_file(presentation_tar, str(presentation.parent))
-    )
+    extracted_dir = Path(extract_file(presentation_tar, presentation.parent))
 
     extracted_files = sorted((f.name for f in extracted_dir.iterdir()))
 
@@ -61,7 +57,7 @@ def test_extract_file_tarfile(
 
 def test_extract_file_on_non_file(tmp_path: Path):
     with pytest.raises(FileNotFoundError):
-        extract_file(tmp_path / "notfound", str(tmp_path))
+        extract_file(tmp_path / "notfound", tmp_path)
 
 
 def test_extract_file_on_non_tar_or_zip(tmp_path: Path):
@@ -69,7 +65,7 @@ def test_extract_file_on_non_tar_or_zip(tmp_path: Path):
     wrong_format.write_text("", "utf8")
 
     with pytest.raises(NotImplementedError):
-        extract_file(wrong_format, str(tmp_path))
+        extract_file(wrong_format, tmp_path)
 
 
 def test_make_presentation(tmp_path: Path):
