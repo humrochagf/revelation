@@ -7,9 +7,7 @@
 [![Coverage Status](https://coveralls.io/repos/github/humrochagf/revelation/badge.svg?branch=main)](https://coveralls.io/github/humrochagf/revelation?branch=main)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black)
 
-[revelation](https://github.com/humrochagf/revelation) is a cli tool that
-makes your [reveal.js](https://github.com/hakimel/reveal.js) presentations
-nice and easy using markdown and serving it locally.
+[revelation](https://github.com/humrochagf/revelation) is a cli tool that makes your [reveal.js](https://github.com/hakimel/reveal.js) presentations nice and easy using markdown and serving it locally.
 
 ## Features
 
@@ -31,44 +29,38 @@ $ pip install revelation
 
 ### Install/Update reveal.js files
 
-The first thing that you will do after installing revelation is to download and
-install reveal.js to render the presentations.
+Revelation depends on reveal.js to run its presentation and every command bellow will check and install it if reveal.js isn't installed yet.
 
-To do that just run the `installreveal` command:
+You can also manually install reveal.js or even update it to a different version with the `installreveal` command:
 
 ```shell
 $ revelation installreveal
 ```
 
-### Running the Presentation
-
-To start your presentation run:
-
-```shell
-$ revelation start PRESENTATION
-```
-
-The `PRESENTATION` is the path to the markdown presentation file.
-
 ### Creating a new Presentation
 
-To create a new presentation run:
+To start making your presentation revelation has the `mkpresentation` command that will setup a new presentation using the base layout for you:
 
 ```shell
-$ revelation mkpresentation NAME
+$ revelation mkpresentation mypresentation
 ```
 
-That will create a new presentation folder with  the `NAME` passed.
+### Running the Presentation
+
+Once you have your presentation ready you can start presenting by running the `start` command on your presentation markdown file:
+
+```shell
+$ cd mypresentation
+$ revelation start slides.md
+```
 
 ### Static Export
 
 To export the presentation as static HTML content use the command:
 
 ```shell
-$ revelation mkstatic PRESENTATION
+$ revelation mkstatic slides.md
 ```
-
-The `PRESENTATION` is the path to the markdown presentation file.
 
 ### PDF Export
 
