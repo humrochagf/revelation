@@ -92,6 +92,6 @@ def extract_file(compressed_file: Path, path: Path = Path(".")) -> Path:
     return path / basename
 
 
-def normalize_newlines(text):
+def normalize_newlines(text: str) -> str:
     """Normalize text to follow Unix newline pattern"""
     return text.replace("\r\n", "\n").replace("\r", "\n")
