@@ -25,7 +25,7 @@ def test_load_slides(presentation: Presentation, revelation: Revelation):
         "# Pag1\n---\n# Pag2.1\n---~\n# Page2.2", "utf8"
     )
 
-    slides = revelation.load_slides(str(presentation.file), "---", "---~")
+    slides = revelation.load_slides(presentation.file, "---", "---~")
 
     assert slides == [["# Pag1\n"], ["\n# Pag2.1\n", "\n# Page2.2"]]
 
@@ -35,7 +35,7 @@ def test_load_slides_non_normalized(
 ):
     presentation.file.write_text("# Pag1\r---\r\n# Pag2", "utf8")
 
-    slides = revelation.load_slides(str(presentation.file), "---", "---~")
+    slides = revelation.load_slides(presentation.file, "---", "---~")
 
     assert slides == [["# Pag1\n"], ["\n# Pag2"]]
 
@@ -45,7 +45,7 @@ def test_load_slides_non_ascii(
 ):
     presentation.file.write_text("# こんにちは\n---\n# 乾杯", "utf8")
 
-    slides = revelation.load_slides(str(presentation.file), "---", "---~")
+    slides = revelation.load_slides(presentation.file, "---", "---~")
 
     assert slides == [["# こんにちは\n"], ["\n# 乾杯"]]
 

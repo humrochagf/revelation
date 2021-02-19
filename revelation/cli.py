@@ -87,7 +87,7 @@ def mkpresentation(presentation: Path):
 @cli.command()
 def mkstatic(
     ctx: typer.Context,
-    presentation: str,
+    presentation: Path,
     config: Optional[str] = Option(
         None, "--config", "-c", help="Custom config file"
     ),
@@ -142,8 +142,8 @@ def mkstatic(
         raise typer.Abort()
 
     # Check for presentation file
-    if os.path.isfile(presentation):
-        path = os.path.dirname(presentation)
+    if presentation.is_file():
+        path = presentation.parent
     else:
         error("Presentation file not found.")
 
@@ -180,7 +180,7 @@ def mkstatic(
 
     # Check for media root
     if not media:
-        media = os.path.realpath(os.path.join(path, "media"))
+        media = os.path.realpath(os.path.join(str(path), "media"))
     else:
         media = os.path.realpath(media)
 
@@ -193,7 +193,7 @@ def mkstatic(
 
     # Check for theme root
     if not theme:
-        theme = os.path.join(path, "theme")
+        theme = os.path.join(str(path), "theme")
 
     if not os.path.isdir(theme):
         # Running without theme folder
@@ -204,7 +204,7 @@ def mkstatic(
 
     # Check for configuration file
     if not config:
-        config = os.path.join(path, "config.py")
+        config = os.path.join(str(path), "config.py")
 
     if not os.path.isfile(config):
         # Running without configuration file
@@ -233,7 +233,7 @@ def mkstatic(
 @cli.command()
 def start(
     ctx: typer.Context,
-    presentation: str,
+    presentation: Path,
     port: int = Option(4000, "--port", "-p", help="Presentation server port"),
     config: Optional[str] = Option(
         None, "--config", "-c", help="Custom config file"
@@ -269,8 +269,8 @@ def start(
         )
 
     # Check for presentation file
-    if os.path.isfile(presentation):
-        path = os.path.dirname(presentation)
+    if presentation.is_file():
+        path = presentation.parent
     else:
         error("Presentation file not found.")
 
@@ -284,7 +284,7 @@ def start(
 
     # Check for media root
     if not media:
-        media = os.path.join(path, "media")
+        media = os.path.join(str(path), "media")
 
     if not os.path.isdir(media):
         # Running without media folder
@@ -294,7 +294,7 @@ def start(
 
     # Check for theme root
     if not theme:
-        theme = os.path.join(path, "theme")
+        theme = os.path.join(str(path), "theme")
 
     if not os.path.isdir(theme):
         # Running without theme folder
@@ -302,7 +302,7 @@ def start(
 
     # Check for configuration file
     if not config:
-        config = os.path.join(path, "config.py")
+        config = os.path.join(str(path), "config.py")
 
     if not os.path.isfile(config):
         # Running without configuration file
@@ -327,7 +327,7 @@ def start(
         server_args["use_reloader"] = True
         server_args["reloader_type"] = "watchdog"
         server_args["extra_files"] = glob.glob(
-            os.path.join(path, "*.md")
-        ) + glob.glob(os.path.join(path, "*.css"))
+            os.path.join(str(path), "*.md")
+        ) + glob.glob(os.path.join(str(path), "*.css"))
 
     run_simple(**server_args)

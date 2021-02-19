@@ -7,6 +7,7 @@ the presentation
 
 import os
 import re
+from pathlib import Path
 
 from jinja2 import Environment, PackageLoader, select_autoescape
 from werkzeug.middleware.shared_data import SharedDataMiddleware
@@ -24,7 +25,7 @@ class Revelation(object):
 
     def __init__(
         self,
-        presentation,
+        presentation: Path,
         config=None,
         media=None,
         theme=None,
@@ -49,7 +50,7 @@ class Revelation(object):
         else:
             self.style = None
 
-        self.wsgi_app = SharedDataMiddleware(self.wsgi_app, shared_data)
+        self.wsgi_app = SharedDataMiddleware(self._wsgi_app, shared_data)
 
     def parse_shared_data(self, shared_root):
         """
@@ -65,15 +66,15 @@ class Revelation(object):
 
         return {}
 
-    def load_slides(self, path, section_separator, vertical_separator):
+    def load_slides(self, path: Path, section_separator, vertical_separator):
         """
         Get slides file from the given path, loads it and split into list
         of slides.
 
         :return: a list of strings with the slides content
         """
-        with open(path, "rb") as presentation:
-            slides = normalize_newlines(presentation.read().decode("utf-8"))
+        with path.open("rb") as fp:
+            slides = normalize_newlines(fp.read().decode("utf-8"))
 
         return [
             re.split(f"^{vertical_separator}$", section, flags=re.MULTILINE)
@@ -115,7 +116,7 @@ class Revelation(object):
             template.render(**context), headers={"content-type": "text/html"}
         )
 
-    def wsgi_app(self, environ, start_response):
+    def _wsgi_app(self, environ, start_response):
         request = Request(environ)
         response = self.dispatch_request(request)
 
