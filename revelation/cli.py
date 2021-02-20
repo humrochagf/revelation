@@ -88,7 +88,7 @@ def mkpresentation(presentation: Path):
 def mkstatic(
     ctx: typer.Context,
     presentation: Path,
-    config: Optional[str] = Option(
+    config: Optional[Path] = Option(
         None, "--config", "-c", help="Custom config file"
     ),
     media: Optional[str] = Option(
@@ -204,9 +204,9 @@ def mkstatic(
 
     # Check for configuration file
     if not config:
-        config = os.path.join(str(path), "config.py")
+        config = path / "config.py"
 
-    if not os.path.isfile(config):
+    if config and not config.is_file():
         # Running without configuration file
         config = None
 
@@ -235,7 +235,7 @@ def start(
     ctx: typer.Context,
     presentation: Path,
     port: int = Option(4000, "--port", "-p", help="Presentation server port"),
-    config: Optional[str] = Option(
+    config: Optional[Path] = Option(
         None, "--config", "-c", help="Custom config file"
     ),
     media: Optional[str] = Option(
@@ -302,9 +302,9 @@ def start(
 
     # Check for configuration file
     if not config:
-        config = os.path.join(str(path), "config.py")
+        config = path / "config.py"
 
-    if not os.path.isfile(config):
+    if config and not config.is_file():
         # Running without configuration file
         config = None
 

@@ -4,13 +4,13 @@ from .conftest import Presentation
 
 
 def test_config_extends_dict(presentation: Presentation):
-    config = Config(str(presentation.config))
+    config = Config(presentation.config)
 
     assert isinstance(config, dict)
 
 
 def test_config_initialize_variables(presentation: Presentation):
-    config = Config(str(presentation.config))
+    config = Config(presentation.config)
 
     assert "REVEAL_META" in config
     assert "REVEAL_SLIDE_SEPARATOR" in config
@@ -19,7 +19,7 @@ def test_config_initialize_variables(presentation: Presentation):
 
 
 def test_config_custom_values(presentation: Presentation):
-    config = Config(str(presentation.config))
+    config = Config(presentation.config)
     meta = {
         "title": "Test Title",
         "author": "Test Author",

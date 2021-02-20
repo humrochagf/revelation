@@ -1,9 +1,8 @@
 """Revelation configuration handler"""
 
-import os
-import types
-
-from werkzeug.utils import import_string
+from pathlib import Path
+from types import ModuleType
+from typing import Optional
 
 from . import default_config
 
@@ -18,35 +17,29 @@ class Config(dict):
     loads the external configs
     """
 
-    def __init__(self, filename=None):
+    def __init__(self, filename: Optional[Path] = None):
         """Initializes the config with the defaults or with custom
         variables from an external file"""
         self.load_from_object(default_config)
 
-        if filename and os.path.isfile(filename):
+        if filename and filename.is_file():
             self.load_from_pyfile(filename)
 
-    def load_from_object(self, obj):
+    def load_from_object(self, obj: ModuleType):
         """Load the configs from a python object passed
         to the function"""
-        if isinstance(obj, str):
-            obj = import_string(obj)
-
         for key in dir(obj):
             if key.isupper():
                 self[key] = getattr(obj, key)
 
-    def load_from_pyfile(self, filename):
+    def load_from_pyfile(self, filename: Path):
         """Load the configs from a python file as it was imported"""
-        module = types.ModuleType("config")
-        module.__file__ = filename
+        module = ModuleType("config")
+        module.__file__ = str(filename)
 
         try:
-            with open(filename, mode="rb") as config_file:
-                exec(
-                    compile(config_file.read(), filename, "exec"),
-                    module.__dict__,
-                )
+            with filename.open(mode="rb") as fp:
+                exec(compile(fp.read(), filename, "exec"), module.__dict__)
         except IOError as error:
             strerror = error.strerror
             error.strerror = f"Unable to load configuration file ({strerror})"

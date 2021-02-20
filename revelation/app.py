@@ -8,6 +8,7 @@ the presentation
 import os
 import re
 from pathlib import Path
+from typing import Optional
 
 from jinja2 import Environment, PackageLoader, select_autoescape
 from werkzeug.middleware.shared_data import SharedDataMiddleware
@@ -26,7 +27,7 @@ class Revelation(object):
     def __init__(
         self,
         presentation: Path,
-        config=None,
+        config: Optional[Path] = None,
         media=None,
         theme=None,
         style=None,
