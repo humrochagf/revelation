@@ -24,6 +24,12 @@ class Revelation(object):
     the requests
     """
 
+    presentation: Path
+    config: Config
+    media: Optional[str]
+    theme: Optional[str]
+    style: Optional[str]
+
     def __init__(
         self,
         presentation: Path,
@@ -35,21 +41,22 @@ class Revelation(object):
         """
         Initializes the server and creates the environment for the presentation
         """
-        self.config = Config(config)
         self.presentation = presentation
+        self.config = Config(config)
+        self.media = media
+        self.theme = theme
+        self.style = style
 
         shared_data = {
             "/static": os.path.join(os.path.dirname(__file__), "static")
         }
 
-        shared_data.update(self.parse_shared_data(media))
-        shared_data.update(self.parse_shared_data(theme))
+        shared_data.update(self.parse_shared_data(self.media))
+        shared_data.update(self.parse_shared_data(self.theme))
 
-        if style:
-            self.style = os.path.basename(style)
-            shared_data.update(self.parse_shared_data(style))
-        else:
-            self.style = None
+        if self.style:
+            self.style_name = os.path.basename(self.style)
+            shared_data.update(self.parse_shared_data(self.style_name))
 
         self.wsgi_app = SharedDataMiddleware(self._wsgi_app, shared_data)
 

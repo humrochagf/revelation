@@ -34,6 +34,53 @@ def error(message: str):
     typer.secho(f"Error: {message}", err=True, fg="red", bold=True)
 
 
+def revelation_factory(
+    presentation: Path,
+    config: Optional[Path] = None,
+    media=None,
+    theme=None,
+    style=None,
+) -> Revelation:
+    if presentation.is_file():
+        path = presentation.parent
+    else:
+        error("Presentation file not found.")
+
+        raise typer.Abort()
+
+    if style and (not os.path.isfile(style) or not style.endswith(".css")):
+        error("Style is not a css file or does not exists.")
+
+        raise typer.Abort()
+
+    if not media:
+        media = os.path.realpath(os.path.join(str(path), "media"))
+    else:
+        media = os.path.realpath(media)
+
+    if not os.path.isdir(media):
+        media = None
+
+        echo("Media folder not detected, running without media.")
+
+    if not theme:
+        theme = os.path.join(str(path), "theme")
+
+    if not os.path.isdir(theme):
+        theme = None
+        echo("Theme not detected, running without custom theme.")
+
+    if not config:
+        config = path / "config.py"
+
+    if config and not config.is_file():
+        config = None
+
+        echo("Configuration file not detected, running with defaults.")
+
+    return Revelation(presentation, config, media, theme, style)
+
+
 @cli.command()
 def version():
     """
@@ -124,7 +171,6 @@ def mkstatic(
 ):
     """Make static presentation"""
 
-    # Check if reveal.js is installed
     if not os.path.exists(str(REVEALJS_DIR)):
         echo("Reveal.js not found, running installation...")
 
@@ -132,27 +178,6 @@ def mkstatic(
         ctx.invoke(
             get_command(cli).get_command(ctx, "installreveal")  # type: ignore
         )
-
-    output_folder = os.path.realpath(output_folder)
-
-    # Check for style override file
-    if os.path.isfile(output_folder):
-        error(f"'{output_folder}' already exists and is a file.")
-
-        raise typer.Abort()
-
-    # Check for presentation file
-    if presentation.is_file():
-        path = presentation.parent
-    else:
-        error("Presentation file not found.")
-
-        raise typer.Abort()
-
-    if style and (not os.path.isfile(style) or not style.endswith(".css")):
-        error("Style is not a css file or does not exists.")
-
-        raise typer.Abort()
 
     if os.path.isdir(output_folder):
         if force:
@@ -165,57 +190,33 @@ def mkstatic(
 
             raise typer.Abort()
 
+    if os.path.isfile(output_folder):
+        error(f"'{output_folder}' already exists and is a file.")
+
+        raise typer.Abort()
+
+    app = revelation_factory(presentation, config, media, theme, style)
+
+    echo("Generating static presentation...")
+
     staticfolder = os.path.join(output_folder, "static")
 
-    # make the output path
     os.makedirs(output_folder)
 
-    # if has override style copy
-    if style:
+    if app.style:
         shutil.copy(
-            style, os.path.join(output_folder, os.path.basename(style))
+            app.style, os.path.join(output_folder, os.path.basename(app.style))
         )
 
     shutil.copytree(str(REVEALJS_DIR), os.path.join(staticfolder, "revealjs"))
 
-    # Check for media root
-    if not media:
-        media = os.path.realpath(os.path.join(str(path), "media"))
-    else:
-        media = os.path.realpath(media)
+    if app.media:
+        shutil.copytree(app.media, os.path.join(output_folder, "media"))
 
-    if not os.path.isdir(media):
-        # Running without media folder
-        media = None
-        echo("Media folder not detected, running without media.")
-    else:
-        shutil.copytree(media, os.path.join(output_folder, "media"))
+    if app.theme:
+        shutil.copytree(app.theme, os.path.join(output_folder, "theme"))
 
-    # Check for theme root
-    if not theme:
-        theme = os.path.join(str(path), "theme")
-
-    if not os.path.isdir(theme):
-        # Running without theme folder
-        theme = None
-        echo("Theme not detected, running without custom theme.")
-    else:
-        shutil.copytree(theme, os.path.join(output_folder, "theme"))
-
-    # Check for configuration file
-    if not config:
-        config = path / "config.py"
-
-    if config and not config.is_file():
-        # Running without configuration file
-        config = None
-
-        echo("Configuration file not detected, running with defaults.")
-
-    echo("Generating static presentation...")
-
-    # instantiating revelation app
-    app = Revelation(presentation, config, media, theme, style)
+    output_folder = os.path.realpath(output_folder)
 
     if not os.path.isdir(output_folder):
         os.makedirs(output_folder)
@@ -259,7 +260,7 @@ def start(
     ),
 ):
     """Start the revelation server"""
-    # Check if reveal.js is installed
+
     if not os.path.exists(str(REVEALJS_DIR)):
         echo("Reveal.js not found, running installation...")
 
@@ -268,52 +269,11 @@ def start(
             get_command(cli).get_command(ctx, "installreveal")  # type: ignore
         )
 
-    # Check for presentation file
-    if presentation.is_file():
-        path = presentation.parent
-    else:
-        error("Presentation file not found.")
+    app = revelation_factory(presentation, config, media, theme, style)
 
-        raise typer.Abort()
-
-    # Check for style override file
-    if style and (not os.path.isfile(style) or not style.endswith(".css")):
-        error("Style is not a css file or does not exists.")
-
-        raise typer.Abort()
-
-    # Check for media root
-    if not media:
-        media = os.path.join(str(path), "media")
-
-    if not os.path.isdir(media):
-        # Running without media folder
-        media = None
-
-        echo("Media folder not detected, running without media")
-
-    # Check for theme root
-    if not theme:
-        theme = os.path.join(str(path), "theme")
-
-    if not os.path.isdir(theme):
-        # Running without theme folder
-        theme = None
-
-    # Check for configuration file
-    if not config:
-        config = path / "config.py"
-
-    if config and not config.is_file():
-        # Running without configuration file
-        config = None
-
-        echo("Configuration file not detected, running with defaults.")
+    presentation_root = presentation.parent
 
     echo("Starting revelation server...")
-
-    # instantiating revelation app
-    app = Revelation(presentation, config, media, theme, style)
 
     server_args: Dict[str, Any] = {
         "hostname": "localhost",
@@ -327,7 +287,7 @@ def start(
         server_args["use_reloader"] = True
         server_args["reloader_type"] = "watchdog"
         server_args["extra_files"] = glob.glob(
-            os.path.join(str(path), "*.md")
-        ) + glob.glob(os.path.join(str(path), "*.css"))
+            os.path.join(str(presentation_root), "*.md")
+        ) + glob.glob(os.path.join(str(presentation_root), "*.css"))
 
     run_simple(**server_args)
