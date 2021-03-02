@@ -111,7 +111,7 @@ toml = ["toml"]
 
 [[package]]
 name = "coveralls"
-version = "3.0.0"
+version = "3.0.1"
 description = "Show coverage stats online via coveralls.io"
 category = "dev"
 optional = false
@@ -602,7 +602,7 @@ watchdog = ["watchdog"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "6204a869babcc3d01f2432eda5edd8e832eccc9e1639c97be65ec8d1efe0e4b2"
+content-hash = "dc6ad4a42a0b61309b7aa4084900c9c99fbdbb40832f012561997fac35f1bbae"
 
 [metadata.files]
 appdirs = [
@@ -696,8 +696,8 @@ coverage = [
     {file = "coverage-5.3.1.tar.gz", hash = "sha256:38f16b1317b8dd82df67ed5daa5f5e7c959e46579840d77a67a4ceb9cef0a50b"},
 ]
 coveralls = [
-    {file = "coveralls-3.0.0-py2.py3-none-any.whl", hash = "sha256:f8384968c57dee4b7133ae701ecdad88e85e30597d496dcba0d7fbb470dca41f"},
-    {file = "coveralls-3.0.0.tar.gz", hash = "sha256:5399c0565ab822a70a477f7031f6c88a9dd196b3de2877b3facb43b51bd13434"},
+    {file = "coveralls-3.0.1-py2.py3-none-any.whl", hash = "sha256:7bd173b3425733661ba3063c88f180127cc2b20e9740686f86d2622b31b41385"},
+    {file = "coveralls-3.0.1.tar.gz", hash = "sha256:cbb942ae5ef3d2b55388cb5b43e93a269544911535f1e750e1c656aef019ce60"},
 ]
 decorator = [
     {file = "decorator-4.4.2-py2.py3-none-any.whl", hash = "sha256:41fa54c2a0cc4ba648be4fd43cff00aedf5b9465c9bf18d64325bc225f08f760"},
