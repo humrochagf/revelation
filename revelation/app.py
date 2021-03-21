@@ -26,17 +26,17 @@ class Revelation(object):
 
     presentation: Path
     config: Config
-    media: Optional[str]
-    theme: Optional[str]
-    style: Optional[str]
+    media: Optional[Path]
+    theme: Optional[Path]
+    style: Optional[Path]
 
     def __init__(
         self,
         presentation: Path,
         config: Optional[Path] = None,
-        media=None,
-        theme=None,
-        style=None,
+        media: Optional[Path] = None,
+        theme: Optional[Path] = None,
+        style: Optional[Path] = None,
     ):
         """
         Initializes the server and creates the environment for the presentation
@@ -53,28 +53,28 @@ class Revelation(object):
 
         shared_data.update(self.parse_shared_data(self.media))
         shared_data.update(self.parse_shared_data(self.theme))
-
-        if self.style:
-            self.style_name = os.path.basename(self.style)
-            shared_data.update(self.parse_shared_data(self.style_name))
+        shared_data.update(self.parse_shared_data(self.style))
 
         self.wsgi_app = SharedDataMiddleware(self._wsgi_app, shared_data)
 
-    def parse_shared_data(self, shared_root):
+    def parse_shared_data(self, shared_root: Optional[Path]) -> dict:
         """
         Parse aditional shared_data if it exists
         """
-        if shared_root:
-            shared_root = os.path.abspath(shared_root)
+        if shared_root and shared_root.exists():
+            shared_root = shared_root.resolve()
+            shared_url = f"/{shared_root.name}"
 
-            if os.path.exists(shared_root):
-                shared_url = f"/{os.path.basename(shared_root)}"
-
-                return {shared_url: shared_root}
+            return {shared_url: str(shared_root)}
 
         return {}
 
-    def load_slides(self, path: Path, section_separator, vertical_separator):
+    def load_slides(
+        self,
+        path: Path,
+        section_separator: str,
+        vertical_separator: str,
+    ):
         """
         Get slides file from the given path, loads it and split into list
         of slides.
@@ -91,14 +91,14 @@ class Revelation(object):
             )
         ]
 
-    def get_theme(self, theme):
-        reveal_theme = f"static/revealjs/dist/theme/{theme}.css"
+    def get_theme(self, theme_name: str):
+        reveal_theme = f"static/revealjs/dist/theme/{theme_name}.css"
         fullpath_theme = os.path.join(os.path.dirname(__file__), reveal_theme)
 
         if os.path.isfile(fullpath_theme):
             return reveal_theme
 
-        return theme
+        return theme_name
 
     def dispatch_request(self, request):
         env = Environment(
@@ -115,7 +115,7 @@ class Revelation(object):
             ),
             "config": self.config.get("REVEAL_CONFIG"),
             "theme": self.get_theme(self.config.get("REVEAL_THEME")),
-            "style": self.style,
+            "style": getattr(self.style, "name", None),
         }
 
         template = env.get_template("presentation.html")

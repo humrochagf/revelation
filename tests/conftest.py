@@ -76,4 +76,4 @@ def presentation_tar(presentation: Presentation) -> Path:
 
 @pytest.fixture
 def revelation(presentation: Presentation) -> Revelation:
-    return Revelation(presentation.file, media=str(presentation.media))
+    return Revelation(presentation.file, media=presentation.media)

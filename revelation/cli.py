@@ -1,7 +1,6 @@
 """Cli tool to handle revelation commands"""
 
 import glob
-import os
 import shutil
 from pathlib import Path
 from typing import Any, Dict, Optional
@@ -37,9 +36,9 @@ def error(message: str):
 def revelation_factory(
     presentation: Path,
     config: Optional[Path] = None,
-    media=None,
-    theme=None,
-    style=None,
+    media: Optional[Path] = None,
+    theme: Optional[Path] = None,
+    style: Optional[Path] = None,
 ) -> Revelation:
     if presentation.is_file():
         path = presentation.parent
@@ -48,26 +47,25 @@ def revelation_factory(
 
         raise typer.Abort()
 
-    if style and (not os.path.isfile(style) or not style.endswith(".css")):
+    if style and (not style.is_file() or not style.suffix == ".css"):
         error("Style is not a css file or does not exists.")
 
         raise typer.Abort()
 
     if not media:
-        media = os.path.realpath(os.path.join(str(path), "media"))
-    else:
-        media = os.path.realpath(media)
+        media = path / "media"
 
-    if not os.path.isdir(media):
+    if not media.is_dir():
         media = None
 
         echo("Media folder not detected, running without media.")
 
     if not theme:
-        theme = os.path.join(str(path), "theme")
+        theme = path / "theme"
 
-    if not os.path.isdir(theme):
+    if not theme.is_dir():
         theme = None
+
         echo("Theme not detected, running without custom theme.")
 
     if not config:
@@ -138,20 +136,20 @@ def mkstatic(
     config: Optional[Path] = Option(
         None, "--config", "-c", help="Custom config file"
     ),
-    media: Optional[str] = Option(
+    media: Optional[Path] = Option(
         None, "--media", "-m", help="Custom media folder"
     ),
-    theme: Optional[str] = Option(
+    theme: Optional[Path] = Option(
         None, "--theme", "-t", help="Custom theme folder"
     ),
-    output_folder: str = Option(
-        "output",
+    output_folder: Path = Option(
+        Path("output"),
         "--output-folder",
         "-o",
         help="Folder where the static presentation will be generated",
     ),
-    output_file: str = Option(
-        "index.html",
+    output_file: Path = Option(
+        Path("index.html"),
         "--output-file",
         "-f",
         help="File name of the static presentation",
@@ -162,7 +160,7 @@ def mkstatic(
         "-r",
         help="Overwrite the output folder if exists",
     ),
-    style: Optional[str] = Option(
+    style: Optional[Path] = Option(
         None,
         "--style-override-file",
         "-s",
@@ -171,7 +169,7 @@ def mkstatic(
 ):
     """Make static presentation"""
 
-    if not os.path.exists(str(REVEALJS_DIR)):
+    if not REVEALJS_DIR.exists():
         echo("Reveal.js not found, running installation...")
 
         # Change after fix on https://github.com/tiangolo/typer/issues/102
@@ -179,7 +177,7 @@ def mkstatic(
             get_command(cli).get_command(ctx, "installreveal")  # type: ignore
         )
 
-    if os.path.isdir(output_folder):
+    if output_folder.is_dir():
         if force:
             shutil.rmtree(output_folder)
         else:
@@ -190,7 +188,7 @@ def mkstatic(
 
             raise typer.Abort()
 
-    if os.path.isfile(output_folder):
+    if output_folder.is_file():
         error(f"'{output_folder}' already exists and is a file.")
 
         raise typer.Abort()
@@ -199,36 +197,34 @@ def mkstatic(
 
     echo("Generating static presentation...")
 
-    staticfolder = os.path.join(output_folder, "static")
+    staticfolder = output_folder / "static"
 
-    os.makedirs(output_folder)
+    output_folder.mkdir(parents=True, exist_ok=True)
 
     if app.style:
-        shutil.copy(
-            app.style, os.path.join(output_folder, os.path.basename(app.style))
-        )
+        shutil.copy(app.style, output_folder / app.style.name)
 
-    shutil.copytree(str(REVEALJS_DIR), os.path.join(staticfolder, "revealjs"))
+    shutil.copytree(REVEALJS_DIR, staticfolder / "revealjs")
 
     if app.media:
-        shutil.copytree(app.media, os.path.join(output_folder, "media"))
+        shutil.copytree(app.media, output_folder / "media")
 
     if app.theme:
-        shutil.copytree(app.theme, os.path.join(output_folder, "theme"))
+        shutil.copytree(app.theme, output_folder / "theme")
 
-    output_folder = os.path.realpath(output_folder)
+    output_folder = output_folder.resolve()
 
-    if not os.path.isdir(output_folder):
-        os.makedirs(output_folder)
+    if not output_folder.is_dir():
+        output_folder.mkdir(parents=True, exist_ok=True)
 
-    output_file = os.path.join(output_folder, output_file)
+    output_file = output_folder / output_file
 
-    with open(output_file, "wb") as f:
-        f.write(
+    with output_file.open("wb") as fp:
+        fp.write(
             app.dispatch_request(None).get_data(as_text=True).encode("utf-8")
         )
 
-    echo(f"Static presentation generated in {os.path.realpath(output_folder)}")
+    echo(f"Static presentation generated in {output_folder}")
 
 
 @cli.command()
@@ -239,13 +235,13 @@ def start(
     config: Optional[Path] = Option(
         None, "--config", "-c", help="Custom config file"
     ),
-    media: Optional[str] = Option(
+    media: Optional[Path] = Option(
         None, "--media", "-m", help="Custom media folder"
     ),
-    theme: Optional[str] = Option(
+    theme: Optional[Path] = Option(
         None, "--theme", "-t", help="Custom theme folder"
     ),
-    style: Optional[str] = Option(
+    style: Optional[Path] = Option(
         None,
         "--style-override-file",
         "-s",
@@ -261,7 +257,7 @@ def start(
 ):
     """Start the revelation server"""
 
-    if not os.path.exists(str(REVEALJS_DIR)):
+    if not REVEALJS_DIR.exists():
         echo("Reveal.js not found, running installation...")
 
         # Change after fix on https://github.com/tiangolo/typer/issues/102
@@ -287,7 +283,7 @@ def start(
         server_args["use_reloader"] = True
         server_args["reloader_type"] = "watchdog"
         server_args["extra_files"] = glob.glob(
-            os.path.join(str(presentation_root), "*.md")
-        ) + glob.glob(os.path.join(str(presentation_root), "*.css"))
+            str(presentation_root / "*.md")
+        ) + glob.glob(str(presentation_root / "*.css"))
 
     run_simple(**server_args)
