@@ -5,7 +5,6 @@ It has the Revelation main class that creates the webserver do run
 the presentation
 """
 
-import os
 import re
 from pathlib import Path
 from typing import Optional
@@ -29,6 +28,7 @@ class Revelation(object):
     media: Optional[Path]
     theme: Optional[Path]
     style: Optional[Path]
+    static: Path = Path(__file__).parent.resolve() / "static"
 
     def __init__(
         self,
@@ -47,10 +47,8 @@ class Revelation(object):
         self.theme = theme
         self.style = style
 
-        shared_data = {
-            "/static": os.path.join(os.path.dirname(__file__), "static")
-        }
-
+        shared_data = dict()
+        shared_data.update(self.parse_shared_data(self.static))
         shared_data.update(self.parse_shared_data(self.media))
         shared_data.update(self.parse_shared_data(self.theme))
         shared_data.update(self.parse_shared_data(self.style))
@@ -93,14 +91,14 @@ class Revelation(object):
 
     def get_theme(self, theme_name: str):
         reveal_theme = f"static/revealjs/dist/theme/{theme_name}.css"
-        fullpath_theme = os.path.join(os.path.dirname(__file__), reveal_theme)
+        fullpath_theme = Path(__file__).parent.resolve() / reveal_theme
 
-        if os.path.isfile(fullpath_theme):
+        if fullpath_theme.is_file():
             return reveal_theme
 
         return theme_name
 
-    def dispatch_request(self, request):
+    def dispatch_request(self, request: Optional[Request] = None):
         env = Environment(
             loader=PackageLoader("revelation", "templates"),
             autoescape=select_autoescape(["html"]),
@@ -110,11 +108,11 @@ class Revelation(object):
             "meta": self.config.get("REVEAL_META"),
             "slides": self.load_slides(
                 self.presentation,
-                self.config.get("REVEAL_SLIDE_SEPARATOR"),
-                self.config.get("REVEAL_VERTICAL_SLIDE_SEPARATOR"),
+                str(self.config.get("REVEAL_SLIDE_SEPARATOR")),
+                str(self.config.get("REVEAL_VERTICAL_SLIDE_SEPARATOR")),
             ),
             "config": self.config.get("REVEAL_CONFIG"),
-            "theme": self.get_theme(self.config.get("REVEAL_THEME")),
+            "theme": self.get_theme(str(self.config.get("REVEAL_THEME"))),
             "style": getattr(self.style, "name", None),
         }
 

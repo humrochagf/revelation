@@ -220,9 +220,7 @@ def mkstatic(
     output_file = output_folder / output_file
 
     with output_file.open("wb") as fp:
-        fp.write(
-            app.dispatch_request(None).get_data(as_text=True).encode("utf-8")
-        )
+        fp.write(app.dispatch_request().get_data(as_text=True).encode("utf-8"))
 
     echo(f"Static presentation generated in {output_folder}")
 
