@@ -25,7 +25,7 @@ ipdb = "^0.13.7"
 ipython = "^7.21.0"
 coveralls = "^3.0.1"
 pytest = "^6.2.2"
-pytest-mock = "^3.5.1"
+pytest-mock = "^3.6.0"
 pytest-cov = "^2.11.1"
 mypy = "^0.812"
 
