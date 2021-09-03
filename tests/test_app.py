@@ -1,5 +1,5 @@
 from werkzeug.test import Client
-from werkzeug.wrappers import BaseResponse
+from werkzeug.wrappers import Response
 
 from revelation import Revelation
 
@@ -51,7 +51,7 @@ def test_load_slides_non_ascii(
 
 
 def test_client_request_ok(revelation: Revelation):
-    client = Client(revelation, BaseResponse)
+    client = Client(revelation, Response)
 
     response = client.get("/")
 

@@ -98,7 +98,7 @@ class Revelation(object):
 
         return theme_name
 
-    def dispatch_request(self, request: Optional[Request] = None):
+    def dispatch_request(self, _: Optional[Request] = None):
         env = Environment(
             loader=PackageLoader("revelation", "templates"),
             autoescape=select_autoescape(["html"]),
