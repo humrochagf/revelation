@@ -55,7 +55,7 @@ revelation mkpresentation mypresentation
 
 You can start presenting with the `start` command on your presentation markdown file:
 
-``shell
+```shell
 cd mypresentation
 revelation start slides.md
 ```
