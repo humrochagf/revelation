@@ -16,6 +16,7 @@
 # folders
 build/
 dist/
+htmlcov/
 revelation/static/
 
 # files

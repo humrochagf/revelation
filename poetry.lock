@@ -228,6 +228,9 @@ category = "dev"
 optional = false
 python-versions = ">=3.6.1,<4.0"
 
+[package.dependencies]
+colorama = {version = ">=0.4.3,<0.5.0", optional = true, markers = "extra == \"colors\""}
+
 [package.extras]
 pipfile_deprecated_finder = ["pipreqs", "requirementslib"]
 requirements_deprecated_finder = ["pipreqs", "pip-api"]
@@ -655,7 +658,7 @@ watchdog = ["watchdog"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "6369f30df294750c5341d0e17f6c1b57796be442be8ac7622e5b8920e7a312d0"
+content-hash = "beba1b726a58b0a8a408c630f8e3235e09ba44323e1692322eb94cdb39e7224b"
 
 [metadata.files]
 appnope = [
