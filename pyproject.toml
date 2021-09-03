@@ -18,16 +18,18 @@ Jinja2 = "^2.11.2"
 typer = "^0.3.2"
 
 [tool.poetry.dev-dependencies]
-black = "^20.8b1"
-isort = "^5.8.0"
-flake8 = "^3.9.0"
-ipdb = "^0.13.7"
-ipython = "^7.21.0"
-coveralls = "^3.0.1"
-pytest = "^6.2.2"
-pytest-mock = "^3.5.1"
-pytest-cov = "^2.11.1"
-mypy = "^0.812"
+black = "^21.8b0"
+isort = "^5.9.3"
+flake8 = "^3.9.2"
+ipdb = "^0.13.9"
+ipython = "^7.27.0"
+coveralls = "^3.2.0"
+pytest = "^6.2.5"
+pytest-mock = "^3.6.1"
+pytest-cov = "^2.12.1"
+mypy = "^0.910"
+types-Jinja2 = "^2.11.6"
+types-Werkzeug = "^1.0.5"
 
 [tool.isort]
 ensure_newline_before_comments = true
