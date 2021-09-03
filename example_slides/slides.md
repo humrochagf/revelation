@@ -20,9 +20,9 @@ The following examples show some of the reveal.js features running on revelation
 
 ## Headers
 
-# This is an &lt;h1&gt; tag
-## This is an &lt;h2&gt; tag
-###### This is an &lt;h6&gt; tag
+# &lt; h1 &gt; tag
+## &lt; h2 &gt; tag
+###### &lt; h6 &gt; tag
 
 ---
 
