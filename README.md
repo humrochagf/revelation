@@ -40,7 +40,7 @@ Revelation depends on revealjs to run its presentation and every command bellow 
 But, you can also manually install or even update it to a different version with the `installreveal` command:
 
 ```shell
-$ revelation installreveal
+revelation installreveal
 ```
 
 ### Creating a new Presentation
@@ -48,16 +48,16 @@ $ revelation installreveal
 To create a new presentation you can use `mkpresentation` command that will setup a new presentation using the base layout for you:
 
 ```shell
-$ revelation mkpresentation mypresentation
+revelation mkpresentation mypresentation
 ```
 
 ### Running the Presentation
 
 You can start presenting with the `start` command on your presentation markdown file:
 
-```shell
-$ cd mypresentation
-$ revelation start slides.md
+``shell
+cd mypresentation
+revelation start slides.md
 ```
 
 ### Static Export
@@ -65,7 +65,7 @@ $ revelation start slides.md
 To export the presentation as static HTML content use the command:
 
 ```shell
-$ revelation mkstatic slides.md
+revelation mkstatic slides.md
 ```
 
 ### PDF Export
