@@ -1,8 +1,11 @@
 # Revelation
 
-[![PyPI](https://img.shields.io/pypi/v/revelation.svg)](https://pypi.org/project/revelation/)
 [![PyPI - License](https://img.shields.io/pypi/l/revelation.svg)](https://pypi.org/project/revelation/)
+[![PyPI](https://img.shields.io/pypi/v/revelation.svg)](https://pypi.org/project/revelation/)
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/revelation.svg)](https://pypi.org/project/revelation/)
+[![Downloads](https://static.pepy.tech/badge/revelation)](https://pepy.tech/project/revelation)
+[![Downloads](https://static.pepy.tech/badge/revelation/month)](https://pepy.tech/project/revelation)
+[![Downloads](https://static.pepy.tech/badge/revelation/week)](https://pepy.tech/project/revelation)
 [![Actions Status](https://github.com/humrochagf/revelation/workflows/CI/badge.svg)](https://github.com/humrochagf/revelation/actions)
 [![Coverage Status](https://coveralls.io/repos/github/humrochagf/revelation/badge.svg?branch=main)](https://coveralls.io/github/humrochagf/revelation?branch=main)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black)

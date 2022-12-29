@@ -6,6 +6,10 @@ authors = ["Humberto Rocha <humrochagf@gmail.com>"]
 license = "MIT"
 readme = "README.md"
 exclude = ["revelation/static/*"]
+classifiers = [
+  "Environment :: Console",
+  "Topic :: Text Processing :: Markup :: Markdown",
+]
 
 [tool.poetry.scripts]
 revelation = "revelation.cli:cli"
