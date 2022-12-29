@@ -16,21 +16,21 @@ revelation = "revelation.cli:cli"
 rv = "revelation.cli:cli"
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = "^3.8.1"
 Werkzeug = {extras = ["watchdog"], version = "^2.2.2"}
-Jinja2 = "^3.0.1"
-typer = "^0.4.0"
+Jinja2 = "^3.1.2"
+typer = "^0.7.0"
 
-[tool.poetry.dev-dependencies]
+[tool.poetry.group.dev.dependencies]
 black = "^22.12.0"
 isort = {extras = ["colors"], version = "^5.11.4"}
-flake8 = "^3.9.2"
+flake8 = "^6.0.0"
 coveralls = "^3.3.1"
 pytest = "^7.2.0"
 pytest-mock = "^3.10.0"
 pytest-cov = "^4.0.0"
-mypy = "^0.910"
-types-Jinja2 = "^2.11.6"
+mypy = "^0.991"
+types-Jinja2 = "^2.11.9"
 types-Werkzeug = "^1.0.9"
 
 [tool.isort]
