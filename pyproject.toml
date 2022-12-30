@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "revelation"
-version = "2.0.1"
+version = "2.1.0"
 description = "Make awesome reveal.js presentations with revelation"
 authors = ["Humberto Rocha <humrochagf@gmail.com>"]
 license = "MIT"
