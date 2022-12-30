@@ -1,8 +1,8 @@
 # Revelation
 
-[![PyPI - License](https://img.shields.io/pypi/l/revelation.svg)](https://pypi.org/project/revelation/)
 [![PyPI](https://img.shields.io/pypi/v/revelation.svg)](https://pypi.org/project/revelation/)
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/revelation.svg)](https://pypi.org/project/revelation/)
+[![PyPI - License](https://img.shields.io/pypi/l/revelation.svg)](https://pypi.org/project/revelation/)
 [![Downloads](https://static.pepy.tech/badge/revelation)](https://pepy.tech/project/revelation)
 [![Downloads](https://static.pepy.tech/badge/revelation/month)](https://pepy.tech/project/revelation)
 [![Downloads](https://static.pepy.tech/badge/revelation/week)](https://pepy.tech/project/revelation)
