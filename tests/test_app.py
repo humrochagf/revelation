@@ -33,7 +33,7 @@ def test_load_slides(presentation: Presentation, revelation: Revelation):
 def test_load_slides_non_normalized(
     presentation: Presentation, revelation: Revelation
 ):
-    presentation.file.write_text("# Pag1\r---\r\n# Pag2", "utf8")
+    presentation.file.write_bytes(b"# Pag1\r---\r\n# Pag2")
 
     slides = revelation.load_slides(presentation.file, "---", "---~")
 
