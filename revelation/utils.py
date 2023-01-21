@@ -51,7 +51,7 @@ def move_and_replace(src: Path, dst: Path):
 
     for src_dir, _, files in os.walk(src):
         # using os walk to navigate through the directory tree
-        # keep te dir structure by replacing the source root to
+        # keep the dir structure by replacing the source root to
         # the destination on walked path
         dst_dir = src_dir.replace(str(src), str(dst))
 

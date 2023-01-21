@@ -57,7 +57,7 @@ class Revelation(object):
 
     def parse_shared_data(self, shared_root: Optional[Path]) -> dict:
         """
-        Parse aditional shared_data if it exists
+        Parse additional shared_data if it exists
         """
         if shared_root and shared_root.exists():
             shared_root = shared_root.resolve()
