@@ -23,9 +23,9 @@ all: full
 checkflake8:
 	$(CMD) flake8 .
 
-.PHONY: checkisort
-checkisort:
-	$(CMD) isort --check --color .
+.PHONY: checkruff
+checkruff:
+	$(CMD) ruff .
 
 .PHONY: checkblack
 checkblack:
@@ -36,7 +36,7 @@ checkmypy:
 	$(CMD) mypy .
 
 .PHONY: check
-check: | checkflake8 checkisort checkblack checkmypy
+check: | checkflake8 checkruff checkblack checkmypy
 
 .PHONY: test
 test:
@@ -57,16 +57,16 @@ coverserver:
 .PHONY: cover
 cover: | coverhtml coverserver
 
-.PHONY: formatisort
-formatisort:
-	$(CMD) isort .
+.PHONY: formatruff
+formatruff:
+	$(CMD) ruff . --fix
 
 .PHONY: formatblack
 formatblack:
 	$(CMD) black -l $(MAX_LINE_LENGTH) .
 
 .PHONY: format
-format: | formatisort formatblack
+format: | formatruff formatblack
 
 .PHONY: full
 full: | format check test
