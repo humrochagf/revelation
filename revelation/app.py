@@ -13,8 +13,9 @@ from jinja2 import Environment, PackageLoader, select_autoescape
 from werkzeug.middleware.shared_data import SharedDataMiddleware
 from werkzeug.wrappers import Request, Response
 
-from .config import Config
-from .utils import normalize_newlines
+from revelation.config import Config
+from revelation.constants import STATIC_ROOT
+from revelation.utils import normalize_newlines
 
 
 class Revelation(object):
@@ -28,7 +29,6 @@ class Revelation(object):
     media: Optional[Path]
     theme: Optional[Path]
     style: Optional[Path]
-    static: Path = Path(__file__).parent.resolve() / "static"
 
     def __init__(
         self,
@@ -48,7 +48,7 @@ class Revelation(object):
         self.style = style
 
         shared_data = dict()
-        shared_data.update(self.parse_shared_data(self.static))
+        shared_data.update(self.parse_shared_data(STATIC_ROOT))
         shared_data.update(self.parse_shared_data(self.media))
         shared_data.update(self.parse_shared_data(self.theme))
         shared_data.update(self.parse_shared_data(self.style))
@@ -90,11 +90,16 @@ class Revelation(object):
         ]
 
     def get_theme(self, theme_name: str):
-        reveal_theme = f"static/revealjs/dist/theme/{theme_name}.css"
-        fullpath_theme = Path(__file__).parent.resolve() / reveal_theme
+        fullpath_theme = (
+            STATIC_ROOT.resolve()
+            / "revealjs"
+            / "dist"
+            / "theme"
+            / f"{theme_name}.css"
+        )
 
         if fullpath_theme.is_file():
-            return reveal_theme
+            return f"static/revealjs/dist/theme/{theme_name}.css"
 
         return theme_name
 
@@ -114,6 +119,7 @@ class Revelation(object):
             "config": self.config.get("REVEAL_CONFIG"),
             "theme": self.get_theme(str(self.config.get("REVEAL_THEME"))),
             "style": getattr(self.style, "name", None),
+            "plugins": self.config.get("REVEAL_PLUGINS"),
         }
 
         template = env.get_template("presentation.html")

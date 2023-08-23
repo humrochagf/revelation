@@ -14,16 +14,22 @@
     <link rel="stylesheet" href="static/revealjs/dist/reset.css">
     <link rel="stylesheet" href="static/revealjs/dist/reveal.css">
 
+    {% for name, plugin in plugins.items() %}
+    {%   for style in plugin.styles |d([]) %}
+    <!-- Plugin Style {{name}} -->
+        <link rel="stylesheet" href="static/revealjs/plugin/{{ style }}" id="plugin-style-{{name}}">
+    {%   endfor %}
+    {% endfor %}
+
     {% if theme %}
+    <!-- Theme Style -->
       <link rel="stylesheet" href="{{ theme }}" id="theme">
     {% endif %}
 
     {% if style %}
+    <!-- Custom Style -->
       <link rel="stylesheet" href="{{ style }}" id="style">
     {% endif %}
-
-    <!-- Theme used for syntax highlighted code -->
-    <link rel="stylesheet" href="static/revealjs/plugin/highlight/monokai.css" id="highlight-theme">
   </head>
 
   <body>
@@ -60,29 +66,28 @@
     <!-- Reveal.js script -->
     <script src="static/revealjs/dist/reveal.js"></script>
 
-    <!-- Reveal.js plugins -->
-    <script src="static/revealjs/plugin/markdown/markdown.js"></script>
-    <script src="static/revealjs/plugin/highlight/highlight.js"></script>
-    <script src="static/revealjs/plugin/search/search.js"></script>
-    <script src="static/revealjs/plugin/notes/notes.js"></script>
-    <script src="static/revealjs/plugin/math/math.js"></script>
-    <script src="static/revealjs/plugin/zoom/zoom.js"></script>
+    {% for name, plugin in plugins.items() %}
+    <!-- Reveal.js plugin {{name}} -->
+    {%   for script in plugin.scripts |d([]) %}
+    <script src="static/revealjs/plugin/{{ script }}"></script>
+    {%   endfor %}
+    {% endfor %}
 
     <script>
       Reveal.initialize({
-        math: {
-          mathjax: 'static/mathjax/MathJax.js',
-          config: 'TeX-AMS_HTML-full',
-          // pass other options into `MathJax.Hub.Config()`
-          TeX: { Macros: { RR: "{\\bf R}" } }
-        },
+    {% for name, plugin in plugins.items() %}
+        // Config for {{ name }}
+    {%   for k,v in (plugin.config |d({})).items() %}
+        {{ k }}: {{ v|tojson }},
+    {%   endfor %}
+    {% endfor %}
         plugins: [
-          RevealMarkdown,
-          RevealHighlight,
-          RevealSearch,
-          RevealNotes,
-          RevealMath,
-          RevealZoom
+    {% for plugin in plugins.values() %}
+    {%   if plugin.initialize_as |d(False) %}
+            // Enabled by {{ name }}
+            {{ plugin.initialize_as }}{{ "," if not loop.last else "" }}
+    {%   endif %}
+    {% endfor %}
         ]
       });
 

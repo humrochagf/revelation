@@ -19,6 +19,7 @@
 - Custom theming support with css.
 - Export to static html tool.
 - Debug mode with server auto refresh.
+- Configurable Revealjs plugins
 
 ## Installation
 
@@ -45,6 +46,8 @@ But, you can also manually install or even update it to a different version with
 ```shell
 revelation installreveal
 ```
+
+The files will be placed into the home directory in *.local/share/revelation/static*. There you can add additional plugins for revealjs.
 
 ### Creating a new Presentation
 
@@ -125,8 +128,41 @@ The configuration file located in the root folder of your presentation, allows y
 - **REVEAL_META**: Metadata of your presentation, mostly to identify the author and title.
 - **REVEAL_THEME**: A string where you can select the theme you would like to use. All revealjs base themes are available.
 - **REVEAL_CONFIG**: A python dictionary with the [revealjs configuration attributes](https://revealjs.com/config/) but using python types (e.g.: true is python boolean True)
+- **REVEAL_PLUGINS**: A list of dictonaries with optional fields
+  - `initialize_as`: String used for `Reveal.initialize` in `plugins` field. Typical `Reveal<Plugin name>`.
+  - `initialize_with`: Dictionary appended on  directonary fo `Reveal.initialize`.
+  - `scripts`: List of JavaScript files pointing to the revealjs plugin directory.
+  - `styles`: List of CSS files pointing to the revealjs plugin directory.
 
 Once you create a new presentation, all configuration values will be there for you to customize.
+
+#### Configure plugins
+
+When creating a new presentation with `revelation mkpresentation` the config.py contains a list with preconfigured plugins in **REVEAL_PLUGINS**.
+
+For example to enable the charts you must do the following steps:
+
+* Download the [charts plugin](https://github.com/rajgoel/reveal.js-plugins/tree/master/chart) files
+* Download [charts.js](https://www.chartjs.org/)
+* Create a plugin folder in the static directory of revelation (*.local/share/revelation/static/revealjs/plugin*)
+* Add the following entry in the `REVEAL_PLUGINS` dictionary in your config.py
+
+```python
+"Chart": {
+    "scripts": [
+        "chart/chart.js",
+        "chart/plugin.js",
+    ],
+    "initialize_as": "RevealChart",
+    "initialize_with": {
+        "chart": {
+            "defaults": {
+                "color": "green"
+            },
+        },
+    },
+}
+```
 
 ## Markdown
 
