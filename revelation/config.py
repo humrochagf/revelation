@@ -4,7 +4,7 @@ from pathlib import Path
 from types import ModuleType
 from typing import Optional
 
-from . import default_config
+from revelation import default_config
 
 
 class Config(dict):
