@@ -13,9 +13,9 @@ from jinja2 import Environment, PackageLoader, select_autoescape
 from werkzeug.middleware.shared_data import SharedDataMiddleware
 from werkzeug.wrappers import Request, Response
 
-from .config import Config
-from .constants import STATIC_ROOT
-from .utils import normalize_newlines
+from revelation.config import Config
+from revelation.constants import STATIC_ROOT
+from revelation.utils import normalize_newlines
 
 
 class Revelation(object):
