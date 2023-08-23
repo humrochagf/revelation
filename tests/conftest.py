@@ -10,7 +10,6 @@ from revelation import Revelation
 
 @dataclass
 class Presentation:
-
     parent: Path
 
     @property
