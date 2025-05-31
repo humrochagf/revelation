@@ -223,3 +223,67 @@ REVEAL_CONFIG = {
     # Time before the cursor is hidden (in ms)
     "hideCursorTime": 5000,
 }
+
+REVEAL_PLUGINS = {
+    # Enable markdown plugin. To disable set `"Markdown": {}`
+    "Markdown": {
+        # Name of plugin in `plugins` field for `Reveal.initialize`
+        "initialize_as": "RevealMarkdown",
+        "scripts": [
+            "markdown/markdown.js",
+        ],
+    },
+    # Enable and configure math plugin. To disable set `"Math": {}`
+    "Math": {
+        # Name of plugin in `plugins` field for `Reveal.initialize`
+        "initialize_as": "RevealMath",
+        "scripts": [
+            "math/math.js",
+        ],
+        "config": {
+            # `math` section will be added to config dictonary for
+            # `Reveal.initialize`
+            "math": {
+                "mathjax": "static/mathjax/MathJax.js",
+                "config": "TeX-AMS_HTML-full",
+                # pass other options into `MathJax.Hub.Config()`
+                "TeX": {
+                    "Macros": {
+                        "RR": "{\\bf R}",
+                    }
+                },
+            },
+        },
+    },
+    # Enable highlight plugin. To disable set `"Highlight": {}`
+    "Highlight": {
+        "initialize_as": "RevealHighlight",
+        "scripts": [
+            "highlight/highlight.js",
+        ],
+        "styles": [
+            "highlight/monokai.css",
+        ],
+    },
+    # Enable search plugin. To disable set `"Search": {}`
+    "Search": {
+        "initialize_as": "RevealSearch",
+        "scripts": [
+            "search/search.js",
+        ],
+    },
+    # Enable notes plugin. To disable set `"Notes": {}`
+    "Notes": {
+        "initialize_as": "RevealNotes",
+        "scripts": [
+            "notes/notes.js",
+        ],
+    },
+    # Enable zoom plugin. To disable set `"Zoom": {}`
+    "Zoom": {
+        "initialize_as": "RevealZoom",
+        "scripts": [
+            "zoom/zoom.js",
+        ],
+    },
+}

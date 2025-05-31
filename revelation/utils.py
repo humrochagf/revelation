@@ -9,7 +9,7 @@ from pathlib import Path
 from typing import Tuple
 from urllib.request import urlretrieve
 
-from . import default_config
+from revelation import default_config
 
 
 def make_presentation(presentation_path: Path):
