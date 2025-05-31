@@ -1,53 +1,152 @@
-[tool.poetry]
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
 name = "revelation"
-version = "2.1.0"
+dynamic = ["version"]
 description = "Make awesome reveal.js presentations with revelation"
-authors = ["Humberto Rocha <humrochagf@gmail.com>"]
-license = "MIT"
 readme = "README.md"
-exclude = ["revelation/static/*"]
+requires-python = ">= 3.9"
+license = "MIT"
+keywords = [
+  "presentation",
+  "slides",
+  "reveal.js",
+  "cli",
+]
+authors = [
+  { name = "Humberto Rocha", email = "humrochagf@gmail.com" },
+]
 classifiers = [
   "Environment :: Console",
   "Topic :: Text Processing :: Markup :: Markdown",
 ]
+dependencies = [
+  "Werkzeug[watchdog]~=2.2.2",
+  "Jinja2~=3.1.2",
+  "typer~=0.7.0",
+]
 
-[tool.poetry.scripts]
+[project.scripts]
 revelation = "revelation.cli:cli"
 rv = "revelation.cli:cli"
 
-[tool.poetry.dependencies]
-python = "^3.8.1"
-Werkzeug = {extras = ["watchdog"], version = "^2.2.2"}
-Jinja2 = "^3.1.2"
-typer = "^0.7.0"
+[project.urls]
+Documentation = "https://github.com/humrochagf/revelation"
+Issues = "https://github.com/humrochagf/revelation/issues"
+Source = "https://github.com/humrochagf/revelation"
 
-[tool.poetry.group.dev.dependencies]
-black = "^22.12.0"
-flake8 = "^6.0.0"
-coveralls = "^3.3.1"
-pytest = "^7.2.0"
-pytest-mock = "^3.10.0"
-pytest-cov = "^4.0.0"
-mypy = "^0.991"
-types-Jinja2 = "^2.11.9"
-types-Werkzeug = "^1.0.9"
-ruff = "^0.0.236"
+[tool.hatch.version]
+path = "revelation/__init__.py"
 
-[tool.ruff]
-select = [
-    # Pyflakes
-    "F",
-    # Pycodestyle
-    "E",
-    "W",
-    # isort
-    "I001"
+[tool.hatch.envs.default]
+dependencies = [
+  "coveralls==3.3.1",
+  "mypy",
+  "pytest",
+  "pytest-cov",
+  "pytest-mock",
+  "ruff",
 ]
-src = ["revelation", "tests"]
 
-[tool.ruff.isort]
+[tool.hatch.envs.default.scripts]
+cov = "pytest --cov"
+tests = "pytest {args:tests}"
+typing = "mypy --install-types --non-interactive {args:revelation tests}"
+lint = "ruff check {args:.}"
+fmt = [
+  "isort .",
+  "ruff format {args:.}",
+]
+
+[tool.isort]
+profile = "black"
+skip = [
+  ".env",
+  ".hatch",
+  ".mypy_cache",
+  ".venv",
+  "__pycache__",
+  "env",
+  "venv",
+]
+
+[tool.ruff.lint]
+select = [
+  "A",
+  "ARG",
+  "B",
+  "C",
+  "DTZ",
+  "E",
+  "EM",
+  "F",
+  "FBT",
+  "I",
+  "ICN",
+  "ISC",
+  "N",
+  "PLC",
+  "PLE",
+  "PLR",
+  "PLW",
+  "Q",
+  "RUF",
+  "S",
+  "T",
+  "TID",
+  "UP",
+  "W",
+  "YTT",
+]
+ignore = [
+  # Same line string implicit string concatenation
+  "ISC001",
+  # Allow non-abstract empty methods in abstract base classes
+  "B027",
+  # Allow boolean positional values in function calls, like `dict.get(... True)`
+  "FBT003",
+  # Ignore checks for possible passwords
+  "S105", "S106", "S107",
+  # Ignore complexity
+  "C901", "PLR0911", "PLR0912", "PLR0913", "PLR0915",
+]
+unfixable = [
+  # Don't touch unused imports
+  "F401",
+]
+
+[tool.ruff.lint.isort]
 known-first-party = ["revelation"]
 
-[build-system]
-requires = ["poetry-core>=1.0.0"]
-build-backend = "poetry.core.masonry.api"
+[tool.ruff.lint.per-file-ignores]
+# Tests can use magic values, assertions, and relative imports
+"tests/**/*" = ["PLR2004", "S101", "TID252"]
+
+[tool.coverage.run]
+source_pkgs = ["revelation", "tests"]
+branch = true
+parallel = true
+
+[tool.coverage.report]
+show_missing = true
+exclude_lines = [
+  "no cov",
+  "if __name__ == .__main__.:",
+  "if TYPE_CHECKING:",
+]
+
+[tool.mypy]
+disallow_incomplete_defs = true
+check_untyped_defs = true
+warn_unused_ignores = true
+exclude = """
+  .env
+  | .hatch
+  | .mypy_cache
+  | .venv
+  | __pycache__
+  | env
+  | venv
+"""
