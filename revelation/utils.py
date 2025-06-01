@@ -6,13 +6,12 @@ import tarfile
 import zipfile
 from http.client import HTTPMessage
 from pathlib import Path
-from typing import Tuple
 from urllib.request import urlretrieve
 
 from revelation import default_config
 
 
-def make_presentation(presentation_path: Path):
+def make_presentation(presentation_path: Path) -> None:
     """
     Make a new presentation boilerplate code given a presentation_path
     """
@@ -28,7 +27,7 @@ def make_presentation(presentation_path: Path):
         fp.write(f"# {title}\n\nStart from here!")
 
 
-def download_file(url: str) -> Tuple[Path, HTTPMessage]:
+def download_file(url: str) -> tuple[Path, HTTPMessage]:
     """
     Download a file from a given url
     """
@@ -37,7 +36,7 @@ def download_file(url: str) -> Tuple[Path, HTTPMessage]:
     return Path(downloaded_file), result
 
 
-def move_and_replace(src: Path, dst: Path):
+def move_and_replace(src: Path, dst: Path) -> None:
     """
     Helper function used to move files from one place to another,
     creating os replacing them if needed
@@ -88,16 +87,13 @@ def extract_file(compressed_file: Path, path: Path = Path(".")) -> Path:
 
                     return prefix == abs_directory
 
-                def safe_extract(
-                    tar, path=".", members=None, *, numeric_owner=False
-                ):
+                def safe_extract(tar, path=".", members=None, *, numeric_owner=False):
                     for member in tar.getmembers():
                         member_path = os.path.join(path, member.name)
 
                         if not is_within_directory(path, member_path):
-                            raise Exception(
-                                "Attempted Path Traversal in Tar File"
-                            )
+                            msg = "Attempted Path Traversal in Tar File"
+                            raise Exception(msg)
 
                     tar.extractall(path, members, numeric_owner=numeric_owner)
 
@@ -107,9 +103,11 @@ def extract_file(compressed_file: Path, path: Path = Path(".")) -> Path:
                 basename = zfile.namelist()[0]
                 zfile.extractall(path)
         else:
-            raise NotImplementedError("File type not supported")
+            msg = "File type not supported"
+            raise NotImplementedError(msg)
     else:
-        raise FileNotFoundError(f"{compressed_file} is not a valid file")
+        msg = f"{compressed_file} is not a valid file"
+        raise FileNotFoundError(msg)
 
     return path / basename
 

@@ -6,8 +6,10 @@ the presentation
 """
 
 import re
+from collections.abc import Iterable
 from pathlib import Path
 from typing import Optional
+from wsgiref.types import StartResponse, WSGIEnvironment
 
 from jinja2 import Environment, PackageLoader, select_autoescape
 from werkzeug.middleware.shared_data import SharedDataMiddleware
@@ -18,7 +20,7 @@ from revelation.constants import STATIC_ROOT
 from revelation.utils import normalize_newlines
 
 
-class Revelation(object):
+class Revelation:
     """
     Main revelation app class that instantiates the server and handles
     the requests
@@ -37,7 +39,7 @@ class Revelation(object):
         media: Optional[Path] = None,
         theme: Optional[Path] = None,
         style: Optional[Path] = None,
-    ):
+    ) -> None:
         """
         Initializes the server and creates the environment for the presentation
         """
@@ -47,7 +49,7 @@ class Revelation(object):
         self.theme = theme
         self.style = style
 
-        shared_data = dict()
+        shared_data = {}
         shared_data.update(self.parse_shared_data(STATIC_ROOT))
         shared_data.update(self.parse_shared_data(self.media))
         shared_data.update(self.parse_shared_data(self.theme))
@@ -72,7 +74,7 @@ class Revelation(object):
         path: Path,
         section_separator: str,
         vertical_separator: str,
-    ):
+    ) -> list:
         """
         Get slides file from the given path, loads it and split into list
         of slides.
@@ -89,13 +91,9 @@ class Revelation(object):
             )
         ]
 
-    def get_theme(self, theme_name: str):
+    def get_theme(self, theme_name: str) -> str:
         fullpath_theme = (
-            STATIC_ROOT.resolve()
-            / "revealjs"
-            / "dist"
-            / "theme"
-            / f"{theme_name}.css"
+            STATIC_ROOT.resolve() / "revealjs" / "dist" / "theme" / f"{theme_name}.css"
         )
 
         if fullpath_theme.is_file():
@@ -103,7 +101,7 @@ class Revelation(object):
 
         return theme_name
 
-    def dispatch_request(self, _: Optional[Request] = None):
+    def dispatch_request(self, _: Optional[Request] = None) -> Response:
         env = Environment(
             loader=PackageLoader("revelation", "templates"),
             autoescape=select_autoescape(["html"]),
@@ -128,11 +126,15 @@ class Revelation(object):
             template.render(**context), headers={"content-type": "text/html"}
         )
 
-    def _wsgi_app(self, environ, start_response):
+    def _wsgi_app(
+        self, environ: WSGIEnvironment, start_response: StartResponse
+    ) -> Iterable[bytes]:
         request = Request(environ)
         response = self.dispatch_request(request)
 
         return response(environ, start_response)
 
-    def __call__(self, environ, start_response):
+    def __call__(
+        self, environ: WSGIEnvironment, start_response: StartResponse
+    ) -> Iterable[bytes]:
         return self.wsgi_app(environ, start_response)

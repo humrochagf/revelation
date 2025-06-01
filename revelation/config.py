@@ -25,14 +25,14 @@ class Config(dict):
         if filename and filename.is_file():
             self.load_from_pyfile(filename)
 
-    def load_from_object(self, obj: ModuleType):
+    def load_from_object(self, obj: ModuleType) -> None:
         """Load the configs from a python object passed
         to the function"""
         for key in dir(obj):
             if key.isupper():
                 self[key] = getattr(obj, key)
 
-    def load_from_pyfile(self, filename: Path):
+    def load_from_pyfile(self, filename: Path) -> None:
         """Load the configs from a python file as it was imported"""
         module = ModuleType("config")
         module.__file__ = str(filename)
@@ -40,7 +40,7 @@ class Config(dict):
         try:
             with filename.open(mode="rb") as fp:
                 exec(compile(fp.read(), filename, "exec"), module.__dict__)
-        except IOError as error:
+        except OSError as error:
             strerror = error.strerror
             error.strerror = f"Unable to load configuration file ({strerror})"
 

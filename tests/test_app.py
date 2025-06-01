@@ -6,13 +6,13 @@ from revelation import Revelation
 from .conftest import Presentation
 
 
-def test_parse_shared_data_empty(revelation: Revelation):
+def test_parse_shared_data_empty(revelation: Revelation) -> None:
     shared_data_config = revelation.parse_shared_data(None)
 
     assert shared_data_config == {}
 
 
-def test_parse_shared_data(presentation: Presentation, revelation: Revelation):
+def test_parse_shared_data(presentation: Presentation, revelation: Revelation) -> None:
     shared_data_config = revelation.parse_shared_data(presentation.media)
 
     assert shared_data_config == {
@@ -20,10 +20,8 @@ def test_parse_shared_data(presentation: Presentation, revelation: Revelation):
     }
 
 
-def test_load_slides(presentation: Presentation, revelation: Revelation):
-    presentation.file.write_text(
-        "# Pag1\n---\n# Pag2.1\n---~\n# Page2.2", "utf8"
-    )
+def test_load_slides(presentation: Presentation, revelation: Revelation) -> None:
+    presentation.file.write_text("# Pag1\n---\n# Pag2.1\n---~\n# Page2.2", "utf8")
 
     slides = revelation.load_slides(presentation.file, "---", "---~")
 
@@ -32,7 +30,7 @@ def test_load_slides(presentation: Presentation, revelation: Revelation):
 
 def test_load_slides_non_normalized(
     presentation: Presentation, revelation: Revelation
-):
+) -> None:
     presentation.file.write_bytes(b"# Pag1\r---\r\n# Pag2")
 
     slides = revelation.load_slides(presentation.file, "---", "---~")
@@ -42,7 +40,7 @@ def test_load_slides_non_normalized(
 
 def test_load_slides_non_ascii(
     presentation: Presentation, revelation: Revelation
-):
+) -> None:
     presentation.file.write_text("# こんにちは\n---\n# 乾杯", "utf8")
 
     slides = revelation.load_slides(presentation.file, "---", "---~")
@@ -50,7 +48,7 @@ def test_load_slides_non_ascii(
     assert slides == [["# こんにちは\n"], ["\n# 乾杯"]]
 
 
-def test_client_request_ok(revelation: Revelation):
+def test_client_request_ok(revelation: Revelation) -> None:
     client = Client(revelation, Response)
 
     response = client.get("/")

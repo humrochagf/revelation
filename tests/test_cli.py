@@ -8,7 +8,7 @@ from revelation.cli import cli
 from .conftest import Presentation
 
 
-def test_mkpresentation(tmp_path: Path):
+def test_mkpresentation(tmp_path: Path) -> None:
     presentation = Presentation(tmp_path)
 
     runner = CliRunner()
@@ -21,7 +21,7 @@ def test_mkpresentation(tmp_path: Path):
     assert presentation.config.is_file()
 
 
-def test_mkpresentation_already_exists(presentation: Presentation):
+def test_mkpresentation_already_exists(presentation: Presentation) -> None:
     runner = CliRunner()
     result = runner.invoke(cli, ["mkpresentation", str(presentation.root)])
 
@@ -31,7 +31,7 @@ def test_mkpresentation_already_exists(presentation: Presentation):
     )
 
 
-def test_mkstatic(presentation: Presentation):
+def test_mkstatic(presentation: Presentation) -> None:
     output_dir = presentation.parent / "output"
     index_file = output_dir / "index.html"
     static_dir = output_dir / "static"
@@ -49,7 +49,7 @@ def test_mkstatic(presentation: Presentation):
     assert media_dir.is_dir()
 
 
-def test_mkstatic_custom_media(presentation: Presentation):
+def test_mkstatic_custom_media(presentation: Presentation) -> None:
     presentation_media = presentation.root / "custom_media"
     presentation_media.mkdir()
     presentation_media_file = presentation_media / "custom_file.txt"
@@ -76,7 +76,7 @@ def test_mkstatic_custom_media(presentation: Presentation):
     assert custom_media_file.is_file()
 
 
-def test_mkstatic_without_media(presentation: Presentation):
+def test_mkstatic_without_media(presentation: Presentation) -> None:
     output_dir = presentation.parent / "output"
 
     presentation.media.rmdir()
@@ -90,7 +90,7 @@ def test_mkstatic_without_media(presentation: Presentation):
     assert "Media folder not detected, running without media." in result.output
 
 
-def test_mkstatic_without_config(presentation: Presentation):
+def test_mkstatic_without_config(presentation: Presentation) -> None:
     output_dir = presentation.parent / "output"
 
     presentation.config.unlink()
@@ -101,13 +101,10 @@ def test_mkstatic_without_config(presentation: Presentation):
     )
 
     assert result.exit_code == 0
-    assert (
-        "Configuration file not detected, running with defaults."
-        in result.output
-    )
+    assert "Configuration file not detected, running with defaults." in result.output
 
 
-def test_mkstatic_with_theme(presentation: Presentation):
+def test_mkstatic_with_theme(presentation: Presentation) -> None:
     (presentation.root / "theme").mkdir()
 
     output_dir = presentation.parent / "output"
@@ -122,7 +119,7 @@ def test_mkstatic_with_theme(presentation: Presentation):
     assert theme_dir.is_dir()
 
 
-def test_mkstatic_override_styles(presentation: Presentation):
+def test_mkstatic_override_styles(presentation: Presentation) -> None:
     style_file = presentation.root / "style.css"
     style_file.write_text("h1 { color: #000 }", "utf8")
 
@@ -146,7 +143,7 @@ def test_mkstatic_override_styles(presentation: Presentation):
     assert output_style_file.is_file()
 
 
-def test_mkstatic_output_already_exists_file(presentation: Presentation):
+def test_mkstatic_output_already_exists_file(presentation: Presentation) -> None:
     output_file = presentation.parent / "output"
     output_file.write_text("", "utf8")
 
@@ -161,7 +158,7 @@ def test_mkstatic_output_already_exists_file(presentation: Presentation):
     )
 
 
-def test_mkstatic_output_already_exists_folder(presentation: Presentation):
+def test_mkstatic_output_already_exists_folder(presentation: Presentation) -> None:
     output_dir = presentation.parent / "output"
     output_dir.mkdir()
 
@@ -172,12 +169,11 @@ def test_mkstatic_output_already_exists_folder(presentation: Presentation):
 
     assert result.exit_code == 1
     assert result.output == (
-        f"Error: '{output_dir}' already exists, use --force to override it.\n"
-        "Aborted!\n"
+        f"Error: '{output_dir}' already exists, use --force to override it.\nAborted!\n"
     )
 
 
-def test_mkstatic_override_output(presentation: Presentation):
+def test_mkstatic_override_output(presentation: Presentation) -> None:
     output_dir = presentation.parent / "output"
     output_dir.mkdir()
 
@@ -193,7 +189,7 @@ def test_mkstatic_override_output(presentation: Presentation):
     assert not override_file.exists()
 
 
-def test_mkstatic_presentation_not_found(tmp_path: Path):
+def test_mkstatic_presentation_not_found(tmp_path: Path) -> None:
     presentation = tmp_path / "notfound"
 
     runner = CliRunner()
@@ -203,7 +199,7 @@ def test_mkstatic_presentation_not_found(tmp_path: Path):
     assert result.output == "Error: Presentation file not found.\nAborted!\n"
 
 
-def test_mkstatic_style_not_file(presentation: Presentation):
+def test_mkstatic_style_not_file(presentation: Presentation) -> None:
     style_dir = presentation.root / "style.css"
     style_dir.mkdir()
 
@@ -218,7 +214,7 @@ def test_mkstatic_style_not_file(presentation: Presentation):
     )
 
 
-def test_mkstatic_style_not_css(presentation: Presentation):
+def test_mkstatic_style_not_css(presentation: Presentation) -> None:
     style_file = presentation.root / "style.notcss"
     style_file.write_text("", "utf8")
 
@@ -233,7 +229,7 @@ def test_mkstatic_style_not_css(presentation: Presentation):
     )
 
 
-def test_start(mocker: MockerFixture, presentation: Presentation):
+def test_start(mocker: MockerFixture, presentation: Presentation) -> None:
     mocked_run_simple = mocker.patch("revelation.cli.run_simple")
 
     runner = CliRunner()
@@ -242,7 +238,7 @@ def test_start(mocker: MockerFixture, presentation: Presentation):
     assert mocked_run_simple.called
 
 
-def test_start_presentation_not_found(tmp_path: Path):
+def test_start_presentation_not_found(tmp_path: Path) -> None:
     presentation = tmp_path / "notfound"
 
     runner = CliRunner()
@@ -252,14 +248,12 @@ def test_start_presentation_not_found(tmp_path: Path):
     assert result.output == "Error: Presentation file not found.\nAborted!\n"
 
 
-def test_start_style_not_file(presentation: Presentation):
+def test_start_style_not_file(presentation: Presentation) -> None:
     style_dir = presentation.root / "style.css"
     style_dir.mkdir()
 
     runner = CliRunner()
-    result = runner.invoke(
-        cli, ["start", str(presentation.file), "-s", str(style_dir)]
-    )
+    result = runner.invoke(cli, ["start", str(presentation.file), "-s", str(style_dir)])
 
     assert result.exit_code == 1
     assert result.output == (
@@ -267,7 +261,7 @@ def test_start_style_not_file(presentation: Presentation):
     )
 
 
-def test_start_style_not_css(presentation: Presentation):
+def test_start_style_not_css(presentation: Presentation) -> None:
     style_file = presentation.root / "style.notcss"
     style_file.write_text("", "utf8")
 
