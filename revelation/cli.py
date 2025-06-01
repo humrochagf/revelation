@@ -3,7 +3,7 @@
 import glob
 import shutil
 from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import Any, Optional
 
 import typer
 from typer import Option
@@ -29,7 +29,7 @@ cli = typer.Typer()
 echo = typer.echo
 
 
-def error(message: str):
+def error(message: str) -> None:
     typer.secho(f"Error: {message}", err=True, fg="red", bold=True)
 
 
@@ -80,7 +80,7 @@ def revelation_factory(
 
 
 @cli.command()
-def version():
+def version() -> None:
     """
     Show version
     """
@@ -89,8 +89,8 @@ def version():
 
 @cli.command()
 def installreveal(
-    url: str = Option(REVEAL_URL, "--url", "-u", help="Reveal.js download url")
-):
+    url: str = Option(REVEAL_URL, "--url", "-u", help="Reveal.js download url"),
+) -> None:
     """
     Install or upgrade reveal.js dependency
 
@@ -117,7 +117,7 @@ def installreveal(
 
 
 @cli.command()
-def mkpresentation(presentation: Path):
+def mkpresentation(presentation: Path) -> None:
     """Create a new revelation presentation"""
     if presentation.exists():
         error(f"'{presentation}' already exists.")
@@ -133,15 +133,9 @@ def mkpresentation(presentation: Path):
 def mkstatic(
     ctx: typer.Context,
     presentation: Path,
-    config: Optional[Path] = Option(
-        None, "--config", "-c", help="Custom config file"
-    ),
-    media: Optional[Path] = Option(
-        None, "--media", "-m", help="Custom media folder"
-    ),
-    theme: Optional[Path] = Option(
-        None, "--theme", "-t", help="Custom theme folder"
-    ),
+    config: Optional[Path] = Option(None, "--config", "-c", help="Custom config file"),
+    media: Optional[Path] = Option(None, "--media", "-m", help="Custom media folder"),
+    theme: Optional[Path] = Option(None, "--theme", "-t", help="Custom theme folder"),
     output_folder: Path = Option(
         Path("output"),
         "--output-folder",
@@ -166,7 +160,7 @@ def mkstatic(
         "-s",
         help="Custom css file to override reveal.js styles",
     ),
-):
+) -> None:
     """Make static presentation"""
 
     if not REVEALJS_DIR.exists():
@@ -181,10 +175,7 @@ def mkstatic(
         if force:
             shutil.rmtree(output_folder)
         else:
-            error(
-                f"'{output_folder}' already exists, "
-                "use --force to override it."
-            )
+            error(f"'{output_folder}' already exists, use --force to override it.")
 
             raise typer.Abort()
 
@@ -230,15 +221,9 @@ def start(
     ctx: typer.Context,
     presentation: Path,
     port: int = Option(4000, "--port", "-p", help="Presentation server port"),
-    config: Optional[Path] = Option(
-        None, "--config", "-c", help="Custom config file"
-    ),
-    media: Optional[Path] = Option(
-        None, "--media", "-m", help="Custom media folder"
-    ),
-    theme: Optional[Path] = Option(
-        None, "--theme", "-t", help="Custom theme folder"
-    ),
+    config: Optional[Path] = Option(None, "--config", "-c", help="Custom config file"),
+    media: Optional[Path] = Option(None, "--media", "-m", help="Custom media folder"),
+    theme: Optional[Path] = Option(None, "--theme", "-t", help="Custom theme folder"),
     style: Optional[Path] = Option(
         None,
         "--style-override-file",
@@ -252,7 +237,7 @@ def start(
         is_flag=True,
         help="Run the revelation server on debug mode",
     ),
-):
+) -> None:
     """Start the revelation server"""
 
     if not REVEALJS_DIR.exists():
@@ -269,7 +254,7 @@ def start(
 
     echo("Starting revelation server...")
 
-    server_args: Dict[str, Any] = {
+    server_args: dict[str, Any] = {
         "hostname": "localhost",
         "port": port,
         "application": app,
