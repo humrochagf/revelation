@@ -133,6 +133,7 @@ def mkpresentation(presentation: Path) -> None:
 def mkstatic(
     ctx: typer.Context,
     presentation: Path,
+    *,
     config: Optional[Path] = Option(None, "--config", "-c", help="Custom config file"),
     media: Optional[Path] = Option(None, "--media", "-m", help="Custom media folder"),
     theme: Optional[Path] = Option(None, "--theme", "-t", help="Custom theme folder"),
@@ -220,6 +221,7 @@ def mkstatic(
 def start(
     ctx: typer.Context,
     presentation: Path,
+    *,
     port: int = Option(4000, "--port", "-p", help="Presentation server port"),
     config: Optional[Path] = Option(None, "--config", "-c", help="Custom config file"),
     media: Optional[Path] = Option(None, "--media", "-m", help="Custom media folder"),
