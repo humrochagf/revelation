@@ -23,8 +23,9 @@ classifiers = [
   "Topic :: Text Processing :: Markup :: Markdown",
 ]
 dependencies = [
-  "Werkzeug[watchdog]~=2.2.2",
   "Jinja2~=3.1.2",
+  "Werkzeug[watchdog]~=2.2.2",
+  "platformdirs",
   "typer~=0.7.0",
 ]
 
