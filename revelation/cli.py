@@ -3,15 +3,26 @@
 import glob
 import shutil
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any
 
 import typer
-from typer import Option
 from typer.main import get_command
 from werkzeug.serving import run_simple
 
 import revelation
 from revelation import Revelation
+from revelation.cli_types import (
+    ConfigFile,
+    DebugFlag,
+    MediaDir,
+    OutputFile,
+    OutputFolder,
+    OverwriteOutputFlag,
+    RevealUrl,
+    ServerPort,
+    StyleOverrideFile,
+    ThemeDir,
+)
 from revelation.constants import (
     MATHJAX_DIR,
     MATHJAX_URL,
@@ -35,10 +46,10 @@ def error(message: str) -> None:
 
 def revelation_factory(
     presentation: Path,
-    config: Optional[Path] = None,
-    media: Optional[Path] = None,
-    theme: Optional[Path] = None,
-    style: Optional[Path] = None,
+    config: ConfigFile = None,
+    media: MediaDir = None,
+    theme: ThemeDir = None,
+    style: StyleOverrideFile = None,
 ) -> Revelation:
     if presentation.is_file():
         path = presentation.parent
@@ -88,9 +99,7 @@ def version() -> None:
 
 
 @cli.command()
-def installreveal(
-    url: str = Option(REVEAL_URL, "--url", "-u", help="Reveal.js download url"),
-) -> None:
+def installreveal(url: RevealUrl = REVEAL_URL) -> None:
     """
     Install or upgrade reveal.js dependency
 
@@ -134,33 +143,13 @@ def mkstatic(
     ctx: typer.Context,
     presentation: Path,
     *,
-    config: Optional[Path] = Option(None, "--config", "-c", help="Custom config file"),
-    media: Optional[Path] = Option(None, "--media", "-m", help="Custom media folder"),
-    theme: Optional[Path] = Option(None, "--theme", "-t", help="Custom theme folder"),
-    output_folder: Path = Option(
-        Path("output"),
-        "--output-folder",
-        "-o",
-        help="Folder where the static presentation will be generated",
-    ),
-    output_file: Path = Option(
-        Path("index.html"),
-        "--output-file",
-        "-f",
-        help="File name of the static presentation",
-    ),
-    force: bool = Option(
-        False,
-        "--force",
-        "-r",
-        help="Overwrite the output folder if exists",
-    ),
-    style: Optional[Path] = Option(
-        None,
-        "--style-override-file",
-        "-s",
-        help="Custom css file to override reveal.js styles",
-    ),
+    config: ConfigFile = None,
+    media: MediaDir = None,
+    theme: ThemeDir = None,
+    output_folder: OutputFolder = Path("output"),
+    output_file: OutputFile = Path("index.html"),
+    force: OverwriteOutputFlag = False,
+    style: StyleOverrideFile = None,
 ) -> None:
     """Make static presentation"""
 
@@ -222,23 +211,12 @@ def start(
     ctx: typer.Context,
     presentation: Path,
     *,
-    port: int = Option(4000, "--port", "-p", help="Presentation server port"),
-    config: Optional[Path] = Option(None, "--config", "-c", help="Custom config file"),
-    media: Optional[Path] = Option(None, "--media", "-m", help="Custom media folder"),
-    theme: Optional[Path] = Option(None, "--theme", "-t", help="Custom theme folder"),
-    style: Optional[Path] = Option(
-        None,
-        "--style-override-file",
-        "-s",
-        help="Custom css file to override reveal.js styles",
-    ),
-    debug: bool = Option(
-        False,
-        "--debug",
-        "-d",
-        is_flag=True,
-        help="Run the revelation server on debug mode",
-    ),
+    port: ServerPort = 4000,
+    config: ConfigFile = None,
+    media: MediaDir = None,
+    theme: ThemeDir = None,
+    style: StyleOverrideFile = None,
+    debug: DebugFlag = False,
 ) -> None:
     """Start the revelation server"""
 
