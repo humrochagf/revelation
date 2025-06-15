@@ -105,7 +105,18 @@ def foo():
 
 ## Equations
 
-`$$ J(\theta_0,\theta_1) = \sum_{i=0} $$`
+<section data-markdown>
+$$ J(\theta_0,\theta_1) = \sum_{i=0} $$
+</section>
+
+---
+
+## The Lorenz Equations</h2>
+
+<section data-markdown>
+\[\begin{aligned} \dot{x} &amp; = \sigma(y-x) \\ \dot{y} &amp; = \rho x - y -
+xz \\ \dot{z} &amp; = -\beta z + xy \end{aligned} \]
+</section>
 
 ---
 

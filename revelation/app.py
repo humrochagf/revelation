@@ -58,6 +58,7 @@ class Revelation:
         shared_data.update(self.parse_shared_data(self.media))
         shared_data.update(self.parse_shared_data(self.theme))
         shared_data.update(self.parse_shared_data(self.style))
+        print(shared_data)
 
         self.wsgi_app = SharedDataMiddleware(self._wsgi_app, shared_data)
 
