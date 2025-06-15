@@ -2,7 +2,6 @@
 
 from pathlib import Path
 from types import ModuleType
-from typing import Optional
 
 from revelation import default_config
 
@@ -17,7 +16,7 @@ class Config(dict):
     loads the external configs
     """
 
-    def __init__(self, filename: Optional[Path] = None):
+    def __init__(self, filename: Path | None = None):
         """Initializes the config with the defaults or with custom
         variables from an external file"""
         self.load_from_object(default_config)

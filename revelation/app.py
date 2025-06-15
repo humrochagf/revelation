@@ -8,7 +8,6 @@ the presentation
 import re
 from collections.abc import Iterable
 from pathlib import Path
-from typing import Optional
 from wsgiref.types import StartResponse, WSGIEnvironment
 
 from jinja2 import Environment, PackageLoader, select_autoescape
@@ -28,17 +27,17 @@ class Revelation:
 
     presentation: Path
     config: Config
-    media: Optional[Path]
-    theme: Optional[Path]
-    style: Optional[Path]
+    media: Path | None
+    theme: Path | None
+    style: Path | None
 
     def __init__(
         self,
         presentation: Path,
-        config: Optional[Path] = None,
-        media: Optional[Path] = None,
-        theme: Optional[Path] = None,
-        style: Optional[Path] = None,
+        config: Path | None = None,
+        media: Path | None = None,
+        theme: Path | None = None,
+        style: Path | None = None,
     ) -> None:
         """
         Initializes the server and creates the environment for the presentation
@@ -57,7 +56,7 @@ class Revelation:
 
         self.wsgi_app = SharedDataMiddleware(self._wsgi_app, shared_data)
 
-    def parse_shared_data(self, shared_root: Optional[Path]) -> dict:
+    def parse_shared_data(self, shared_root: Path | None) -> dict:
         """
         Parse additional shared_data if it exists
         """
@@ -101,7 +100,7 @@ class Revelation:
 
         return theme_name
 
-    def dispatch_request(self, _: Optional[Request] = None) -> Response:
+    def dispatch_request(self, _: Request | None = None) -> Response:
         env = Environment(
             loader=PackageLoader("revelation", "templates"),
             autoescape=select_autoescape(["html"]),

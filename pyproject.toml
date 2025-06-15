@@ -43,7 +43,7 @@ path = "revelation/__init__.py"
 
 [tool.hatch.envs.default]
 dependencies = [
-  "coveralls==3.3.1",
+  "coveralls==4.0.1",
   "mypy",
   "pytest",
   "pytest-cov",
