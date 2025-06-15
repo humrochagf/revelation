@@ -236,24 +236,10 @@ REVEAL_PLUGINS = {
     # Enable and configure math plugin. To disable set `"Math": {}`
     "Math": {
         # Name of plugin in `plugins` field for `Reveal.initialize`
-        "initialize_as": "RevealMath",
+        "initialize_as": "RevealMath.KaTeX",
         "scripts": [
             "math/math.js",
         ],
-        "config": {
-            # `math` section will be added to config dictonary for
-            # `Reveal.initialize`
-            "math": {
-                "mathjax": "static/mathjax/MathJax.js",
-                "config": "TeX-AMS_HTML-full",
-                # pass other options into `MathJax.Hub.Config()`
-                "TeX": {
-                    "Macros": {
-                        "RR": "{\\bf R}",
-                    }
-                },
-            },
-        },
     },
     # Enable highlight plugin. To disable set `"Highlight": {}`
     "Highlight": {
