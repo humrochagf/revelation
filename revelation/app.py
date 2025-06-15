@@ -8,7 +8,6 @@ the presentation
 import re
 from collections.abc import Iterable
 from pathlib import Path
-from wsgiref.types import StartResponse, WSGIEnvironment
 
 from jinja2 import Environment, PackageLoader, select_autoescape
 from werkzeug.middleware.shared_data import SharedDataMiddleware
@@ -17,6 +16,14 @@ from werkzeug.wrappers import Request, Response
 from revelation.config import Config
 from revelation.constants import STATIC_ROOT
 from revelation.utils import normalize_newlines
+
+try:
+    from wsgiref.types import StartResponse, WSGIEnvironment
+except ImportError:
+    from typing import Any
+
+    StartResponse = Any  # type: ignore
+    WSGIEnvironment = Any  # type: ignore
 
 
 class Revelation:
