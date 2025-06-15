@@ -23,12 +23,7 @@ from revelation.cli_types import (
     StyleOverrideFile,
     ThemeDir,
 )
-from revelation.constants import (
-    MATHJAX_DIR,
-    MATHJAX_URL,
-    REVEAL_URL,
-    REVEALJS_DIR,
-)
+from revelation.constants import REVEAL_URL, REVEALJS_DIR
 from revelation.utils import (
     download_file,
     extract_file,
@@ -113,14 +108,6 @@ def installreveal(url: RevealUrl = REVEAL_URL) -> None:
     echo("Installing reveal.js...")
 
     move_and_replace(extract_file(download[0]), REVEALJS_DIR)
-
-    echo("Downloading MathJax...")
-
-    download = download_file(MATHJAX_URL)
-
-    echo("Installing MathJax...")
-
-    move_and_replace(extract_file(download[0]), MATHJAX_DIR)
 
     echo("Installation completed!")
 
