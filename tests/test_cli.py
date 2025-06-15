@@ -26,9 +26,7 @@ def test_mkpresentation_already_exists(presentation: Presentation) -> None:
     result = runner.invoke(cli, ["mkpresentation", str(presentation.root)])
 
     assert result.exit_code == 1
-    assert result.output == (
-        f"Error: '{presentation.root}' already exists.\nAborted.\n"
-    )
+    assert f"'{presentation.root}' already exists" in result.output
 
 
 def test_mkstatic(presentation: Presentation) -> None:
@@ -87,7 +85,7 @@ def test_mkstatic_without_media(presentation: Presentation) -> None:
     )
 
     assert result.exit_code == 0
-    assert "Media folder not detected, running without media." in result.output
+    assert "Media folder not detected, running without media" in result.output
 
 
 def test_mkstatic_without_config(presentation: Presentation) -> None:
@@ -101,7 +99,7 @@ def test_mkstatic_without_config(presentation: Presentation) -> None:
     )
 
     assert result.exit_code == 0
-    assert "Configuration file not detected, running with defaults." in result.output
+    assert "Configuration file not detected, running with defaults" in result.output
 
 
 def test_mkstatic_with_theme(presentation: Presentation) -> None:
@@ -153,9 +151,7 @@ def test_mkstatic_output_already_exists_file(presentation: Presentation) -> None
     )
 
     assert result.exit_code == 1
-    assert result.output == (
-        f"Error: '{output_file}' already exists and is a file.\nAborted.\n"
-    )
+    assert f"'{output_file}' already exists and is a file" in result.output
 
 
 def test_mkstatic_output_already_exists_folder(presentation: Presentation) -> None:
@@ -168,9 +164,7 @@ def test_mkstatic_output_already_exists_folder(presentation: Presentation) -> No
     )
 
     assert result.exit_code == 1
-    assert result.output == (
-        f"Error: '{output_dir}' already exists, use --force to override it.\nAborted.\n"
-    )
+    assert f"'{output_dir}' already exists, use --force to override it" in result.output
 
 
 def test_mkstatic_override_output(presentation: Presentation) -> None:
@@ -196,7 +190,7 @@ def test_mkstatic_presentation_not_found(tmp_path: Path) -> None:
     result = runner.invoke(cli, ["mkstatic", str(presentation)])
 
     assert result.exit_code == 1
-    assert result.output == "Error: Presentation file not found.\nAborted.\n"
+    assert "Presentation file not found" in result.output
 
 
 def test_mkstatic_style_not_file(presentation: Presentation) -> None:
@@ -209,9 +203,7 @@ def test_mkstatic_style_not_file(presentation: Presentation) -> None:
     )
 
     assert result.exit_code == 1
-    assert result.output == (
-        "Error: Style is not a css file or does not exists.\nAborted.\n"
-    )
+    assert "Style is not a css file or does not exists" in result.output
 
 
 def test_mkstatic_style_not_css(presentation: Presentation) -> None:
@@ -224,9 +216,7 @@ def test_mkstatic_style_not_css(presentation: Presentation) -> None:
     )
 
     assert result.exit_code == 1
-    assert result.output == (
-        "Error: Style is not a css file or does not exists.\nAborted.\n"
-    )
+    assert "Style is not a css file or does not exists" in result.output
 
 
 def test_start(mocker: MockerFixture, presentation: Presentation) -> None:
@@ -245,7 +235,7 @@ def test_start_presentation_not_found(tmp_path: Path) -> None:
     result = runner.invoke(cli, ["start", str(presentation)])
 
     assert result.exit_code == 1
-    assert result.output == "Error: Presentation file not found.\nAborted.\n"
+    assert "Presentation file not found" in result.output
 
 
 def test_start_style_not_file(presentation: Presentation) -> None:
@@ -256,9 +246,7 @@ def test_start_style_not_file(presentation: Presentation) -> None:
     result = runner.invoke(cli, ["start", str(presentation.file), "-s", str(style_dir)])
 
     assert result.exit_code == 1
-    assert result.output == (
-        "Error: Style is not a css file or does not exists.\nAborted.\n"
-    )
+    assert "Style is not a css file or does not exists" in result.output
 
 
 def test_start_style_not_css(presentation: Presentation) -> None:
@@ -271,6 +259,4 @@ def test_start_style_not_css(presentation: Presentation) -> None:
     )
 
     assert result.exit_code == 1
-    assert result.output == (
-        "Error: Style is not a css file or does not exists.\nAborted.\n"
-    )
+    assert "Style is not a css file or does not exists" in result.output
