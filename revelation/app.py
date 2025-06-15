@@ -5,7 +5,10 @@ It has the Revelation main class that creates the webserver do run
 the presentation
 """
 
+from __future__ import annotations
+
 import re
+import typing
 from collections.abc import Iterable
 from pathlib import Path
 
@@ -17,13 +20,8 @@ from revelation.config import Config
 from revelation.constants import STATIC_ROOT
 from revelation.utils import normalize_newlines
 
-try:
-    from wsgiref.types import StartResponse, WSGIEnvironment
-except ImportError:
-    from typing import Any
-
-    StartResponse = Any  # type: ignore
-    WSGIEnvironment = Any  # type: ignore
+if typing.TYPE_CHECKING:
+    from _typeshed.wsgi import StartResponse, WSGIEnvironment
 
 
 class Revelation:
