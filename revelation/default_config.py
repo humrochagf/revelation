@@ -20,7 +20,7 @@ REVEAL_VERTICAL_SLIDE_SEPARATOR = "---~"
 
 # Themes
 # beige, black, blood, league, moon, night, serif, simple, sky,
-# solarized, white
+# solarized, white, dracula
 REVEAL_THEME = "black"
 
 REVEAL_CONFIG = {
